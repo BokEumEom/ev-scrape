@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전기차 및 충전소 뉴스</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <!-- 네비게이션 바 -->
+        <ul>
+            <li><a href="/">전기차 및 충전소 뉴스</a></li>
+            <li><a href="/announce/icn/">인천시 공고</a></li>
+        </ul>
+    </nav>
+
+    <div class="news-container">
+        <!-- 인천시 공고 데이터를 렌더링 -->
+        {% for announcement in announcements %}
+            <div class="news-card">
+                <h2>{{ announcement.title }}</h2>
+                <small>제공일자: {{ announcement.date }}</small>
+                <a href="{{ announcement.link }}" target="_blank" class="read-more">더 보기</a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

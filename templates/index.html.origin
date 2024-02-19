@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뉴스 스크래퍼</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="news-container">
+        {% for news in news_list %}
+        <div class="news-card-wrapper" data-news-id="{{ news.id }}">
+            <a href="{{ news.link }}" class="news-card-link" target="_blank" rel="noopener noreferrer">
+                <div class="news-card">
+                    <div class="image-placeholder">
+                        <span class="image-text">WATER</span>
+                    </div>
+                    <div class="news-content">
+                        <h2 class="news-title">{{ news.title }}</h2>
+                        <p class="news-pubdate">{{ news.pubDate }}</p>
+                    </div>
+                </div>
+            </a>
+            <div class="card-actions">
+                <i class="far fa-comment comment-icon"></i>
+                <span class="comment-count">{{ news.comment_count }} 댓글</span>
+            </div>
+            <div class="comments-section" data-news-id="{{ news.id }}" style="display: none;">
+                <div class="comments-container">
+                    {% for comment in news.comments %}
+                    <div class="comment">
+                        {{ comment.content }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- 댓글 폼 -->
+                <div class="comment-form" data-news-id="{{ news.id }}" style="display: none;">
+                    <form>
+                        <input type="text" placeholder="댓글을 입력하세요...">
+                        <button type="submit">댓글 작성</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="loading-indicator" style="display: none;">
+        뉴스를 로드하는 중...
+    </div>
+    <script src="/static/news.js"></script>
+</body>
+</html>

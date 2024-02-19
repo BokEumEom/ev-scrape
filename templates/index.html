@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전기차 및 충전소 뉴스</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">전기차 및 충전소 뉴스</a></li>
+            <li><a href="/announce/icn/">인천시 공고</a></li>
+        </ul>
+    </nav>
+
+    <div class="news-container">
+        {% for news in news_list %}
+        <div class="news-card" data-news-id="{{ news.id }}" data-link="{{ news.link }}" style="cursor: pointer;">
+            <h2>{{ news.title }}</h2>
+            <p><small>출처: {{ news.source }} | 날짜: {{ news.pubDate }}</small></p>
+            <p>{{ news.description }}</p>
+            <a href="{{ news.link }}" target="_blank" class="read-more">더 보기</a>
+            <div class="comments-section">
+                <form class="comment-form" data-news-id="{{ news.id }}">
+                    <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
+                    <input type="hidden" name="news-id" value="{{ news.id }}">
+                    <button type="submit">댓글 추가</button>
+                </form>
+                <div class="comment-icon" data-news-id="{{ news.id }}">
+                    <i class="far fa-comment"></i>
+                    <span class="comment-count">{{ news.comment_count }}</span>개의 댓글
+                </div>
+                <div class="comments-list" data-news-id="{{ news.id }}"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="loading-indicator" style="display: none;">뉴스를 로드하는 중...</div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
