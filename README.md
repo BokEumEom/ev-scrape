@@ -1,9 +1,9 @@
 Google News Rss Scrape
 
-Frontend
+## Frontend
 Svelte
 $ npm run dev
 
-Backend
+## Backend
 FastAPI
 $ uvicorn app:app --reload
