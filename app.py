@@ -13,8 +13,9 @@ from config import setup_logging
 
 # Assuming scraper functions are in the scraper.py and scraper_icn.py files respectively
 from scraper import scrape_google_news
-from scraper_icn import scrape_announce_icn
-from scraper_kyki import scrape_announce_kyki
+from scraper_icn import scrape_incheon_announcements
+from scraper_kyki import scrape_kyungki_announcements
+from scraper_seoul import scrape_seoul_announcements
 
 app = FastAPI()
 
@@ -52,7 +53,7 @@ async def news_exists(news_id: int) -> bool:
 @app.get("/announce/icn/", response_model=List[Announcement])
 async def get_announcements():
     try:
-        announcements_data = scrape_announce_icn()
+        announcements_data = scrape_incheon_announcements()
         return announcements_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
@@ -61,10 +62,19 @@ async def get_announcements():
 @app.get("/announce/kyki/", response_model=List[Announcement])
 async def get_announcements():
     try:
-        announcements_data = scrape_announce_kyki()
+        announcements_data = scrape_kyungki_announcements()
         return announcements_data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")    
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+
+# 서울시 사업공고             
+@app.get("/announce/seoul/", response_model=List[Announcement])
+async def get_announcements():
+    try:
+        announcements_data = scrape_seoul_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
  
 # 뉴스 API   
 @app.get("/news", response_model=Dict[str, Any])

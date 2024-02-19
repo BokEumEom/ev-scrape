@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def scrape_announce_icn():
+def scrape_incheon_announcements():
     # 웹페이지 URL
     base_url = "https://www.incheon.go.kr"
     path = "/IC010205?beginDt=&endDt=&srchMainManagerDeptNm=&srchRepTitle=전기차"
@@ -41,6 +41,6 @@ def scrape_announce_icn():
 
 # 스크랩한 데이터를 출력
 if __name__ == "__main__":
-    scraped_announcements = scrape_announce_icn()
+    scraped_announcements = scrape_incheon_announcements()
     for announcement in scraped_announcements:
         print(announcement)

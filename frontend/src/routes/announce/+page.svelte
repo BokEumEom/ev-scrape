@@ -4,25 +4,36 @@
 
   let icnAnnouncements = [];
   let kykiAnnouncements = [];
+  let seoulAnnouncements = [];
   let showICN = false; // Controls the visibility of ICN announcements
   let showKYKI = false; // Controls the visibility of KYKI announcements
+  let showSeoul = false;
 
   onMount(async () => {
-    const [icnResponse, kykiResponse] = await Promise.all([
-      fetch('http://localhost:8000/announce/icn'),
-      fetch('http://localhost:8000/announce/kyki')
-    ]);
+    try {
+      const icnResponse = await fetch('http://localhost:8000/announce/icn');
+      const kykiResponse = await fetch('http://localhost:8000/announce/kyki');
+      const seoulResponse = await fetch('http://localhost:8000/announce/seoul'); // corrected line
 
-    if (icnResponse.ok) {
-      icnAnnouncements = await icnResponse.json();
-    } else {
-      console.error('Failed to fetch ICN announcements');
-    }
+      if (icnResponse.ok) {
+        icnAnnouncements = await icnResponse.json();
+      } else {
+        console.error('Failed to fetch ICN announcements');
+      }
 
-    if (kykiResponse.ok) {
-      kykiAnnouncements = await kykiResponse.json();
-    } else {
-      console.error('Failed to fetch KYKI announcements');
+      if (kykiResponse.ok) {
+        kykiAnnouncements = await kykiResponse.json();
+      } else {
+        console.error('Failed to fetch KYKI announcements');
+      }
+
+      if (seoulResponse.ok) {
+        seoulAnnouncements = await seoulResponse.json();
+      } else {
+        console.error('Failed to fetch Seoul announcements');
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching announcements', error);
     }
   });
 
@@ -32,6 +43,10 @@
 
   function toggleKYKI() {
     showKYKI = !showKYKI;
+  }
+
+  function toggleSeoul() {
+    showSeoul = !showSeoul;
   }
 </script>
 
@@ -69,14 +84,30 @@
       <p>경기도 공고 정보를 불러올 수 없습니다.</p>
     {/if}
   </div>
+
+  <button on:click={toggleSeoul} class="accordion">서울시 공고</button>
+  <div class={showSeoul ? 'panel show' : 'panel'}>
+    {#if seoulAnnouncements.length > 0}
+      <ul>
+        {#each seoulAnnouncements as announcement}
+          <li>
+            <a href={announcement.link} target="_blank">{announcement.title}</a>
+            <small>제공일자: {announcement.date}</small>
+          </li>
+        {/each}
+      </ul>
+    {:else}
+      <p>서울 공고 정보를 불러올 수 없습니다.</p>
+    {/if}
+  </div>
 </div>
 
 <style>
   .announcements-container {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
+    gap: 7px;
+    margin-top: 5px;
   }
 
   .accordion {
@@ -84,7 +115,7 @@
     background-color: #343434;
     color: white;
     cursor: pointer;
-    padding: 18px;
+    padding: 15px;
     width: 100%;
     text-align: left;
     border: none;
@@ -106,14 +137,14 @@
     transition: max-height 0.2s ease-out, padding 0.2s ease-out;
     max-height: 0;
     padding: 0 18px;
-    border: 1px solid #007bff;
+    border: 1px solid #E5E5E5;
     border-radius: 4px;
   }
 
   .panel.show {
     max-height: 1000px; /* Adjust as necessary */
-    padding-top: 20px; /* Add padding for visual comfort */
-    padding-bottom: 20px; /* Add padding for visual comfort */
+    padding-top: 10px; /* Add padding for visual comfort */
+    padding-bottom: 10px; /* Add padding for visual comfort */
   }
 
   h2 {

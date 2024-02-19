@@ -25,7 +25,7 @@ def extract_announcement_details(row, base_url):
         'date': date
     }
 
-def scrape_announce_kyki():
+def scrape_kyungki_announcements():
     base_url = "https://ggeea.or.kr"
     path = "/energy/news?board_seq=0&currRow=1&select_list=all&srch_input=전기자동차"
     full_url = f"{base_url}{path}"
@@ -44,6 +44,6 @@ def scrape_announce_kyki():
 
 # 스크랩한 데이터를 출력
 if __name__ == "__main__":
-    scraped_announcements = scrape_announce_kyki()
+    scraped_announcements = scrape_kyungki_announcements()
     for announcement in scraped_announcements:
         print(announcement)

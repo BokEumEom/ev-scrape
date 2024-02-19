@@ -4,3 +4,5 @@ jinja2
 requests
 beautifulsoup4
 scikit-learn
+selenium
+webdriver-manager

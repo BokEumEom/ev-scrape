@@ -213,7 +213,7 @@
                           <i class="fa-regular fa-comment-dots"></i> {comment.upvotes}
                         </button>
                         <button class="vote-btn" on:click={() => voteComment(news.id, comment.id, 'upvote')}>
-                          <i class="fa-regular fa-star"></i> {comment.upvotes}
+                          <i class="fa-regular fa-heart"></i> {comment.upvotes}
                         </button>
                       </div>
                     </div>
