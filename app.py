@@ -13,9 +13,10 @@ from config import setup_logging
 
 # Assuming scraper functions are in the scraper.py and scraper_icn.py files respectively
 from scraper import scrape_google_news
-from scraper_icn import scrape_incheon_announcements
-from scraper_kyki import scrape_kyungki_announcements
+# from scraper_icn import scrape_incheon_announcements
+# from scraper_kyki import scrape_kyungki_announcements
 from scraper_seoul import scrape_seoul_announcements
+from scraper_deduplication import scrape_incheon_announcements, scrape_kyungki_announcements
 
 app = FastAPI()
 
