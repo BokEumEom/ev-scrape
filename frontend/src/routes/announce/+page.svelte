@@ -1,50 +1,52 @@
 <script>
   import { onMount } from 'svelte';
-  import Navbar from '$lib/components/Navbar.svelte';
+  import { icnAnnouncements, kykiAnnouncements, seoulAnnouncements } from '$lib/stores'; // Adjust this path if necessary
+  import Navbar from '$lib/components/Navbar.svelte'; // Adjust this path if necessary
 
-  let icnAnnouncements = [];
-  let kykiAnnouncements = [];
-  let seoulAnnouncements = [];
-  let showICN = false; // Controls the visibility of ICN announcements
-  let showKYKI = false; // Controls the visibility of KYKI announcements
+  // Declaring reactive variables
+  let showICN = false;
+  let showKYKI = false;
   let showSeoul = false;
+  
+  // You might also need to initialize loading states if you're tracking those
+  let loadingICN = false;
+  let loadingKYKI = false;
+  let loadingSeoul = false;
 
-  onMount(async () => {
-    try {
-      const icnResponse = await fetch('http://localhost:8000/announce/icn');
-      const kykiResponse = await fetch('http://localhost:8000/announce/kyki');
-      const seoulResponse = await fetch('http://localhost:8000/announce/seoul'); // corrected line
+  async function fetchAnnouncementsIfNeeded(endpoint, store) {
+    let currentData;
+    store.subscribe(value => {
+      currentData = value;
+    })(); // Immediately invoke the function returned by `subscribe` to unsubscribe
 
-      if (icnResponse.ok) {
-        icnAnnouncements = await icnResponse.json();
-      } else {
-        console.error('Failed to fetch ICN announcements');
+    if (currentData.length === 0) {
+      try {
+        const response = await fetch(`http://localhost:8000/announce/${endpoint}`);
+        if (response.ok) {
+          const data = await response.json();
+          store.set(data);
+        } else {
+          console.error(`Failed to fetch ${endpoint} announcements`);
+        }
+      } catch (error) {
+        console.error(`Error fetching announcements for ${endpoint}:`, error);
       }
-
-      if (kykiResponse.ok) {
-        kykiAnnouncements = await kykiResponse.json();
-      } else {
-        console.error('Failed to fetch KYKI announcements');
-      }
-
-      if (seoulResponse.ok) {
-        seoulAnnouncements = await seoulResponse.json();
-      } else {
-        console.error('Failed to fetch Seoul announcements');
-      }
-    } catch (error) {
-      console.error('An error occurred while fetching announcements', error);
     }
+  }
+
+  onMount(() => {
+    fetchAnnouncementsIfNeeded('icn', icnAnnouncements);
+    fetchAnnouncementsIfNeeded('kyki', kykiAnnouncements);
+    fetchAnnouncementsIfNeeded('seoul', seoulAnnouncements);
   });
 
+  // Toggle functions for each announcement type
   function toggleICN() {
     showICN = !showICN;
   }
-
   function toggleKYKI() {
     showKYKI = !showKYKI;
   }
-
   function toggleSeoul() {
     showSeoul = !showSeoul;
   }
@@ -55,9 +57,9 @@
 <div class="announcements-container">
   <button on:click={toggleICN} class="accordion">인천시 공고</button>
   <div class={showICN ? 'panel show' : 'panel'}>
-    {#if icnAnnouncements.length > 0}
+    {#if $icnAnnouncements.length > 0}
       <ul>
-        {#each icnAnnouncements as announcement}
+        {#each $icnAnnouncements as announcement}
           <li>
             <a href={announcement.link} target="_blank">{announcement.title}</a>
             <small>제공일자: {announcement.date}</small>
@@ -71,9 +73,9 @@
 
   <button on:click={toggleKYKI} class="accordion">경기도 공고</button>
   <div class={showKYKI ? 'panel show' : 'panel'}>
-    {#if kykiAnnouncements.length > 0}
+    {#if $kykiAnnouncements.length > 0}
       <ul>
-        {#each kykiAnnouncements as announcement}
+        {#each $kykiAnnouncements as announcement}
           <li>
             <a href={announcement.link} target="_blank">{announcement.title}</a>
             <small>사업일자: {announcement.date}</small>
@@ -87,9 +89,9 @@
 
   <button on:click={toggleSeoul} class="accordion">서울시 공고</button>
   <div class={showSeoul ? 'panel show' : 'panel'}>
-    {#if seoulAnnouncements.length > 0}
+    {#if $seoulAnnouncements.length > 0}
       <ul>
-        {#each seoulAnnouncements as announcement}
+        {#each $seoulAnnouncements as announcement}
           <li>
             <a href={announcement.link} target="_blank">{announcement.title}</a>
             <small>제공일자: {announcement.date}</small>

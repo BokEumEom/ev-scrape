@@ -10,11 +10,25 @@ class Comment(BaseModel):
     upvotes: int = 0
     downvotes: int = 0
 
-# 서울시 전기차 충전사업 공고 모델 정의   
+# 전기차 충전사업 공고 모델 정의   
 class Announcement(BaseModel):
     title: str
     link: str
     date: str
+    
+# 서울시 전기차 충전사업 공고 모델 정의 
+class SeoulAnnouncement:
+    def __init__(self, title, date, link):
+        self.title = title
+        self.date = date
+        self.link = link
+
+    def dict(self):
+        return {
+            'title': self.title,
+            'date': self.date,
+            'link': self.link
+        }
 
 # 투표 모델 정의    
 class Vote(BaseModel):
