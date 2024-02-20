@@ -42,6 +42,20 @@
         console.error('Error adding comment:', error);
       }
     }
+
+    async function voteComment(newsId, commentId, voteType) {
+        try {
+        const response = await fetch(`http://localhost:8000/comments/vote`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ comment_id: commentId, vote_type: voteType })
+        });
+        if (!response.ok) throw new Error('Failed to register comment vote.');
+        await fetchComments(newsId);
+        } catch (error) {
+        console.error('Error voting on comment:', error);
+        }
+    }
   
     onMount(fetchComments);
   </script>
@@ -103,7 +117,7 @@
   flex-grow: 1;
   border: none;
   outline: none;
-  padding: 10px;
+  padding: 8px 12px;
   font-size: 0.9rem;
   border-radius: 20px;
   margin-right: 8px;
@@ -112,7 +126,7 @@
 .send-comment {
   background-color: #4CAF50; /* Change color as needed */
   border: none;
-  border-radius: 4%;
+  border-radius: 18%;
   padding: 10px;
   cursor: pointer;
   color: white;
@@ -129,17 +143,22 @@
   font-size: 1.2em;
 }
 
-/* Comments List Styling */
+/* Comment List Styles */
 .comments-list {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
-  margin: 0;
 }
 
 .comment {
+  background-color: #f8f9fa;
   padding: 10px;
-  border-bottom: 1px solid #eee;
-  display: flex;
+  border-radius: 8px;
+  margin-top: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.comment:hover {
+  background-color: #e9ecef;
 }
 
 .comment:last-child {

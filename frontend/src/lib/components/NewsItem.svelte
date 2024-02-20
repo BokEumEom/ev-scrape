@@ -9,7 +9,10 @@
   
     // Function to toggle the visibility of comments
     function toggleComments() {
-      showComments = !showComments;
+        showComments = !showComments;
+        if (showComments) {
+        dispatch('fetchComments', { newsId: news.id });
+        }
     }
 </script>
 
@@ -19,7 +22,7 @@
     <div class="news-actions">
         <!-- Button to toggle comments -->
         <button on:click={toggleComments} class="vote-btn">
-            <i class="fa-regular fa-message"></i> {news.commentsLength ?? 0}
+            <i class="fa-regular fa-message"></i> {news.commentsCount ?? 0} <!-- Updated to show comment count -->
         </button>
         <!-- Button to upvote -->
         <button on:click={() => dispatch('vote', { newsId: news.id, voteType: 'upvote' })} class="vote-btn">

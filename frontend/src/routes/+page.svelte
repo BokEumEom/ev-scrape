@@ -42,54 +42,54 @@
     }
   }
 
-  async function fetchComments(newsId) {
-    try {
-      const response = await fetch(`http://localhost:8000/comments/${newsId}`);
-      if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
-      const data = await response.json();
-      comments.set(newsId, data || []);
-      comments = new Map(comments);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      comments.set(newsId, []);
-      comments = new Map(comments);
-    }
-  }
+  // async function fetchComments(newsId) {
+  //   try {
+  //     const response = await fetch(`http://localhost:8000/comments/${newsId}`);
+  //     if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
+  //     const data = await response.json();
+  //     comments.set(newsId, data || []);
+  //     comments = new Map(comments);
+  //   } catch (error) {
+  //     console.error('Error fetching comments:', error);
+  //     comments.set(newsId, []);
+  //     comments = new Map(comments);
+  //   }
+  // }
 
-  async function addComment(newsId) {
-    const content = newComment[newsId]?.trim();
-    if (!content) {
-      console.error('Comment content cannot be empty');
-      return;
-    }
+  // async function addComment(newsId) {
+  //   const content = newComment[newsId]?.trim();
+  //   if (!content) {
+  //     console.error('Comment content cannot be empty');
+  //     return;
+  //   }
 
-    try {
-      const response = await fetch(`http://localhost:8000/comments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ news_id: newsId, content })
-      });
-      if (!response.ok) throw new Error(`Failed to post comment: ${response.statusText}`);
-      newComment[newsId] = '';
-      await fetchComments(newsId);
-    } catch (error) {
-      console.error('Error adding comment:', error);
-    }
-  }
+  //   try {
+  //     const response = await fetch(`http://localhost:8000/comments`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ news_id: newsId, content })
+  //     });
+  //     if (!response.ok) throw new Error(`Failed to post comment: ${response.statusText}`);
+  //     newComment[newsId] = '';
+  //     await fetchComments(newsId);
+  //   } catch (error) {
+  //     console.error('Error adding comment:', error);
+  //   }
+  // }
 
-  async function voteComment(newsId, commentId, voteType) {
-    try {
-      const response = await fetch(`http://localhost:8000/comments/vote`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ comment_id: commentId, vote_type: voteType })
-      });
-      if (!response.ok) throw new Error('Failed to register comment vote.');
-      await fetchComments(newsId);
-    } catch (error) {
-      console.error('Error voting on comment:', error);
-    }
-  }
+  // async function voteComment(newsId, commentId, voteType) {
+  //   try {
+  //     const response = await fetch(`http://localhost:8000/comments/vote`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ comment_id: commentId, vote_type: voteType })
+  //     });
+  //     if (!response.ok) throw new Error('Failed to register comment vote.');
+  //     await fetchComments(newsId);
+  //   } catch (error) {
+  //     console.error('Error voting on comment:', error);
+  //   }
+  // }
 
   // async function vote(newsId, voteType) {
   //   try {
@@ -124,23 +124,28 @@
   }
 
   async function handleFetchComments(event) {
-    const { newsId } = event.detail;
-
-    try {
-      const response = await fetch(`http://localhost:8000/comments/${newsId}`);
-      if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
-      const data = await response.json();
+      const { newsId } = event.detail;
       
-      // Assuming comments is a Map object where key is newsId and value is the comments array
-      comments.set(newsId, data || []);
-      comments = new Map(comments); // Trigger reactivity by assigning a new Map
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      comments.set(newsId, []); // Set to empty array in case of an error
-      comments = new Map(comments); // Trigger reactivity
-    }
+      try {
+          const response = await fetch(`http://localhost:8000/comments/${newsId}`);
+          if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
+          const data = await response.json();
+          
+          // Update the news item with the new comments count
+          const newsItem = newsList.find(item => item.id === newsId);
+          if (newsItem) {
+              newsItem.commentsCount = data.length;
+              newsList = [...newsList]; // Trigger reactivity by re-assigning the array
+          }
+          
+          // Update the comments Map with the fetched comments
+          comments.set(newsId, data || []);
+          comments = new Map(comments); // Trigger reactivity
+      } catch (error) {
+          console.error('Error fetching comments:', error);
+      }
   }
-
+  
   async function handleVote(event) {
     const { newsId, voteType } = event.detail;
 
