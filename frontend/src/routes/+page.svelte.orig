@@ -91,59 +91,7 @@
     }
   }
 
-  // async function vote(newsId, voteType) {
-  //   try {
-  //     const response = await fetch(`http://localhost:8000/vote/${newsId}`, {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ vote_type: voteType })
-  //     });
-  //     if (!response.ok) throw new Error('Failed to register vote.');
-  //     const result = await response.json();
-  //     const newsItem = newsList.find(item => item.id === newsId);
-  //     if (newsItem) {
-  //       newsItem.upvotes = result.votes.upvotes;
-  //       newsItem.downvotes = result.votes.downvotes;
-  //       newsList = [...newsList];
-  //     }
-  //   } catch (error) {
-  //     console.error("Error voting:", error);
-  //   }
-  // }
-
-  // function toggleComments(newsId) {
-  //   showComments[newsId] = !showComments[newsId];
-  //   if (showComments[newsId] && !comments.has(newsId)) {
-  //     fetchComments(newsId);
-  //   }
-  // }
-
-  function goToNextPage() {
-    currentPage += 1;
-    fetchNews(currentPage);
-  }
-
-  async function handleFetchComments(event) {
-    const { newsId } = event.detail;
-
-    try {
-      const response = await fetch(`http://localhost:8000/comments/${newsId}`);
-      if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
-      const data = await response.json();
-      
-      // Assuming comments is a Map object where key is newsId and value is the comments array
-      comments.set(newsId, data || []);
-      comments = new Map(comments); // Trigger reactivity by assigning a new Map
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      comments.set(newsId, []); // Set to empty array in case of an error
-      comments = new Map(comments); // Trigger reactivity
-    }
-  }
-
-  async function handleVote(event) {
-    const { newsId, voteType } = event.detail;
-
+  async function vote(newsId, voteType) {
     try {
       const response = await fetch(`http://localhost:8000/vote/${newsId}`, {
         method: 'POST',
@@ -152,20 +100,27 @@
       });
       if (!response.ok) throw new Error('Failed to register vote.');
       const result = await response.json();
-
-      // Update the local state to reflect the new vote counts
-      const newsItemIndex = newsList.findIndex(item => item.id === newsId);
-      if (newsItemIndex !== -1) {
-        if (voteType === 'upvote') {
-          newsList[newsItemIndex].upvotes = result.votes.upvotes;
-        } else {
-          newsList[newsItemIndex].downvotes = result.votes.downvotes;
-        }
-        newsList = [...newsList]; // Trigger reactivity by re-assigning the array
+      const newsItem = newsList.find(item => item.id === newsId);
+      if (newsItem) {
+        newsItem.upvotes = result.votes.upvotes;
+        newsItem.downvotes = result.votes.downvotes;
+        newsList = [...newsList];
       }
     } catch (error) {
-      console.error('Error voting:', error);
+      console.error("Error voting:", error);
     }
+  }
+
+  function toggleComments(newsId) {
+    showComments[newsId] = !showComments[newsId];
+    if (showComments[newsId] && !comments.has(newsId)) {
+      fetchComments(newsId);
+    }
+  }
+
+  function goToNextPage() {
+    currentPage += 1;
+    fetchNews(currentPage);
   }
 </script>
   
@@ -175,7 +130,60 @@
   {#if newsList.length > 0}
     <ul>
       {#each newsList as news (news.id)}
-        <NewsItem {news} on:fetchComments={handleFetchComments} on:vote={handleVote} />
+        <!-- News Item -->
+        <li class="news-item">
+          <!-- News Content -->
+          <a href={news.link} target="_blank">{news.title}</a>
+          <small>출처: {news.source} | Date: {news.pubDate}</small>
+          <div class="news-actions">
+            <!-- 투표 버튼에 click 이벤트 핸들러 추가 -->
+            <button on:click={() => toggleComments(news.id)} class="vote-btn">
+              <i class="fa-regular fa-message"></i> {comments.get(news.id)?.length ?? 0}
+            </button>
+            <button on:click={() => vote(news.id, 'upvote')} class="vote-btn">
+              <i class="fas fa-thumbs-up"></i> {news.upvotes ?? 0}
+            </button>
+            <button on:click={() => vote(news.id, 'downvote')} class="vote-btn">
+                <i class="fas fa-thumbs-down"></i> {news.downvotes ?? 0}
+            </button>          
+          </div>
+          <!-- 댓글 표시 및 추가 관련 코드 -->
+          {#if showComments[news.id]}
+            <!-- Comment Section -->
+            <div class="comment-section">
+              <div class="comment-input-area">
+                <input
+                  type="text"
+                  bind:value={newComment[news.id]}
+                  placeholder="Write a comment..."
+                  class="comment-input"
+                />
+                <button on:click={() => addComment(news.id)} class="send-comment">
+                  <i class="fa-solid fa-arrow-up"></i>
+                </button>
+              </div>
+
+              <!-- Comments List -->
+                {#each comments.get(news.id) || [] as comment (comment.id)}
+                  <li class="comment">
+                    <!-- Comment Content -->
+                    <div class="comment-content">
+                      <p>{comment.content}</p>
+                      <div class="comment-footer">
+                        <!-- Upvote Button -->
+                        <button class="vote-btn" on:click={() => voteComment(news.id, comment.id, 'upvote')}>
+                          <i class="fa-regular fa-comment-dots"></i> {comment.upvotes}
+                        </button>
+                        <button class="vote-btn" on:click={() => voteComment(news.id, comment.id, 'upvote')}>
+                          <i class="fa-regular fa-heart"></i> {comment.upvotes}
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                {/each}
+            </div>
+          {/if}
+        </li>
       {/each}
     </ul>
   {:else}
