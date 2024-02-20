@@ -7,11 +7,6 @@
   let showICN = false;
   let showKYKI = false;
   let showSeoul = false;
-  
-  // You might also need to initialize loading states if you're tracking those
-  let loadingICN = false;
-  let loadingKYKI = false;
-  let loadingSeoul = false;
 
   async function fetchAnnouncementsIfNeeded(endpoint, store) {
     let currentData;

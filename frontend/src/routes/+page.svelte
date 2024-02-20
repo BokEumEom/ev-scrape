@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import Navbar from '$lib/components/Navbar.svelte';
-  
+
   let newsList = [];
   let comments = new Map();
   let currentPage = 1;
@@ -14,8 +14,7 @@
 
   onMount(() => {
     fetchNews(currentPage);
-    
-    // window 객체를 사용하는 로직은 onMount 내부에서 정의
+
     function checkScroll() {
       const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
       if (nearBottom && isNextPageAvailable && !isLoading) {
@@ -24,32 +23,17 @@
     }
 
     window.addEventListener('scroll', checkScroll);
-
-    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener('scroll', checkScroll);
-    };
+    return () => window.removeEventListener('scroll', checkScroll);
   });
 
-  function goToNextPage() {
-    if (isNextPageAvailable && !isLoading) {
-      currentPage += 1; // 현재 페이지 업데이트
-      fetchNews(currentPage);
-    }
-  }
-
   async function fetchNews(page) {
-    console.log('fetchNews')
     isLoading = true;
     try {
       const response = await fetch(`http://localhost:8000/news?page=${page}&limit=${limit}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch news data.');
-      }
+      if (!response.ok) throw new Error('Failed to fetch news data.');
       const data = await response.json();
       newsList = page === 1 ? data.news : [...newsList, ...data.news];
       isNextPageAvailable = data.nextPageAvailable;
-      currentPage = page;
     } catch (error) {
       errorMessage = `Error: ${error.message}`;
     } finally {
@@ -57,17 +41,13 @@
     }
   }
 
-  // 댓글을 가져오는 함수
   async function fetchComments(newsId) {
-    console.log('fetchComments')
     try {
       const response = await fetch(`http://localhost:8000/comments/${newsId}`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch comments: ${response.statusText}`);
-      }
+      if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
       const data = await response.json();
       comments.set(newsId, data || []);
-      comments = new Map(comments); // Svelte 반응성 갱신
+      comments = new Map(comments);
     } catch (error) {
       console.error('Error fetching comments:', error);
       comments.set(newsId, []);
@@ -75,90 +55,71 @@
     }
   }
 
-  // 댓글 토글 함수
-  async function toggleComments(newsId) {
-    console.log('toggleComments')
-      showComments[newsId] = !showComments[newsId];
-      if (showComments[newsId] && !comments.has(newsId)) {
-          await fetchComments(newsId);
-      }
-  }
-
-  // 댓글 추가하기
   async function addComment(newsId) {
-    console.log('addComments')
-      const content = newComment[newsId]?.trim();
-      if (!content) {
-          console.error('Comment content cannot be empty');
-          return;
-      }
+    const content = newComment[newsId]?.trim();
+    if (!content) {
+      console.error('Comment content cannot be empty');
+      return;
+    }
 
-      try {
-          const response = await fetch(`http://localhost:8000/comments`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ news_id: newsId, content })
-          });
-          if (!response.ok) {
-              throw new Error(`Failed to post comment: ${response.statusText}`);
-          }
-          newComment[newsId] = ''; // 입력 필드 초기화
-
-          // 댓글 목록 새로고침
-          await fetchComments(newsId);
-
-      } catch (error) {
-          console.error('Error adding comment:', error);
-      }
+    try {
+      const response = await fetch(`http://localhost:8000/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ news_id: newsId, content })
+      });
+      if (!response.ok) throw new Error(`Failed to post comment: ${response.statusText}`);
+      newComment[newsId] = '';
+      await fetchComments(newsId);
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
   }
 
-  // Function to vote on a comment
   async function voteComment(newsId, commentId, voteType) {
-    console.log('voteComments')
-      const voteData = { comment_id: commentId, vote_type: voteType };
-
-      try {
-          const response = await fetch(`http://localhost:8000/comments/vote`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(voteData)
-          });
-          if (!response.ok) {
-              const errorData = await response.json(); // 오류 응답을 JSON으로 변환
-              // 오류 메시지 개선
-              throw new Error(`Failed to register comment vote: ${JSON.stringify(errorData)}`);
-          }
-          // 성공적인 응답 처리 로직 추가
-      } catch (error) {
-          console.error('Error voting on comment:', error.message); // 오류 메시지를 보다 명확하게 출력
-      }
+    try {
+      const response = await fetch(`http://localhost:8000/comments/vote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment_id: commentId, vote_type: voteType })
+      });
+      if (!response.ok) throw new Error('Failed to register comment vote.');
+      await fetchComments(newsId);
+    } catch (error) {
+      console.error('Error voting on comment:', error);
+    }
   }
 
   async function vote(newsId, voteType) {
-    console.log('vote')
-      if (!newsId) {
-          console.error("News ID is undefined.");
-          return;
+    try {
+      const response = await fetch(`http://localhost:8000/vote/${newsId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vote_type: voteType })
+      });
+      if (!response.ok) throw new Error('Failed to register vote.');
+      const result = await response.json();
+      const newsItem = newsList.find(item => item.id === newsId);
+      if (newsItem) {
+        newsItem.upvotes = result.votes.upvotes;
+        newsItem.downvotes = result.votes.downvotes;
+        newsList = [...newsList];
       }
-      try {
-          const response = await fetch(`http://localhost:8000/vote/${newsId}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ vote_type: voteType })
-          });
-          if (!response.ok) {
-              throw new Error('Failed to register vote.');
-          }
-          const result = await response.json();
-          const newsItem = newsList.find(item => item.id === newsId);
-          if (newsItem) {
-              newsItem.upvotes = result.votes.upvotes;
-              newsItem.downvotes = result.votes.downvotes;
-              newsList = [...newsList]; // Svelte 반응성 갱신
-          }
-      } catch (error) {
-          console.error("Error voting:", error);
-      }
+    } catch (error) {
+      console.error("Error voting:", error);
+    }
+  }
+
+  function toggleComments(newsId) {
+    showComments[newsId] = !showComments[newsId];
+    if (showComments[newsId] && !comments.has(newsId)) {
+      fetchComments(newsId);
+    }
+  }
+
+  function goToNextPage() {
+    currentPage += 1;
+    fetchNews(currentPage);
   }
 </script>
   

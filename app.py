@@ -51,7 +51,7 @@ async def news_exists(news_id: int) -> bool:
 
 # 인천시 고시공고
 @app.get("/announce/icn/", response_model=List[Announcement])
-async def get_announcements():
+async def get_icn_announcements():
     try:
         announcements_data = scrape_incheon_announcements()
         return announcements_data
@@ -60,7 +60,7 @@ async def get_announcements():
     
 # 경기도 사업공고
 @app.get("/announce/kyki/", response_model=List[Announcement])
-async def get_announcements():
+async def get_kyki_announcements():
     try:
         announcements_data = scrape_kyungki_announcements()
         return announcements_data
@@ -69,7 +69,7 @@ async def get_announcements():
 
 # 서울시 사업공고             
 @app.get("/announce/seoul/", response_model=List[Announcement])
-async def get_announcements():
+async def get_seoul_announcements():
     try:
         announcements_data = scrape_seoul_announcements()
         return announcements_data
