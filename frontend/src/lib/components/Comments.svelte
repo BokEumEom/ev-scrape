@@ -1,21 +1,27 @@
 <script>
     import { onMount } from 'svelte';
+    import { commentsCountStore } from '$lib/stores.js';
   
     export let newsId;
   
     let comments = [];
     let newComment = '';
+    let errorMessage = '';
   
     // This function fetches comments for the current news item
     async function fetchComments() {
       try {
         const response = await fetch(`http://localhost:8000/comments/${newsId}`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch comments: ${response.statusText}`);
-        }
-        comments = await response.json();
+        if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
+        const data = await response.json();
+        comments = data;
+        commentsCountStore.update(store => {
+          store.set(newsId, comments.length);
+          return store;
+        });
       } catch (error) {
-        console.error('Error fetching comments:', error);
+        errorMessage = `Error fetching comments: ${error.message}`;
+        console.error(errorMessage);
       }
     }
   
@@ -23,42 +29,48 @@
     async function addComment() {
       const content = newComment.trim();
       if (!content) {
-        console.error('Comment content cannot be empty');
+        errorMessage = 'Comment content cannot be empty';
         return;
       }
-  
+
       try {
         const response = await fetch(`http://localhost:8000/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ news_id: newsId, content })
         });
-        if (!response.ok) {
-          throw new Error(`Failed to post comment: ${response.statusText}`);
-        }
-        newComment = '';
+        if (!response.ok) throw new Error(`Failed to post comment: ${response.statusText}`);
+        newComment = ''; // Clear the input
         await fetchComments(); // Refresh comments list after adding a new comment
       } catch (error) {
-        console.error('Error adding comment:', error);
+        errorMessage = `Error adding comment: ${error.message}`;
+        console.error(errorMessage);
       }
     }
 
-    async function voteComment(newsId, commentId, voteType) {
-        try {
+    // Function to handle voting on a comment
+    async function voteComment(commentId, voteType) {
+      try {
         const response = await fetch(`http://localhost:8000/comments/vote`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ comment_id: commentId, vote_type: voteType })
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ comment_id: commentId, vote_type: voteType })
         });
         if (!response.ok) throw new Error('Failed to register comment vote.');
-        await fetchComments(newsId);
-        } catch (error) {
-        console.error('Error voting on comment:', error);
-        }
+        await fetchComments(); // Refresh comments to reflect the vote change
+      } catch (error) {
+        errorMessage = `Error voting on comment: ${error.message}`;
+        console.error(errorMessage);
+      }
     }
   
     onMount(fetchComments);
   </script>
+
+  <!-- Display error message, if any -->
+  {#if errorMessage}
+  <p class="error-message">{errorMessage}</p>
+  {/if}
   
   <div class="comment-section">
     <!-- Comment Input Area with Integrated Button -->
@@ -124,15 +136,16 @@
 }
 
 .send-comment {
-  background-color: #4CAF50; /* Change color as needed */
+  background-color: #ffd700; /* Gold background to match the button in the image */
   border: none;
-  border-radius: 18%;
-  padding: 10px;
+  border-radius: 50%; /* Circular shape */
+  padding: 8px; /* Adjust padding to match the image */
   cursor: pointer;
-  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Shadow for depth */
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .send-comment:disabled {
@@ -140,7 +153,12 @@
 }
 
 .send-comment i {
-  font-size: 1.2em;
+  color: #ffffff; /* White icon color */
+  font-size: 1.2em; /* Icon size */
+}
+
+.send-comment:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Enhanced shadow on hover for "pop-out" effect */
 }
 
 /* Comment List Styles */

@@ -103,7 +103,7 @@
   .announcements-container {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 2px;
     margin-top: 5px;
   }
 

@@ -1,17 +1,21 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     import Comments from './Comments.svelte';
-  
+    import { commentsCountStore } from '$lib/stores.js';
+
     export let news;
     let showComments = false;
   
     const dispatch = createEventDispatcher();
+
+    // Reactive statement to get the comment count for this news item
+    $: commentsCount = $commentsCountStore.get(news.id) || 0;
   
     // Function to toggle the visibility of comments
     function toggleComments() {
         showComments = !showComments;
         if (showComments) {
-        dispatch('fetchComments', { newsId: news.id });
+            dispatch('fetchComments', { newsId: news.id });
         }
     }
 </script>
@@ -22,7 +26,7 @@
     <div class="news-actions">
         <!-- Button to toggle comments -->
         <button on:click={toggleComments} class="vote-btn">
-            <i class="fa-regular fa-message"></i> {news.commentsCount ?? 0} <!-- Updated to show comment count -->
+            <i class="fa-regular fa-message"></i> {commentsCount ?? 0} <!-- Updated to show comment count -->
         </button>
         <!-- Button to upvote -->
         <button on:click={() => dispatch('vote', { newsId: news.id, voteType: 'upvote' })} class="vote-btn">
