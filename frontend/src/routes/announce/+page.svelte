@@ -8,13 +8,18 @@
   let showKYKI = false;
   let showSeoul = false;
 
-  async function fetchAnnouncementsIfNeeded(endpoint, store) {
+  let isLoadingICN = false;
+  let isLoadingKYKI = false;
+  let isLoadingSeoul = false;
+
+  async function fetchAnnouncementsIfNeeded(endpoint, store, setLoadingStatus) {
     let currentData;
     store.subscribe(value => {
       currentData = value;
     })(); // Immediately invoke the function returned by `subscribe` to unsubscribe
 
     if (currentData.length === 0) {
+      setLoadingStatus(true); // 로딩 시작
       try {
         const response = await fetch(`http://localhost:8000/announce/${endpoint}`);
         if (response.ok) {
@@ -25,14 +30,16 @@
         }
       } catch (error) {
         console.error(`Error fetching announcements for ${endpoint}:`, error);
+      } finally {
+        setLoadingStatus(false); // 로딩 완료 또는 에러 발생 시 로딩 완료 처리
       }
     }
   }
 
   onMount(() => {
-    fetchAnnouncementsIfNeeded('icn', icnAnnouncements);
-    fetchAnnouncementsIfNeeded('kyki', kykiAnnouncements);
-    fetchAnnouncementsIfNeeded('seoul', seoulAnnouncements);
+    fetchAnnouncementsIfNeeded('icn', icnAnnouncements, (isLoading) => isLoadingICN = isLoading);
+    fetchAnnouncementsIfNeeded('kyki', kykiAnnouncements, (isLoading) => isLoadingKYKI = isLoading);
+    fetchAnnouncementsIfNeeded('seoul', seoulAnnouncements, (isLoading) => isLoadingSeoul = isLoading);
   });
 
   // Toggle functions for each announcement type
@@ -50,53 +57,67 @@
 <Navbar />
 
 <div class="announcements-container">
-  <button on:click={toggleICN} class="accordion">인천시 공고</button>
-  <div class={showICN ? 'panel show' : 'panel'}>
-    {#if $icnAnnouncements.length > 0}
-      <ul>
-        {#each $icnAnnouncements as announcement}
-          <li>
-            <a href={announcement.link} target="_blank">{announcement.title}</a>
-            <small>제공일자: {announcement.date}</small>
-          </li>
-        {/each}
-      </ul>
-    {:else}
-      <p>인천 공고 정보를 불러올 수 없습니다.</p>
-    {/if}
-  </div>
+  {#if isLoadingICN}
+    <div class="loading-bar"><p>Loading 인천시 공고...</p></div>
+  {:else}
+    <button on:click={toggleICN} class="accordion">인천시 공고</button>
+    <div class={showICN ? 'panel show' : 'panel'}>
+      {#if $icnAnnouncements.length > 0}
+        <ul>
+          {#each $icnAnnouncements as announcement}
+            <li>
+              <a href={announcement.link} target="_blank">{announcement.title}</a>
+              <small>제공일자: {announcement.date}</small>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p>인천 공고 정보를 불러올 수 없습니다.</p>
+      {/if}
+    </div>
+  {/if}
 
-  <button on:click={toggleKYKI} class="accordion">경기도 공고</button>
-  <div class={showKYKI ? 'panel show' : 'panel'}>
-    {#if $kykiAnnouncements.length > 0}
-      <ul>
-        {#each $kykiAnnouncements as announcement}
-          <li>
-            <a href={announcement.link} target="_blank">{announcement.title}</a>
-            <small>사업일자: {announcement.date}</small>
-          </li>
-        {/each}
-      </ul>
-    {:else}
-      <p>경기도 공고 정보를 불러올 수 없습니다.</p>
-    {/if}
-  </div>
+  {#if isLoadingKYKI}
+    <p>Loading 경기도 공고...</p>
+  {:else}
+    <button on:click={toggleKYKI} class="accordion">경기도 공고</button>
+    <div class={showKYKI ? 'panel show' : 'panel'}>
+      {#if $kykiAnnouncements.length > 0}
+        <ul>
+          {#each $kykiAnnouncements as announcement}
+            <li>
+              <a href={announcement.link} target="_blank">{announcement.title}</a>
+              <small>사업일자: {announcement.date}</small>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p>경기도 공고 정보를 불러올 수 없습니다.</p>
+      {/if}
+    </div>
+  {/if}
 
-  <button on:click={toggleSeoul} class="accordion">서울시 공고</button>
-  <div class={showSeoul ? 'panel show' : 'panel'}>
-    {#if $seoulAnnouncements.length > 0}
-      <ul>
-        {#each $seoulAnnouncements as announcement}
-          <li>
-            <a href={announcement.link} target="_blank">{announcement.title}</a>
-            <small>제공일자: {announcement.date}</small>
-          </li>
-        {/each}
-      </ul>
-    {:else}
-      <p>서울 공고 정보를 불러올 수 없습니다.</p>
-    {/if}
-  </div>
+  {#if isLoadingSeoul}
+    <div class="loading-bar"></div>
+  {:else}
+    <div>
+      <button on:click={toggleSeoul} class="accordion">서울시 공고</button>
+      <div class={showSeoul ? 'panel show' : 'panel'}>
+        {#if $seoulAnnouncements.length > 0}
+          <ul>
+            {#each $seoulAnnouncements as announcement}
+              <li>
+                <a href={announcement.link} target="_blank">{announcement.title}</a>
+                <small>제공일자: {announcement.date}</small>
+              </li>
+            {/each}
+          </ul>
+        {:else}
+          <p>서울 공고 정보를 불러올 수 없습니다.</p>
+        {/if}
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -179,5 +200,28 @@
     display: block; /* Block display for positioning */
     font-size: 14px; /* Smaller font size for date */
     margin-top: 5px; /* Space above the date */
+  }
+
+  .loading-bar {
+    height: 4px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #3498db; /* 로딩 바 색상 */
+    animation: loadingAnimation 2s infinite;
+    z-index: 9999;
+  }
+
+  @keyframes loadingAnimation {
+    0% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 </style>

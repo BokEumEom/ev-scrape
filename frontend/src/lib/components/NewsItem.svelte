@@ -5,6 +5,7 @@
 
     export let news;
     let showComments = false;
+    let isLoading = false;
   
     const dispatch = createEventDispatcher();
 
@@ -19,6 +20,10 @@
         }
     }
 </script>
+
+{#if isLoading}
+  <div class="loading-bar"></div>
+{/if}
 
 <li class="news-item">
     <a href="{news.link}" target="_blank">{news.title}</a>
@@ -96,4 +101,24 @@ small {
 .vote-btn i {
     margin-right: 4px; /* Space between icon and text */
 }
+
+.loading-bar {
+    height: 4px;
+    width: 100%;
+    background-color: #3498db; /* 로딩 바의 색상 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    animation: loadingAnimation 2s linear infinite;
+  }
+
+  @keyframes loadingAnimation {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
 </style>
