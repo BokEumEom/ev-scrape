@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import logging
+import re
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -8,6 +9,16 @@ logger = logging.getLogger(__name__)
 
 class ScrapingError(Exception):
     """A custom exception for scraping-related errors."""
+    
+def transform_kyungki_link(onclick_value):
+    # Extract the board_seq ID using a regex pattern from the onclick attribute.
+    match = re.search(r"goBoardView\('(\d+)'\)", onclick_value)
+    if match:
+        board_seq = match.group(1)
+        return f"https://ggeea.or.kr/energy/news/view?board_seq={board_seq}&currRow=1&select_list=all&srch_input=전기자동차"
+    else:
+        # If the pattern is not found, return None or raise an error as appropriate.
+        return None
 
 def generic_scrape_announcements(base_url, path, selectors, transform_link=None):
     """
@@ -77,9 +88,9 @@ def scrape_kyungki_announcements():
             'announcement': "tbody tr",
             'title': "td.board_left a",
             'date': "td:nth-of-type(3)",  # Adjust as per actual structure
-            'link': "a"
+            'link': "td.board_left a"  # Adjusted to select the correct element with the onclick attribute
         },
-        transform_link=lambda link: "https://ggeea.or.kr" + link if not link.startswith('http') else link
+        transform_link=transform_kyungki_link  # Passing the onclick value to the transform function
     )
 
 if __name__ == "__main__":

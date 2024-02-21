@@ -11,7 +11,7 @@ This FastAPI project is designed to aggregate news from various sources, includi
 - In-memory storage for comments and votes related to news items.
 
 ## Installation
-Ensure you have Python 3.6+ installed on your system. This project also recommends the use of pip for package management.
+Ensure you have Python 3.6+ installed on your system. This project also recommends the use of **pip** for package management.
 
 ## Clone the repository:
 
