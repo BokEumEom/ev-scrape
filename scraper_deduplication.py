@@ -2,6 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 import re
+from urllib.parse import quote_plus, urlencode, parse_qsl, urlparse
+
+# Disable InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -19,6 +23,21 @@ def transform_kyungki_link(onclick_value):
     else:
         # If the pattern is not found, return None or raise an error as appropriate.
         return None
+    
+def transform_koroad_link(href):
+    # Assuming href contains the relative URL extracted from the 'a' element's href attribute
+    base_url = "https://www.koroad.or.kr"
+    # Parse the query string into a dictionary
+    query_params = dict(parse_qsl(urlparse(href).query))
+    
+    # Correctly encode the 'sv' parameter to ensure only one level of encoding
+    if 'sv' in query_params:
+        query_params['sv'] = quote_plus('전기차')
+    
+    # Construct the full URL
+    full_url = f"{base_url}/main/bid/bid_etc_view.do?" + urlencode(query_params)
+    
+    return full_url
 
 def generic_scrape_announcements(base_url, path, selectors, transform_link=None):
     """
@@ -34,7 +53,8 @@ def generic_scrape_announcements(base_url, path, selectors, transform_link=None)
     announcements = []
 
     try:
-        response = requests.get(full_url)
+        # Added verify=False to bypass SSL verification
+        response = requests.get(full_url, verify=False)
         if response.status_code != 200:
             raise ScrapingError(f"Failed to fetch announcements, status code: {response.status_code}")
 
@@ -92,6 +112,19 @@ def scrape_kyungki_announcements():
         },
         transform_link=transform_kyungki_link  # Passing the onclick value to the transform function
     )
+    
+def scraper_koroad_announcements():
+    return generic_scrape_announcements(
+        base_url="https://www.koroad.or.kr",
+        path="/main/bid/bid_etc_list.do?sc=&sv=전기차",  # The exact path if necessary
+        selectors={
+            'announcement': "tr",  # Assuming each announcement is within a table row
+            'title': "td.tit.left > div.link > a",  # Assuming 'tit' and 'left' are separate classes
+            'date': "td.date > span",  # Direct child selector for span within td with class 'date'
+            'link': "td.tit.left > div.link > a"  # Assuming link is in an <a> tag
+        },
+        transform_link=transform_koroad_link  # Use the newly defined function
+    )
 
 if __name__ == "__main__":
     # Scrape and print announcements for both Incheon and Kyungki
@@ -102,6 +135,10 @@ if __name__ == "__main__":
 
         print("\nKyungki Announcements:")
         for announcement in scrape_kyungki_announcements():
+            print(announcement)
+            
+        print("\nKoroad Announcements:")
+        for announcement in scraper_koroad_announcements():
             print(announcement)
 
     except ScrapingError as e:

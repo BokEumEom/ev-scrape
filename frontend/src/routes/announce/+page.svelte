@@ -1,16 +1,18 @@
 <script>
   import { onMount } from 'svelte';
-  import { icnAnnouncements, kykiAnnouncements, seoulAnnouncements } from '$lib/stores'; // Adjust this path if necessary
+  import { icnAnnouncements, kykiAnnouncements, seoulAnnouncements, koroadAnnouncements } from '$lib/stores'; // Adjust this path if necessary
   import Navbar from '$lib/components/Navbar.svelte'; // Adjust this path if necessary
 
   // Declaring reactive variables
   let showICN = false;
   let showKYKI = false;
   let showSeoul = false;
+  let showKoroad = false;
 
   let isLoadingICN = false;
   let isLoadingKYKI = false;
   let isLoadingSeoul = false;
+  let isLoadingKoroad = false;
 
   async function fetchAnnouncementsIfNeeded(endpoint, store, setLoadingStatus) {
     let currentData;
@@ -40,6 +42,7 @@
     fetchAnnouncementsIfNeeded('icn', icnAnnouncements, (isLoading) => isLoadingICN = isLoading);
     fetchAnnouncementsIfNeeded('kyki', kykiAnnouncements, (isLoading) => isLoadingKYKI = isLoading);
     fetchAnnouncementsIfNeeded('seoul', seoulAnnouncements, (isLoading) => isLoadingSeoul = isLoading);
+    fetchAnnouncementsIfNeeded('koroad', koroadAnnouncements, (isLoading) => isLoadingKoroad = isLoading);
   });
 
   // Toggle functions for each announcement type
@@ -51,6 +54,9 @@
   }
   function toggleSeoul() {
     showSeoul = !showSeoul;
+  }
+  function toggleKoroad() {
+    showKoroad = !showKoroad;
   }
 </script>
 
@@ -118,13 +124,35 @@
       </div>
     </div>
   {/if}
+
+  {#if isLoadingKoroad}
+    <div class="loading-bar"></div>
+  {:else}
+    <div>
+      <button on:click={toggleKoroad} class="accordion">KoROAD 공고</button>
+      <div class={showKoroad ? 'panel show' : 'panel'}>
+        {#if $koroadAnnouncements.length > 0}
+          <ul>
+            {#each $koroadAnnouncements as announcement}
+              <li>
+                <a href={announcement.link} target="_blank">{announcement.title}</a>
+                <small>마감일: {announcement.date}</small>
+              </li>
+            {/each}
+          </ul>
+        {:else}
+          <p>KoROAD 공고 정보를 불러올 수 없습니다.</p>
+        {/if}
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style>
   .announcements-container {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 5px;
     margin-top: 5px;
   }
 
