@@ -15,10 +15,7 @@
   let isLoadingSeoul = false;
   let isLoadingKoroad = false;
 
-  const apiBaseUrl = import.meta.env.VITE_PUBLIC_API_URL;
-
   async function fetchAnnouncementsIfNeeded(endpoint, store, setLoadingStatus) {
-    console.log(apiBaseUrl);
     let currentData;
     store.subscribe(value => {
       currentData = value;
@@ -27,7 +24,7 @@
     if (currentData.length === 0) {
       setLoadingStatus(true); // 로딩 시작
       try {
-        const response = await fetch(`${apiBaseUrl}/announce/${endpoint}`);
+        const response = await fetch(`https://fastapi.watercharging.com/announce/${endpoint}`);
         if (response.ok) {
           const data = await response.json();
           store.set(data);

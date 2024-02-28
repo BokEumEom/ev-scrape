@@ -11,26 +11,25 @@
   let isLoading = false;
   let errorMessage = '';
   const limit = 10;
-  const apiBaseUrl = import.meta.env.VITE_PUBLIC_API_URL;
 
   onMount(() => {
     fetchNews(currentPage);
+
+    function checkScroll() {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
+      if (nearBottom && isNextPageAvailable && !isLoading) {
+        goToNextPage();
+      }
+    }
+
     window.addEventListener('scroll', checkScroll);
     return () => window.removeEventListener('scroll', checkScroll);
   });
 
-  function checkScroll() {
-    const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
-    if (nearBottom && isNextPageAvailable && !isLoading) {
-      goToNextPage();
-    }
-  }
-
   async function fetchNews(page) {
     isLoading = true;
-    console.log(apiBaseUrl);
     try {
-      const response = await fetch(`${apiBaseUrl}/news?page=${page}&limit=${limit}`);
+      const response = await fetch(`https://fastapi.watercharging.com/news?page=${page}&limit=${limit}`);
       if (!response.ok) throw new Error('Failed to fetch news data.');
       const data = await response.json();
       newsList = page === 1 ? data.news : [...newsList, ...data.news];
@@ -51,7 +50,7 @@
     const { newsId } = event.detail;
 
     try {
-      const response = await fetch(`${apiBaseUrl}/comments/${newsId}`);
+      const response = await fetch(`https://fastapi.watercharging.com/comments/${newsId}`);
       if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
       const data = await response.json();
 
@@ -79,7 +78,7 @@
     const { newsId, voteType } = event.detail;
 
     try {
-      const response = await fetch(`${apiBaseUrl}/vote/${newsId}`, {
+      const response = await fetch(`https://fastapi.watercharging.com/vote/${newsId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ vote_type: voteType })

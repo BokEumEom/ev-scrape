@@ -1,18 +1,17 @@
 <script>
     import { onMount } from 'svelte';
     import { commentsCountStore } from '$lib/stores.js';
-      
+  
     export let newsId;
   
     let comments = [];
     let newComment = '';
     let errorMessage = '';
-    const apiBaseUrl = import.meta.env.VITE_PUBLIC_API_URL;
   
     // This function fetches comments for the current news item
     async function fetchComments() {
       try {
-        const response = await fetch(`${apiBaseUrl}/comments/${newsId}`);
+        const response = await fetch(`https://fastapi.watercharging.com/comments/${newsId}`);
         if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
         const data = await response.json();
         comments = data;
@@ -35,7 +34,7 @@
       }
 
       try {
-        const response = await fetch(`${apiBaseUrl}/comments`, {
+        const response = await fetch(`https://fastapi.watercharging.com/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ news_id: newsId, content })
@@ -52,7 +51,7 @@
     // Function to handle voting on a comment
     async function voteComment(commentId, voteType) {
       try {
-        const response = await fetch(`${apiBaseUrl}/comments/vote`, {
+        const response = await fetch(`https://fastapi.watercharging.com/comments/vote`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ comment_id: commentId, vote_type: voteType })
