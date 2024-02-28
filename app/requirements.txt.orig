@@ -2,6 +2,8 @@ fastapi
 uvicorn[standard]
 jinja2
 requests
+pydantic
+pydantic_settings
 beautifulsoup4
 scikit-learn
 selenium
@@ -10,3 +12,7 @@ playwright
 asyncio
 aiofiles
 httpx
+sqlalchemy
+aiosqlite
+databases
+alembic

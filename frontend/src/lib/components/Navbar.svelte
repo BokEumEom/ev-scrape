@@ -1,4 +1,3 @@
-
   <nav class="navbar">
     <div class="navbar-brand"><i class="fa-solid fa-bolt-lightning"></i>전기차</div>
     <ul class="navbar-menu">
@@ -27,6 +26,7 @@
       display: flex;
       margin: 0;
       padding: 0;
+      flex-direction: row;
     }
     .navbar-item {
       margin-left: 1rem;
@@ -40,6 +40,16 @@
       background-color: #0056b3;
       border-radius: 5px;
     }
+    @media (min-width: 768px) {
+    .navbar {
+      margin: 20px auto; /* 가운데 정렬 */
+      max-width: 1024px; /* PC 환경에서는 최대 너비를 제한합니다. */
+      padding: 18px 50px; /* PC 환경에서는 좀 더 넓은 패딩을 줍니다. */
+    }
+    .navbar-menu {
+      margin-left: auto; /* Push the menu to the right */
+    }
+  }
   </style>
   
   

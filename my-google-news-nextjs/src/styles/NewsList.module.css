@@ -1,0 +1,35 @@
+/* src/styles/NewsList.module.css */
+.list {
+    display: flex;
+    border: 1px solid #ddd;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    align-items: center; /* Align items vertically */
+  }
+  
+  .imageWrapper {
+    width: 100px; /* Set image width */
+    height: 100px; /* Set image height */
+    overflow: hidden;
+    margin-right: 15px;
+    border-radius: 5px;
+  }
+  
+  .content {
+    flex-grow: 1;
+  }
+  
+  .title {
+    margin: 0;
+    color: #1a0dab; /* Dark blue color for the title */
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .details {
+    color: #666;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  

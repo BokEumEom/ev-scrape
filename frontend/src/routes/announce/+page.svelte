@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { icnAnnouncements, kykiAnnouncements, seoulAnnouncements, koroadAnnouncements } from '$lib/stores'; // Adjust this path if necessary
   import Navbar from '$lib/components/Navbar.svelte'; // Adjust this path if necessary
+  import { Spinner } from 'flowbite-svelte';
 
   // Declaring reactive variables
   let showICN = false;
@@ -64,6 +65,7 @@
 
 <div class="announcements-container">
   {#if isLoadingICN}
+    <Spinner />
     <div class="loading-bar"><p>Loading 인천시 공고...</p></div>
   {:else}
     <button on:click={toggleICN} class="accordion">인천시 공고</button>
@@ -84,6 +86,7 @@
   {/if}
 
   {#if isLoadingKYKI}
+    <Spinner />
     <p>Loading 경기도 공고...</p>
   {:else}
     <button on:click={toggleKYKI} class="accordion">경기도 공고</button>
@@ -104,6 +107,7 @@
   {/if}
 
   {#if isLoadingSeoul}
+    <Spinner />
     <div class="loading-bar"></div>
   {:else}
     <div>
@@ -126,6 +130,7 @@
   {/if}
 
   {#if isLoadingKoroad}
+    <Spinner />
     <div class="loading-bar"></div>
   {:else}
     <div>
@@ -152,7 +157,6 @@
   .announcements-container {
     display: flex;
     flex-direction: column;
-    gap: 5px;
     margin-top: 5px;
   }
 
@@ -174,7 +178,7 @@
   }
 
   .accordion:hover {
-    background-color: #0056b3;
+    background-color: #03C75B;
   }
 
   .panel {
@@ -250,6 +254,13 @@
     }
     100% {
       transform: translateX(100%);
+    }
+  }
+  /* Desktop-specific styles */
+  @media (min-width: 768px) {
+    .announcements-container {
+      margin: 20px auto; /* 가운데 정렬 */
+      max-width: 1024px; /* PC 환경에서는 최대 너비를 제한합니다. */
     }
   }
 </style>

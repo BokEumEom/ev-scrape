@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, HTTPException, Query, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -13,9 +13,6 @@ from config import setup_logging
 
 # Assuming scraper functions are in the scraper.py and scraper_icn.py files respectively
 from scraper import scrape_google_news
-# from scraper_icn import scrape_incheon_announcements
-# from scraper_kyki import scrape_kyungki_announcements
-# from scraper_seoul import scrape_seoul_announcements
 from scraper_seoul_playwright import scrape_seoul_announcements
 from scraper_deduplication import scrape_incheon_announcements, scrape_kyungki_announcements, scraper_koroad_announcements
 

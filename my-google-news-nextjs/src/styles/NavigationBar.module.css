@@ -1,0 +1,19 @@
+/* src/components/NavigationBar.module.css */
+.navbar {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background-color: #4B4BFD; /* Example background color */
+}
+
+.navLink {
+  color: white;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  margin: 0 1rem;
+}
+
+.navLink:hover {
+  background-color: #3939F6;
+  border-radius: 5px;
+}
