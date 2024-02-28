@@ -3,6 +3,7 @@
   import NewsItem from '$lib/components/NewsItem.svelte';
   import Navbar from '$lib/components/Navbar.svelte';
   import { commentsCountStore } from '$lib/stores.js'; // Import the store correctly
+  import { PUBLIC_API_SERVER } from '$env/static/public';
 
   let newsList = [];
   let comments = new Map();
@@ -28,8 +29,9 @@
 
   async function fetchNews(page) {
     isLoading = true;
+    console.log(PUBLIC_API_SERVER)
     try {
-      const response = await fetch(`https://fastapi.watercharging.com/news?page=${page}&limit=${limit}`);
+      const response = await fetch(`${PUBLIC_API_SERVER}/news?page=${page}&limit=${limit}`);
       if (!response.ok) throw new Error('Failed to fetch news data.');
       const data = await response.json();
       newsList = page === 1 ? data.news : [...newsList, ...data.news];
@@ -50,7 +52,7 @@
     const { newsId } = event.detail;
 
     try {
-      const response = await fetch(`https://fastapi.watercharging.com/comments/${newsId}`);
+      const response = await fetch(`${PUBLIC_API_SERVER}/comments/${newsId}`);
       if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
       const data = await response.json();
 
@@ -78,7 +80,7 @@
     const { newsId, voteType } = event.detail;
 
     try {
-      const response = await fetch(`https://fastapi.watercharging.com/vote/${newsId}`, {
+      const response = await fetch(`${PUBLIC_API_SERVER}/vote/${newsId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ vote_type: voteType })
