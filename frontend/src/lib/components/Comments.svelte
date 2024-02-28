@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { commentsCountStore } from '$lib/stores.js';
+    import { PUBLIC_API_URL } from '$env/static/public';
   
     export let newsId;
   
@@ -11,7 +12,7 @@
     // This function fetches comments for the current news item
     async function fetchComments() {
       try {
-        const response = await fetch(`http://localhost:8000/comments/${newsId}`);
+        const response = await fetch(`${PUBLIC_API_URL}/comments/${newsId}`);
         if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
         const data = await response.json();
         comments = data;
@@ -34,7 +35,7 @@
       }
 
       try {
-        const response = await fetch(`http://localhost:8000/comments`, {
+        const response = await fetch(`${PUBLIC_API_URL}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ news_id: newsId, content })
@@ -51,7 +52,7 @@
     // Function to handle voting on a comment
     async function voteComment(commentId, voteType) {
       try {
-        const response = await fetch(`http://localhost:8000/comments/vote`, {
+        const response = await fetch(`${PUBLIC_API_URL}/comments/vote`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ comment_id: commentId, vote_type: voteType })

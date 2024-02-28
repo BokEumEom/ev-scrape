@@ -3,6 +3,7 @@
   import { icnAnnouncements, kykiAnnouncements, seoulAnnouncements, koroadAnnouncements } from '$lib/stores'; // Adjust this path if necessary
   import Navbar from '$lib/components/Navbar.svelte'; // Adjust this path if necessary
   import { Spinner } from 'flowbite-svelte';
+  import { PUBLIC_API_URL } from '$env/static/public';
 
   // Declaring reactive variables
   let showICN = false;
@@ -24,7 +25,7 @@
     if (currentData.length === 0) {
       setLoadingStatus(true); // 로딩 시작
       try {
-        const response = await fetch(`http://localhost:8000/announce/${endpoint}`);
+        const response = await fetch(`${PUBLIC_API_URL}/announce/${endpoint}`);
         if (response.ok) {
           const data = await response.json();
           store.set(data);

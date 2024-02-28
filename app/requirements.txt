@@ -12,3 +12,6 @@ playwright
 asyncio
 aiofiles
 httpx
+python-dateutil
+gunicorn
+lxml
