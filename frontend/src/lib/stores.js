@@ -13,3 +13,4 @@ export const icnAnnouncements = writable([]);
 export const kykiAnnouncements = writable([]);
 export const seoulAnnouncements = writable([]);
 export const koroadAnnouncements = writable([]);
+export const gwangjuAnnouncements = writable([]);

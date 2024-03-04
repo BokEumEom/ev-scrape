@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { icnAnnouncements, kykiAnnouncements, seoulAnnouncements, koroadAnnouncements } from '$lib/stores'; // Adjust this path if necessary
+  import { icnAnnouncements, kykiAnnouncements, seoulAnnouncements, koroadAnnouncements, gwangjuAnnouncements } from '$lib/stores'; // Adjust this path if necessary
   import Navbar from '$lib/components/Navbar.svelte'; // Adjust this path if necessary
   import { Spinner } from 'flowbite-svelte';
   import { PUBLIC_API_SERVER } from '$env/static/public';
@@ -10,11 +10,13 @@
   let showKYKI = false;
   let showSeoul = false;
   let showKoroad = false;
+  let showGwangju = false;
 
   let isLoadingICN = false;
   let isLoadingKYKI = false;
   let isLoadingSeoul = false;
   let isLoadingKoroad = false;
+  let isLoadingGwangju = false;
 
   async function fetchAnnouncementsIfNeeded(endpoint, store, setLoadingStatus) {
     let currentData;
@@ -45,6 +47,7 @@
     fetchAnnouncementsIfNeeded('kyki', kykiAnnouncements, (isLoading) => isLoadingKYKI = isLoading);
     fetchAnnouncementsIfNeeded('seoul', seoulAnnouncements, (isLoading) => isLoadingSeoul = isLoading);
     fetchAnnouncementsIfNeeded('koroad', koroadAnnouncements, (isLoading) => isLoadingKoroad = isLoading);
+    fetchAnnouncementsIfNeeded('gwangju', gwangjuAnnouncements, (isLoading) => isLoadingGwangju = isLoading);
   });
 
   // Toggle functions for each announcement type
@@ -59,6 +62,9 @@
   }
   function toggleKoroad() {
     showKoroad = !showKoroad;
+  }
+  function toggleGwangju() {
+    showGwangju = !showGwangju;
   }
 </script>
 
@@ -125,6 +131,29 @@
           </ul>
         {:else}
           <p>서울 공고 정보를 불러올 수 없습니다.</p>
+        {/if}
+      </div>
+    </div>
+  {/if}
+
+  {#if isLoadingGwangju}
+    <Spinner />
+    <div class="loading-bar"></div>
+  {:else}
+    <div>
+      <button on:click={toggleGwangju} class="accordion">광주광역시 공고</button>
+      <div class={showGwangju ? 'panel show' : 'panel'}>
+        {#if $gwangjuAnnouncements.length > 0}
+          <ul>
+            {#each $gwangjuAnnouncements as announcement}
+              <li>
+                <a href={announcement.link} target="_blank">{announcement.title}</a>
+                <small>제공일자: {announcement.date}</small>
+              </li>
+            {/each}
+          </ul>
+        {:else}
+          <p>광주광역시 공고 정보를 불러올 수 없습니다.</p>
         {/if}
       </div>
     </div>

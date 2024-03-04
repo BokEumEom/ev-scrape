@@ -4,6 +4,7 @@
   import Navbar from '$lib/components/Navbar.svelte';
   import { commentsCountStore } from '$lib/stores.js'; // Import the store correctly
   import { PUBLIC_API_SERVER } from '$env/static/public';
+  console.log(PUBLIC_API_SERVER)
 
   let newsList = [];
   let comments = new Map();

@@ -15,6 +15,7 @@ from config import setup_logging
 from scraper import scrape_google_news
 from scraper_seoul_playwright import scrape_seoul_announcements
 from scraper_deduplication import scrape_incheon_announcements, scrape_kyungki_announcements, scraper_koroad_announcements
+from scraper_gwangju import scrape_gwangju_announcements
 
 app = FastAPI()
 
@@ -81,6 +82,16 @@ async def get_seoul_announcements():
 async def get_koroad_announcements():
     try:
         announcements_data = scraper_koroad_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 광주광역시 사업공고
+@app.get("/announce/gwangju/", response_model=List[Announcement])
+async def get_gwju_announcements():
+    try:
+        # Ensure scrape_seoul_announcements() is awaited if it's an async function
+        announcements_data = await scrape_gwangju_announcements()
         return announcements_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
