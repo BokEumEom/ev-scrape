@@ -1,3 +1,4 @@
+# alembic/env.py
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,7 +6,10 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.models.models import Base  # 모델의 Base 임포트
+# Import your model's base metadata
+from app.db.database import Base  # Adjust based on your structure
+
+from app.models.news import News  # Make sure this model is imported
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,7 +24,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
