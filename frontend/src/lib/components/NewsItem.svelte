@@ -1,3 +1,4 @@
+<!-- frontend/src/lib/components/NewsItem.svelte-->
 <script>
     import { createEventDispatcher } from 'svelte';
     import Comments from './Comments.svelte';
@@ -27,7 +28,7 @@
 
 <li class="news-item">
     <a href="{news.link}" target="_blank">{news.title}</a>
-    <small>출처: {news.source} | Date: {news.pubDate}</small>
+    <small>출처: {news.source} | Date: {news.publication_date}</small>
     <div class="news-actions">
         <!-- Button to toggle comments -->
         <button on:click={toggleComments} class="vote-btn">

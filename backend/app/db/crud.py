@@ -12,3 +12,6 @@ def create_news(db: Session, news_create: NewsCreate):
 
 def get_news(db: Session, skip: int = 0, limit: int = 10):
     return db.query(News).offset(skip).limit(limit).all()
+
+def get_news_count(db: Session) -> int:
+    return db.query(News).count()

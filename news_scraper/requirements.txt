@@ -1,0 +1,7 @@
+sqlalchemy
+fastapi
+uvicorn
+aiosqlite
+alembic
+feedparser
+asyncio

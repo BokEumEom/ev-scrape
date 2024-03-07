@@ -1,0 +1,11 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "database",
+            "database": "\\\\wsl.localhost\\Ubuntu\\home\\bokeum\\python\\scrap\\backend\\database.db"
+        }
+    ]
+}

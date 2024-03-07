@@ -8,38 +8,38 @@
   
   <style>
     .navbar {
-      font-family: 'Noto Sans KR', sans-serif;
-      background-color: #7766F9;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px;
-      border-radius: 4px;
-    }
-    .navbar-brand {
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    .navbar-menu {
-      list-style: none;
-      display: flex;
-      margin: 0;
-      padding: 0;
-      flex-direction: row;
-    }
-    .navbar-item {
-      margin-left: 1rem;
-    }
-    .navbar-item a {
-      color: white;
-      text-decoration: none;
-      padding: 0.5rem 0.75rem;
-    }
-    .navbar-item a:hover {
-      background-color: #0056b3;
-      border-radius: 5px;
-    }
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #7766F9;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px;
+            border-radius: 4px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .navbar-menu {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            flex-direction: row;
+        }
+        .navbar-item {
+            margin-left: 1rem;
+        }
+        .navbar-item a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+        }
+        .navbar-item a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
     @media (min-width: 768px) {
     .navbar {
       margin: 20px auto; /* 가운데 정렬 */
