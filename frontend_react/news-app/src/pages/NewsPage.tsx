@@ -11,6 +11,9 @@ const NewsPage: React.FC = () => {
     const [page, setPage] = useState(1);
     const limit = 10;
 
+    // react-spring animation setup
+    const [style, set] = useSpring(() => ({ opacity: 1, transform: 'translateX(0px)' }));
+
     // Load news items when the component mounts or page changes
     useEffect(() => {
         fetchNewsItems(page, limit)
@@ -21,10 +24,7 @@ const NewsPage: React.FC = () => {
             .catch(error => console.error("Fetching news items failed:", error));
         // Scroll to the top of the page when the page changes
         window.scrollTo(0, 0);
-    }, [page]);
-
-    // react-spring animation setup
-    const [style, set] = useSpring(() => ({ opacity: 1, transform: 'translateX(0px)' }));
+    }, [page, set]);
 
     const swipeLeft = () => {
         set({ opacity: 0, transform: 'translateX(-100px)' });
