@@ -10,6 +10,10 @@ from .database import Base, engine, SessionLocal
 from .rss_scheduler import start_rss_feed_scheduler
 from .config import get_logger
 from fastapi.middleware.cors import CORSMiddleware
+from .announce_models import Announcement, Announcement_Playwright
+from .scraping_functions import scrape_incheon_announcements, scrape_gyeonggi_announcements, scraper_koroad_announcements
+from .scraper_seoul import scrape_seoul_announcements
+from .scraper_gwangju import scrape_gwangju_announcements
 
 logger = get_logger()
 
@@ -18,15 +22,19 @@ async def app_lifespan(app: FastAPI):
     # Create database tables asynchronously
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    
+
+    # Log that the application has started
     logger.info("Application started")
-    # Starting RSS feed scheduler in the background
+
+    # Start the RSS feed scheduler in the background
     task = asyncio.create_task(start_rss_feed_scheduler())
-    
+
     yield
-    
-    # Cleanup actions before the application completely stops
+
+    # Attempt to cancel the task on cleanup
     task.cancel()
+
+    # Log that the application has stopped
     logger.info("Application stopped")
 
 app = FastAPI(lifespan=app_lifespan)
@@ -74,3 +82,50 @@ def delete_news_item(news_id: int, db: AsyncSession = Depends(get_db)):
     if deleted_news is None:
         raise HTTPException(status_code=404, detail="News item not found")
     return deleted_news
+
+# 인천시 고시공고
+@app.get("/announcements/incheon/", response_model=List[Announcement])
+async def get_icn_announcements():
+    try:
+        announcements_data = scrape_incheon_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 경기도 사업공고
+@app.get("/announcements/gyeonggi/", response_model=List[Announcement])
+async def get_gyeonggi_announcements():
+    try:
+        announcements_data = scrape_gyeonggi_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+
+# 서울시 사업공고             
+@app.get("/announcements/seoul/", response_model=List[Announcement])
+async def get_seoul_announcements():
+    try:
+        # Ensure scrape_seoul_announcements() is awaited if it's an async function
+        announcements_data = await scrape_seoul_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 도로교통공단 사업공고
+@app.get("/announcements/koroad/", response_model=List[Announcement])
+async def get_koroad_announcements():
+    try:
+        announcements_data = scraper_koroad_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 광주광역시 사업공고
+@app.get("/announcements/gwangju/", response_model=List[Announcement])
+async def get_gwju_announcements():
+    try:
+        # Ensure scrape_seoul_announcements() is awaited if it's an async function
+        announcements_data = await scrape_gwangju_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")

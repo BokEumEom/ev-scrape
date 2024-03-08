@@ -1,3 +1,4 @@
+# app/crud.py
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from . import models, schemas
@@ -48,12 +49,14 @@ async def update_news(db: AsyncSession, news_id: int, updated_news: schemas.News
         return db_news
     return None  # Return None if the news item does not exist
 
-def delete_news(db: AsyncSession, news_id: int):
+async def delete_news(db: AsyncSession, news_id: int):
     """
-    특정 ID를 가진 뉴스 아이템을 데이터베이스에서 삭제하는 함수입니다.
+    비동기 방식으로 특정 ID를 가진 뉴스 아이템을 데이터베이스에서 삭제합니다.
     """
-    db_news = db.query(models.News).filter(models.News.id == news_id).first()
+    query = select(models.News).where(models.News.id == news_id)
+    result = await db.execute(query)
+    db_news = result.scalars().first()
     if db_news:
-        db.delete(db_news)
-        db.commit()
+        await db.delete(db_news)
+        await db.commit()
     return db_news

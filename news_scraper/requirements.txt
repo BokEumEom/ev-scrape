@@ -5,3 +5,5 @@ aiosqlite
 alembic
 feedparser
 asyncio
+python-dotenv
+playwright
