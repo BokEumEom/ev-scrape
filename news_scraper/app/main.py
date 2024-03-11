@@ -14,6 +14,7 @@ from .announce_models import Announcement, Announcement_Playwright
 from .scraping_functions import scrape_incheon_announcements, scrape_gyeonggi_announcements, scraper_koroad_announcements
 from .scraper_seoul import scrape_seoul_announcements
 from .scraper_gwangju import scrape_gwangju_announcements
+# from .scraper_incheon import scrape_incheon_announcements
 
 logger = get_logger()
 

@@ -1,65 +1,62 @@
 // src/pages/NewsPage.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { useSpring, animated } from 'react-spring';
+import { useTransition, animated } from '@react-spring/web';
 import { NewsItem } from '../types';
 import { fetchNewsItems } from '../services/apiService';
 import NewsList from '../components/NewsList';
+import '../styles/styles.module.css'; // Assume styles are defined similarly
 
 const NewsPage: React.FC = () => {
-    const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-    const [page, setPage] = useState(1);
-    const limit = 10;
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-    // react-spring animation setup
-    const [style, set] = useSpring(() => ({ opacity: 1, transform: 'translateX(0px)' }));
+  // Fetch news items when the component mounts or page changes
+  useEffect(() => {
+    fetchNewsItems(page, limit)
+      .then(data => {
+        setNewsItems(data);
+      })
+      .catch(error => console.error("Fetching news items failed:", error));
+  }, [page]);
 
-    // Load news items when the component mounts or page changes
-    useEffect(() => {
-        fetchNewsItems(page, limit)
-            .then(newItems => {
-                set({ opacity: 1, transform: 'translateX(0px)', reset: true });
-                setNewsItems(newItems);
-            })
-            .catch(error => console.error("Fetching news items failed:", error));
-        // Scroll to the top of the page when the page changes
-        window.scrollTo(0, 0);
-    }, [page, set]);
+  const transitions = useTransition(newsItems, {
+    from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
+    enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
+    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
+  });
 
-    const swipeLeft = () => {
-        set({ opacity: 0, transform: 'translateX(-100px)' });
-        setTimeout(() => setPage((prevPage) => prevPage + 1), 200);
-    };
+  const swipeLeft = () => setPage((currentPage) => currentPage + 1);
+  const swipeRight = () => setPage((currentPage) => Math.max(currentPage - 1, 1));
 
-    const swipeRight = () => {
-        set({ opacity: 0, transform: 'translateX(100px)' });
-        setTimeout(() => setPage((prevPage) => Math.max(prevPage - 1, 1)), 200);
-    };
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => swipeLeft(),
+    onSwipedRight: () => swipeRight(),
+    trackMouse: true // This enables mouse swipes for development, consider removing for production
+  });
 
-    const swipeHandlers = useSwipeable({
-        onSwipedLeft: () => swipeLeft(),
-        onSwipedRight: () => swipeRight(),
-        trackMouse: true
-    });
-
-    return (
-        <div {...swipeHandlers} className="flex flex-col h-full">
-            <animated.div style={style} className="flex-grow">
-                <NewsList newsItems={newsItems} />
-            </animated.div>
-            <div className="flex justify-center mt-4">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={swipeRight}
-                        disabled={page === 1}>
-                    Previous
-                </button>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={swipeLeft}>
-                    Next
-                </button>
-            </div>
-        </div>
-    );
+  return (
+    <div {...swipeHandlers} className="flex flex-col h-full">
+      {transitions((style, item, transition, index) => (
+        <animated.div key={index} style={style}>
+          <NewsList newsItems={[item]} /> {/* Adapt NewsList to handle single items or adjust this mapping */}
+        </animated.div>
+      ))}
+      <div className="flex justify-center mt-4">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={swipeRight}
+                disabled={page === 1}>
+          Previous
+        </button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={swipeLeft}>
+          Next
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default NewsPage;
+

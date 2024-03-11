@@ -1,0 +1,95 @@
+/* styles/AnnouncementsPage.css */
+.region-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background-color: #ffffff; /* Light grey background for the container */
+  }
+
+  .region-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+  }
+  
+  .region-btn {
+    background-color: #2c3e50; /* Dark blue background for the button */
+    color: #ecf0f1; /* Light grey text color */
+    border: none;
+    border-radius: 5px; /* Slightly rounded corners for the buttons */
+    padding: 15px 30px;
+    margin: 2px 0; /* Margin to separate buttons */
+    width: 90%; /* Adjust the width as per your design */
+    font-size: 1rem; /* Adjust font size as needed */
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* subtle shadow for depth */
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .region-btn:hover {
+    background-color: #34495e; /* Slightly lighter blue on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Larger shadow on hover for a lifting effect */
+  }
+  
+  .region-btn:active {
+    background-color: #2c3e50; /* Return to original color when clicked */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reset to original shadow when clicked */
+  }
+  
+.fade-enter {
+    opacity: 0;
+    transform: scale(0.9);
+}
+.fade-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms, transform 300ms;
+}
+.fade-exit {
+    opacity: 1;
+}
+.fade-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.back-to-regions-btn-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 20px; /* Adjust as needed for your layout */
+    padding: 0 20px; /* Same as left/right padding of the list for consistency */
+    text-align: center;
+  }
+
+.back-to-regions-btn {
+    /* Styling for the back button */
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .back-to-regions-btn:hover {
+    background-color: #ccc;
+  }
+
+  @media (max-width: 768px) {
+    .back-to-regions-btn {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+    }
+  }

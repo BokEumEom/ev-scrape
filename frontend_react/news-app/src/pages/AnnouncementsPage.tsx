@@ -1,72 +1,87 @@
 // src/pages/AnnouncementsPage.tsx
 import React, { useState } from 'react';
-import { useSpring, animated } from 'react-spring';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { useSwipeable } from 'react-swipeable';
 import AnnouncementList from '../components/AnnouncementList';
 import { fetchAnnouncements } from '../services/apiService';
 import Spinner from '../components/Spinner';
+import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
 
-const regions = ['Incheon', 'Gyeonggi', 'Seoul', 'Koroad', 'Gwangju'];
+const regions = ['incheon', 'gyeonggi', 'seoul', 'koroad', 'gwangju'];
 
 const AnnouncementsPage = () => {
-  const [selectedRegion, setSelectedRegion] = useState(regions[0]);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [slideInStyles, setSlideInStyles] = useSpring(() => ({ opacity: 1, transform: 'translateX(0%)' }));
-
-  const handleSwipe = (deltaX: number) => {
-    // Swipe right: positive deltaX, swipe left: negative deltaX
-    const index = regions.indexOf(selectedRegion);
-    if (deltaX < 0) { // Swiped left
-      const nextIndex = (index + 1) % regions.length;
-      handleSelectRegion(regions[nextIndex]);
-    } else if (deltaX > 0) { // Swiped right
-      const nextIndex = (index - 1 + regions.length) % regions.length;
-      handleSelectRegion(regions[nextIndex]);
-    }
-  };
-
-  const swipeHandlers = useSwipeable({
-    onSwiped: (eventData) => handleSwipe(eventData.deltaX)
-  });
 
   const handleSelectRegion = async (region: string) => {
     setSelectedRegion(region);
-    setIsLoading(true); // Start loading
-    setSlideInStyles({ opacity: 0 }); // Begin slide out effect
-  
+    setIsLoading(true);
     try {
-      const data = await fetchAnnouncements(region.toLowerCase());
+      const data = await fetchAnnouncements(region);
       setAnnouncements(data);
+      setIsLoading(false);
     } catch (error) {
       console.error(`Fetching announcements for ${region} failed:`, error);
-    } finally {
-      setIsLoading(false); // Stop loading
-      setSlideInStyles({ opacity: 1 }); // Begin slide in effect
+      setIsLoading(false);
     }
   };
-  
+
+  const renderRegionButtons = () => {
+    return regions.map((region) => (
+      <button
+        key={region}
+        onClick={() => handleSelectRegion(region)}
+        className={`region-btn ${selectedRegion === region ? 'selected' : ''}`}
+      >
+        {region.charAt(0).toUpperCase() + region.slice(1)}
+      </button>
+    ));
+  };
+
+  const renderAnnouncements = () => {
+    if (isLoading) {
+      return <Spinner />;
+    }
+
+    return (
+      <AnnouncementList announcements={announcements} />
+    );
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (selectedRegion !== null) {
+        const nextRegionIndex = (regions.indexOf(selectedRegion) + 1) % regions.length;
+        handleSelectRegion(regions[nextRegionIndex]);
+      }
+    },
+    onSwipedRight: () => {
+      if (selectedRegion !== null) {
+        setSelectedRegion(null);
+      }
+    },
+    trackMouse: true
+  });
+
   return (
-    <div {...swipeHandlers} className="flex flex-col min-h-screen bg-gray-100">
-      <div className="flex justify-center bg-white p-3 shadow-lg mb-4">
-        {regions.map((region) => (
-          <button
-            key={region}
-            onClick={() => handleSelectRegion(region)}
-            className={`text-sm sm:text-base lg:text-lg px-3 py-1 mr-2 mb-2 ${
-                selectedRegion === region
-                ? 'bg-green-500 text-white font-bold'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300 ease-in-out`}
-            >
-            {region}
-          </button>
-        ))}
-      </div>
-      <animated.div style={slideInStyles} className="flex-grow p-10">
-        {isLoading && <Spinner />}
-        {!isLoading && <AnnouncementList announcements={announcements} />}
-      </animated.div>
+    <div {...swipeHandlers} className="announcement-page">
+      <TransitionGroup>
+        {selectedRegion === null ? (
+          <CSSTransition classNames="fade" timeout={300} key="region-list">
+            <div className="region-list">
+              {renderRegionButtons()}
+            </div>
+          </CSSTransition>
+        ) : (
+          <CSSTransition classNames="fade" timeout={300} key="announcement-list">
+            <div className="announcement-list">
+              {renderAnnouncements()}
+              <button onClick={() => setSelectedRegion(null)} className="back-to-regions-btn">Back to regions</button>
+            </div>
+          </CSSTransition>
+        )}
+      </TransitionGroup>
     </div>
   );
 };

@@ -128,6 +128,7 @@ def scraper_koroad_announcements():
     )
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     # Scrape and print announcements for both Incheon and Gyeonggi
     try:
         print("Incheon Announcements:")

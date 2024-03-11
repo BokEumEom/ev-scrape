@@ -5,6 +5,7 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    './styles/**/*.{ts,tsx,css}'
 	],
   theme: {
     extend: {
@@ -12,11 +13,22 @@ module.exports = {
         spin: 'spin 1s linear infinite',
       },
     },
+    screens: {
+      'tablet': '640px',
+      // => @media (min-width: 640px) { ... }
+
+      'laptop': '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      'desktop': '1280px',
+      // => @media (min-width: 1280px) { ... }
+    },
   },
   plugins: [
     // ...
     require('tailwindcss'),
     require('autoprefixer'),
+    require('@tailwindcss/forms'),
     // ...
   ]
 }
