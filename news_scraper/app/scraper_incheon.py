@@ -13,6 +13,7 @@ INCEHON_ANNOUNCEMENTS_URL = "https://announce.incheon.go.kr/citynet/jsp/sap/SAPG
 
 async def scrape_incheon2_announcements():
     announcements = []
+    browser = None
     try:
         async with async_playwright() as p:
             # Launch the browser in headless mode
@@ -56,8 +57,9 @@ async def scrape_incheon2_announcements():
         logger.error("Error during scraping: ", exc_info=True)
         return []
     finally:
-        # Make sure to close the browser
-        await browser.close()
+        if browser:  # Check if the browser has been initialized
+            # Make sure to close the browser
+            await browser.close()
 
     return announcements
 
