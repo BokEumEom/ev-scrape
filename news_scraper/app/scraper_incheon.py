@@ -63,7 +63,7 @@ async def scrape_incheon2_announcements():
 
 async def main():
     logger.info("Main function started")
-    announcements = await scrape_incheon_announcements()
+    announcements = await scrape_incheon2_announcements()
     for announcement in announcements:
         print(announcement)
 
