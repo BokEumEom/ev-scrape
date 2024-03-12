@@ -3,7 +3,6 @@ import asyncio
 from playwright.async_api import async_playwright
 import logging
 import re
-from .announce_models import Announcement_Playwright
 
 # Setup logging
 logger = logging.getLogger(__name__)
@@ -12,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 # The Incheon website URL we will scrape
 INCEHON_ANNOUNCEMENTS_URL = "https://announce.incheon.go.kr/citynet/jsp/sap/SAPGosiBizProcess.do?command=searchList&flag=gosiGL&svp=Y&sido=ic"
 
-async def scrape_incheon_announcements():
+async def scrape_incheon2_announcements():
     announcements = []
     try:
         async with async_playwright() as p:

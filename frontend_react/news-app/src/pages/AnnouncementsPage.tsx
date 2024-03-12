@@ -7,7 +7,7 @@ import { fetchAnnouncements } from '../services/apiService';
 import Spinner from '../components/Spinner';
 import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
 
-const regions = ['incheon', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan'];
+const regions = ['incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan'];
 
 const AnnouncementsPage = () => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);

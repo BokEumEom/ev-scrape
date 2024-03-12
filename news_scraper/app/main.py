@@ -15,6 +15,7 @@ from .scraping_functions import scrape_incheon_announcements, scrape_gyeonggi_an
 from .scraping_functions import scrape_bucheon_announcements, scrape_ulsan_announcements
 from .scraper_seoul import scrape_seoul_announcements
 from .scraper_gwangju import scrape_gwangju_announcements
+from .scraper_incheon import scrape_incheon2_announcements
 # from .scraper_incheon import scrape_incheon_announcements
 
 logger = get_logger()
@@ -148,6 +149,16 @@ async def get_ulsan_announcements():
     try:
         # Ensure scrape_seoul_announcements() is awaited if it's an async function
         announcements_data = scrape_ulsan_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 인천광역시 고시공고
+@app.get("/announcements/incheon2/", response_model=List[Announcement])
+async def get_incheon2_announcements():
+    try:
+        # Ensure scrape_seoul_announcements() is awaited if it's an async function
+        announcements_data = await scrape_incheon2_announcements()
         return announcements_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
