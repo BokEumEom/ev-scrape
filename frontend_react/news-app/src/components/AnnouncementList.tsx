@@ -8,12 +8,13 @@ interface AnnouncementsListProps {
 
 const AnnouncementsList: React.FC<AnnouncementsListProps> = ({ announcements }) => {
   return (
-    <div className="max-w-4xl mx-auto mt-10 px-4">
+    // AnnouncementList component with improved styling
+    <div className="max-w-4xl mx-auto px-4">
       {announcements.length > 0 ? (
         announcements.map((announcement, index) => (
           <div
             key={index}
-            className="border-b border-gray-200 py-4 mb-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+            className="border-b border-gray-200 py-4 mb-4 shadow-sm hover:shadow-md transition-shadow duration-300"
           >
             <h2 className="text-lg md:text-xl font-semibold text-blue-800 mb-2">
               {announcement.title}

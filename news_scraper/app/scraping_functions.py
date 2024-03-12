@@ -25,6 +25,15 @@ def transform_gyeonggi_link(onclick_value):
         # If the pattern is not found, return None or raise an error as appropriate.
         return None
     
+def transform_bucheon_link(href):
+    # Parse the query string into a dictionary
+    query_params = dict(parse_qsl(urlparse(href).query))
+
+    # Construct the full URL for the announcement
+    full_url = f"http://www.bucheon.go.kr/site/program/board/basicboard/view?" + urlencode(query_params)
+
+    return full_url
+    
 def transform_koroad_link(href):
     # Assuming href contains the relative URL extracted from the 'a' element's href attribute
     base_url = "https://www.koroad.or.kr"
@@ -37,6 +46,20 @@ def transform_koroad_link(href):
     
     # Construct the full URL
     full_url = f"{base_url}/main/bid/bid_etc_view.do?" + urlencode(query_params)
+    
+    return full_url
+
+def transform_ulsan_link(href):
+    # Assuming href contains the relative URL extracted from the 'a' element's href attribute
+    base_url = "https://www.ulsan.go.kr"
+    # Parse the query string into a dictionary
+    query_params = dict(parse_qsl(urlparse(href).query))
+    
+    # Extract the document ID from the href
+    doc_id = href.split('/')[-1].split('.')[0]
+    
+    # Construct the full URL using the document ID and the query parameters
+    full_url = f"{base_url}/u/rep/transfer/notice/{doc_id}.ulsan?" + urlencode(query_params)
     
     return full_url
 
@@ -126,6 +149,33 @@ def scraper_koroad_announcements():
         },
         transform_link=transform_koroad_link  # Use the newly defined function
     )
+    
+def scrape_bucheon_announcements():
+    return generic_scrape_announcements(
+        base_url="http://www.bucheon.go.kr",
+        path="/site/program/board/basicboard/list?boardtypeid=26736&menuid=148002001001",
+        selectors={
+            'announcement': "tr",
+            'title': "td.td-lf > a",  # Update this selector based on actual page structure
+            'date': "td:nth-of-type(4)",  # Update this selector based on actual page structure
+            'link': "td.td-lf > a"  # The link is in the 'a' tag within the title cell
+        },
+        transform_link=transform_bucheon_link
+    )
+    
+def scrape_ulsan_announcements():
+    return generic_scrape_announcements(
+        base_url="https://www.ulsan.go.kr",
+        path="/u/rep/transfer/notice/list.ulsan?mId=001004002000000000",
+        selectors={
+            'announcement': "tr",  # Each announcement is within a table row
+            'title': "td.gosi > a",  # Assuming the announcement title is in an 'a' tag within a 'td' with class 'gosi'
+            'date': "td:nth-last-child(1)",  # Assuming the date is in the last 'td' of the row
+            'link': "td.gosi > a"  # The announcement link is also in the 'a' tag within a 'td' with class 'gosi'
+        },
+        transform_link=transform_ulsan_link  # Passing the href value to the transform function
+    )
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -141,6 +191,14 @@ if __name__ == "__main__":
             
         print("\nKoroad Announcements:")
         for announcement in scraper_koroad_announcements():
+            print(announcement)
+            
+        print("\nBucheon Announcements:")
+        for announcement in scrape_bucheon_announcements():
+            print(announcement)
+            
+        print("\nUlsan Announcements:")
+        for announcement in scrape_ulsan_announcements():
             print(announcement)
 
     except ScrapingError as e:

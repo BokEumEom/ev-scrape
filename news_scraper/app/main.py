@@ -12,6 +12,7 @@ from .config import get_logger
 from fastapi.middleware.cors import CORSMiddleware
 from .announce_models import Announcement, Announcement_Playwright
 from .scraping_functions import scrape_incheon_announcements, scrape_gyeonggi_announcements, scraper_koroad_announcements
+from .scraping_functions import scrape_bucheon_announcements, scrape_ulsan_announcements
 from .scraper_seoul import scrape_seoul_announcements
 from .scraper_gwangju import scrape_gwangju_announcements
 # from .scraper_incheon import scrape_incheon_announcements
@@ -123,10 +124,30 @@ async def get_koroad_announcements():
     
 # 광주광역시 사업공고
 @app.get("/announcements/gwangju/", response_model=List[Announcement])
-async def get_gwju_announcements():
+async def get_gwangju_announcements():
     try:
         # Ensure scrape_seoul_announcements() is awaited if it's an async function
         announcements_data = await scrape_gwangju_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 부천시 사업공고
+@app.get("/announcements/bucheon/", response_model=List[Announcement])
+async def get_bucheon_announcements():
+    try:
+        # Ensure scrape_seoul_announcements() is awaited if it's an async function
+        announcements_data = scrape_bucheon_announcements()
+        return announcements_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 울산광역시 사업공고
+@app.get("/announcements/ulsan/", response_model=List[Announcement])
+async def get_ulsan_announcements():
+    try:
+        # Ensure scrape_seoul_announcements() is awaited if it's an async function
+        announcements_data = scrape_ulsan_announcements()
         return announcements_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")

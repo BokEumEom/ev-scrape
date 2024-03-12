@@ -7,3 +7,4 @@ feedparser
 asyncio
 python-dotenv
 playwright
+aiofiles

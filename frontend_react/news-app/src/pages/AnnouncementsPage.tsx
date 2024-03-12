@@ -1,5 +1,5 @@
 // src/pages/AnnouncementsPage.tsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { useSwipeable } from 'react-swipeable';
 import AnnouncementList from '../components/AnnouncementList';
@@ -7,12 +7,15 @@ import { fetchAnnouncements } from '../services/apiService';
 import Spinner from '../components/Spinner';
 import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
 
-const regions = ['incheon', 'gyeonggi', 'seoul', 'koroad', 'gwangju'];
+const regions = ['incheon', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan'];
 
 const AnnouncementsPage = () => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const nodeRef = useRef(null); // 추가된 부분
+  const regionListRef = useRef(null);
+  const announcementListRef = useRef(null);
 
   const handleSelectRegion = async (region: string) => {
     setSelectedRegion(region);
@@ -68,14 +71,14 @@ const AnnouncementsPage = () => {
     <div {...swipeHandlers} className="announcement-page">
       <TransitionGroup>
         {selectedRegion === null ? (
-          <CSSTransition classNames="fade" timeout={300} key="region-list">
-            <div className="region-list">
+          <CSSTransition nodeRef={regionListRef} classNames="fade" timeout={300} key="region-list">
+            <div ref={nodeRef} className="region-list">
               {renderRegionButtons()}
             </div>
           </CSSTransition>
         ) : (
-          <CSSTransition classNames="fade" timeout={300} key="announcement-list">
-            <div className="announcement-list">
+          <CSSTransition ref={announcementListRef} classNames="fade" timeout={300} key="announcement-list">
+            <div ref={nodeRef} className="announcement-list">
               {renderAnnouncements()}
               <button onClick={() => setSelectedRegion(null)} className="back-to-regions-btn">Back to regions</button>
             </div>
