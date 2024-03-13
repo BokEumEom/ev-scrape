@@ -19,7 +19,7 @@ RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Install Playwright and browser binaries
-RUN pip install playwright==@1.42.0 && \
+RUN pip install playwright && \
     playwright install --with-deps
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
