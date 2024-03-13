@@ -9,6 +9,8 @@ import time
 service = Service(excutable_path="./chromedriver.exe")
 options = webdriver.ChromeOptions()
 options.headless = True  # 브라우저를 머리없는 모드로 실행 (GUI 없이)
+options.add_argument('--no-sandbox')
+options.add_argument('--disable-dev-shm-usage')
 driver = webdriver.Chrome(service=service, options=options)
 
 # 기본 URL 설정

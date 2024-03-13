@@ -35,13 +35,20 @@ const AnnouncementsPage = () => {
       <button
         key={region}
         onClick={() => handleSelectRegion(region)}
-        className={`region-btn ${selectedRegion === region ? 'selected' : ''}`}
+        className={`
+          ${selectedRegion === region ? 'bg-gray-800' : 'bg-gray-700'} 
+          text-white font-bold py-4 px-2 m-px 
+          transition ease-in-out duration-300 
+          hover:bg-gray-600 rounded-md shadow cursor-pointer 
+          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
+          w-full
+        `}
       >
         {region.charAt(0).toUpperCase() + region.slice(1)}
       </button>
     ));
   };
-
+  
   const renderAnnouncements = () => {
     if (isLoading) {
       return <Spinner />;
@@ -68,19 +75,23 @@ const AnnouncementsPage = () => {
   });
 
   return (
-    <div {...swipeHandlers} className="announcement-page">
+    <div {...swipeHandlers} className="flex flex-col items-stretch py-2 bg-white transition-all">
       <TransitionGroup>
         {selectedRegion === null ? (
           <CSSTransition nodeRef={regionListRef} classNames="fade" timeout={300} key="region-list">
-            <div ref={nodeRef} className="region-list">
+            <div ref={nodeRef} className="w-full flex flex-col items-center">
               {renderRegionButtons()}
             </div>
           </CSSTransition>
         ) : (
           <CSSTransition ref={announcementListRef} classNames="fade" timeout={300} key="announcement-list">
-            <div ref={nodeRef} className="announcement-list">
+            <div ref={nodeRef} className="w-full">
               {renderAnnouncements()}
-              <button onClick={() => setSelectedRegion(null)} className="back-to-regions-btn">Back to regions</button>
+              <div className="fixed inset-x-0 bottom-5 px-5 text-center">
+                <button onClick={() => setSelectedRegion(null)} className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded mx-auto bottom-5 left-1/2 transform -translate-x-1/2 fixed">
+                  Back to regions
+                </button>
+              </div>
             </div>
           </CSSTransition>
         )}

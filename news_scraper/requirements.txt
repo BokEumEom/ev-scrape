@@ -8,3 +8,10 @@ asyncio
 python-dotenv
 playwright
 aiofiles
+requests
+beautifulsoup4
+pydantic
+pydantic-settings
+gunicorn
+pysqlite3
+db-sqlite3

@@ -3,6 +3,7 @@ import asyncio
 from playwright.async_api import async_playwright
 import logging
 import re
+from .announce_models import Announcement_Playwright
 
 # Setup logging
 logger = logging.getLogger(__name__)
