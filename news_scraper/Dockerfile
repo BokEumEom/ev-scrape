@@ -15,6 +15,7 @@ COPY . ./
 RUN apt-get update && apt-get install -y wget --no-install-recommends \
     && pip install --no-cache-dir --upgrade pip \
     && pip install playwright \
+    && playwright install \
     && playwright install-deps \
     && pip install --no-cache-dir -r requirements.txt \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false wget \
