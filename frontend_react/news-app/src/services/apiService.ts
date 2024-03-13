@@ -7,7 +7,7 @@ export const PUBLIC_API_BASE_URL = 'https://fastapi.watercharging.com';
 
 export const fetchNewsItems = async (page = 1, limit = 10) => {
     const skip = (page - 1) * limit; // Calculate the correct skip value
-    const url = `${API_BASE_URL}/news?skip=${skip}&limit=${limit}`;
+    const url = `${PUBLIC_API_BASE_URL}/news?skip=${skip}&limit=${limit}`;
     try {
         const response = await fetch(url);
         if (!response.ok) {
