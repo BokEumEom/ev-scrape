@@ -13,9 +13,9 @@ const AnnouncementsPage = () => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const nodeRef = useRef(null); // 추가된 부분
-  const regionListRef = useRef(null);
-  const announcementListRef = useRef(null);
+  // useRef로 DOM 요소에 대한 참조 생성
+  const regionListRef = useRef(null); // 지역 목록을 위한 ref
+  const announcementListRef = useRef(null); // 공고 목록을 위한 ref
 
   const handleSelectRegion = async (region: string) => {
     setSelectedRegion(region);
@@ -79,16 +79,16 @@ const AnnouncementsPage = () => {
       <TransitionGroup>
         {selectedRegion === null ? (
           <CSSTransition nodeRef={regionListRef} classNames="fade" timeout={300} key="region-list">
-            <div ref={nodeRef} className="w-full flex flex-col items-center">
+            <div ref={regionListRef} className="w-full flex flex-col items-center">
               {renderRegionButtons()}
             </div>
           </CSSTransition>
         ) : (
-          <CSSTransition ref={announcementListRef} classNames="fade" timeout={300} key="announcement-list">
-            <div ref={nodeRef} className="w-full">
+          <CSSTransition nodeRef={announcementListRef} classNames="fade" timeout={300} key="announcement-list">
+            <div ref={announcementListRef} className="w-full">
               {renderAnnouncements()}
               <div className="fixed inset-x-0 bottom-5 px-5 text-center">
-                <button onClick={() => setSelectedRegion(null)} className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded mx-auto bottom-5 left-1/2 transform -translate-x-1/2 fixed">
+              <button onClick={() => setSelectedRegion(null)} className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded mx-auto bottom-5 left-1/2 transform -translate-x-1/2 fixed">
                   Back to regions
                 </button>
               </div>
