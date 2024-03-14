@@ -10,13 +10,14 @@ from .database import Base, engine, SessionLocal
 from .rss_scheduler import start_rss_feed_scheduler
 from .config import get_logger
 from fastapi.middleware.cors import CORSMiddleware
-from .announce_models import Announcement, Announcement_Playwright
+from .announce_models import Announcement
 from .scraping_functions import scrape_incheon_announcements, scrape_gyeonggi_announcements, scraper_koroad_announcements
 from .scraping_functions import scrape_bucheon_announcements, scrape_ulsan_announcements
 from .scraper_seoul import scrape_seoul_announcements
 from .scraper_gwangju import scrape_gwangju_announcements
 from .scraper_incheon import scrape_incheon2_announcements
 # from .scraper_incheon import scrape_incheon_announcements
+from .cache_management import load_cached_data, save_data_to_cache, get_md5_hash
 
 logger = get_logger()
 
@@ -157,8 +158,10 @@ async def get_ulsan_announcements():
 @app.get("/announcements/incheon2/", response_model=List[Announcement])
 async def get_incheon2_announcements():
     try:
-        # Ensure scrape_seoul_announcements() is awaited if it's an async function
-        announcements_data = await scrape_incheon2_announcements()
-        return announcements_data
+        cached_data = await load_cached_data()
+        new_data = await scrape_incheon2_announcements()
+        if not cached_data or get_md5_hash(cached_data) != get_md5_hash(new_data):
+            await save_data_to_cache(new_data)
+        return new_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
