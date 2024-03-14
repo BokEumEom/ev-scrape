@@ -6,7 +6,6 @@ import json
 import os
 from hashlib import md5
 import logging
-from .announce_models import Announcement_Playwright
 import urllib.parse
 
 # Setup logging

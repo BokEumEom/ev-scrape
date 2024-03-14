@@ -6,7 +6,6 @@ import json
 import os
 from hashlib import md5
 import logging
-from .announce_models import Announcement_Playwright
 
 # Setup logging
 logger = logging.getLogger(__name__)
@@ -29,8 +28,13 @@ async def save_data_to_cache(data):
     try:
         async with aiofiles.open(CACHE_FILE_PATH, 'w', encoding='utf-8') as file:
             await file.write(json.dumps(data, ensure_ascii=False))
+    except IOError as e:
+        logger.error(f"IOError while trying to write cache file: {e}")
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON encoding error while writing cache file: {e}")
     except Exception as e:
-        logger.error("Failed to save data to cache", exc_info=True)
+        logger.error("Unexpected error while saving data to cache", exc_info=True)
+
 
 def get_md5_hash(data):
     return md5(json.dumps(data, sort_keys=True).encode('utf-8')).hexdigest()
