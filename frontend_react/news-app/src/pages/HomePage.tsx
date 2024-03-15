@@ -1,11 +1,13 @@
 // src/pages/HomePage.tsx
 import React from 'react';
+import HeroSection from '../components/HeroSection'; // You will need to create this component
+import AboutEVSection from '../components/AboutEVSection'; // You will need to create this component
 
 const HomePage: React.FC = () => {
     return (
         <div>
-            <h1>Home Page</h1>
-            <p>Welcome to our news application!</p>
+            <HeroSection />
+            <AboutEVSection />
         </div>
     );
 }
