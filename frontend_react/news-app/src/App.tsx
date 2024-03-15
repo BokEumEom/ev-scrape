@@ -6,6 +6,7 @@ import NewsPage from './pages/NewsPage';
 import AnnouncementsPage from './pages/AnnouncementsPage';
 import NotFoundPage from './pages/NotFoundPage'; // Adjust path as needed
 import NavigationBar from './components/NavigationBar';
+import FooterBar from'./components/FooterBar';
 
 const App: React.FC = () => {
     return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
                 <Route path="/announcements" element={<AnnouncementsPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
+            <FooterBar />
         </Router>
     );
 };

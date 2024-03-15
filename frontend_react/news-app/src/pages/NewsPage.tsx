@@ -1,4 +1,5 @@
 // src/pages/NewsPage.tsx
+
 import React, { useState, useEffect } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { useTransition, animated } from '@react-spring/web';
@@ -6,7 +7,6 @@ import { NewsItem } from '../types';
 import { fetchNewsItems } from '../services/apiService';
 import NewsList from '../components/NewsList';
 import Spinner from '../components/Spinner';
-import '../styles/styles.module.css'; // Assume styles are defined similarly
 
 const NewsPage: React.FC = () => {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
@@ -54,28 +54,27 @@ const NewsPage: React.FC = () => {
   }
 
   return (
-    <div {...swipeHandlers} className="flex flex-col h-full">
-    {transitions((style, item) => (
-      <animated.div key={item.id} style={style}>
-        <NewsList newsItems={[item]} />
-      </animated.div>
-    ))}
-    <div className="mt-4 px-4 flex justify-between sm:justify-center gap-4">
-        {/* Using Tailwind's responsive design classes to adjust button styles on smaller screens */}
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:w-full sm:max-w-xs transition duration-300 ease-in-out"
-          onClick={swipeRight}
-          disabled={page === 1}
-        >
-          Previous
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:w-full sm:max-w-xs transition duration-300 ease-in-out"
-          onClick={swipeLeft}
-        >
-          Next
-        </button>
-      </div>
+    <div {...swipeHandlers} className="flex flex-col h-full pt-16 pb-20"> {/* 패딩 추가 */}
+      {transitions((style, item) => (
+        <animated.div key={item.id} style={style}>
+          <NewsList newsItems={[item]} />
+        </animated.div>
+      ))}
+      <div className="mt-4 px-4 flex justify-between sm:justify-center gap-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:w-full sm:max-w-xs transition duration-300 ease-in-out"
+            onClick={swipeRight}
+            disabled={page === 1}
+          >
+            Previous
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:w-full sm:max-w-xs transition duration-300 ease-in-out"
+            onClick={swipeLeft}
+          >
+            Next
+          </button>
+        </div>
     </div>
   );
 };

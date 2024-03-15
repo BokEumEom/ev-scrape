@@ -13,9 +13,8 @@ const AnnouncementsPage = () => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  // useRef로 DOM 요소에 대한 참조 생성
-  const regionListRef = useRef(null); // 지역 목록을 위한 ref
-  const announcementListRef = useRef(null); // 공고 목록을 위한 ref
+  const regionListRef = useRef(null);
+  const announcementListRef = useRef(null);
 
   const handleSelectRegion = async (region: string) => {
     setSelectedRegion(region);
@@ -75,7 +74,7 @@ const AnnouncementsPage = () => {
   });
 
   return (
-    <div {...swipeHandlers} className="flex flex-col items-stretch py-2 bg-white transition-all">
+    <div {...swipeHandlers} className="flex flex-col items-stretch py-16 bg-white transition-all min-h-screen"> {/* 상단 패딩 추가 */}
       <TransitionGroup>
         {selectedRegion === null ? (
           <CSSTransition nodeRef={regionListRef} classNames="fade" timeout={300} key="region-list">
@@ -85,17 +84,17 @@ const AnnouncementsPage = () => {
           </CSSTransition>
         ) : (
           <CSSTransition nodeRef={announcementListRef} classNames="fade" timeout={300} key="announcement-list">
-            <div ref={announcementListRef} className="w-full">
+            <div ref={announcementListRef} className="w-full pt-4 pb-20"> {/* 컨텐츠에 패딩 추가 */}
               {renderAnnouncements()}
-              <div className="fixed inset-x-0 bottom-5 px-5 text-center">
-              <button onClick={() => setSelectedRegion(null)} className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded mx-auto bottom-5 left-1/2 transform -translate-x-1/2 fixed">
-                  Back to regions
-                </button>
-              </div>
             </div>
           </CSSTransition>
         )}
       </TransitionGroup>
+      <div className="fixed inset-x-0 bottom-16 px-5 text-center"> {/* 버튼 위치 조정 */}
+        <button onClick={() => setSelectedRegion(null)} className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded mx-auto">
+          Back to regions
+        </button>
+      </div>
     </div>
   );
 };
