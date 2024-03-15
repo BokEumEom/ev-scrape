@@ -12,15 +12,19 @@ const App: React.FC = () => {
     return (
         <Router>
             <NavigationBar />
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/news" element={<NewsPage />} />
-                <Route path="/announcements" element={<AnnouncementsPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+            {/* Add top padding equivalent to the height of the NavigationBar */}
+            <div className="pt-16"> {/* Example height, adjust as needed */}
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/news" element={<NewsPage />} />
+                    <Route path="/announcements" element={<AnnouncementsPage />} />
+                    <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+            </div>
             <FooterBar />
         </Router>
     );
 };
 
 export default App;
+
