@@ -13,7 +13,7 @@ const App: React.FC = () => {
         <Router>
             <NavigationBar />
             {/* Add top padding equivalent to the height of the NavigationBar */}
-            <div className="pt-16"> {/* Example height, adjust as needed */}
+            <div> {/* Example height, adjust as needed */}
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/news" element={<NewsPage />} />
