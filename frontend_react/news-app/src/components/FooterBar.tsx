@@ -1,6 +1,6 @@
 // src/components/FooterBar.tsx
 import React from 'react';
-import { IoHomeSharp, IoChatboxEllipses, IoPerson, IoMenuOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoHomeSharp, IoShareOutline, IoPerson, IoMenuOutline, IoSearchOutline } from 'react-icons/io5';
 
 const FooterBar: React.FC = () => {
   return (
@@ -8,7 +8,7 @@ const FooterBar: React.FC = () => {
       <IoMenuOutline  className="text-gray-800 text-2xl" />
       <IoSearchOutline className="text-gray-800 text-2xl" />
       <IoHomeSharp  className="text-gray-800 text-2xl" />
-      <IoChatboxEllipses className="text-gray-800 text-2xl" />
+      <IoShareOutline className="text-gray-800 text-2xl" />
       <IoPerson className="text-gray-800 text-2xl" />
     </div>
   );

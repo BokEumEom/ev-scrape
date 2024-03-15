@@ -1,6 +1,6 @@
 // src/components/AnnouncementList.tsx
 import React from 'react';
-import { Announcement } from '../types'; // Make sure this type is defined in your types file
+import { Announcement } from '../types'; // Assuming the type is defined
 
 interface AnnouncementsListProps {
   announcements: Announcement[];
@@ -8,27 +8,18 @@ interface AnnouncementsListProps {
 
 const AnnouncementsList: React.FC<AnnouncementsListProps> = ({ announcements }) => {
   return (
-    // AnnouncementList component with improved styling
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto mt-2 px-4">
       {announcements.length > 0 ? (
         announcements.map((announcement, index) => (
-          <div
-            key={index}
-            className="border-b border-gray-200 py-4 mb-4 shadow-sm hover:shadow-md transition-shadow duration-300"
-          >
-            <h2 className="text-lg md:text-xl font-semibold text-blue-800 mb-2">
-              {announcement.title}
-            </h2>
-            <p className="text-sm md:text-base text-gray-600 mb-2">
-              Published on: {announcement.date}
-            </p>
-            <a
-              href={announcement.link}
-              className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Read more...
+          // Assuming 'id' is unique; use it as a key. If not, use index, but prefer unique IDs.
+          <div key={index} className="border-b border-gray-200 p-4">
+            <a href={announcement.link} target="_blank" rel="noopener noreferrer" className="hover:underline block">
+              <h2 className="text-lg font-semibold text-gray-900">
+                {announcement.title}
+              </h2>
+              <p className="text-xs text-gray-500 mt-2">
+                등록일 - {announcement.date}
+              </p>
             </a>
           </div>
         ))

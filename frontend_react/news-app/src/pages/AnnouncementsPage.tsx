@@ -5,6 +5,7 @@ import { useSwipeable } from 'react-swipeable';
 import AnnouncementList from '../components/AnnouncementList';
 import { fetchAnnouncements } from '../services/apiService';
 import Spinner from '../components/Spinner';
+import { IoLocationSharp } from 'react-icons/io5';
 import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
 
 const regions = ['incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan'];
@@ -31,20 +32,24 @@ const AnnouncementsPage = () => {
 
   const renderRegionButtons = () => {
     return regions.map((region) => (
-      <button
-        key={region}
-        onClick={() => handleSelectRegion(region)}
-        className={`
-          ${selectedRegion === region ? 'bg-gray-800' : 'bg-gray-700'} 
-          text-white font-bold py-4 px-2 m-px 
-          transition ease-in-out duration-300 
-          hover:bg-gray-600 rounded-md shadow cursor-pointer 
-          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
-          w-full
-        `}
-      >
-        {region.charAt(0).toUpperCase() + region.slice(1)}
-      </button>
+      <div className="flex flex-col items-start w-full px-2 py-1">
+        <button
+          key={region}
+          onClick={() => handleSelectRegion(region)}
+          onTouchStart={() => {}}
+          className={`
+            ${selectedRegion === region ? 'bg-gray-800' : 'bg-gray-700'} 
+            flex text-white font-bold py-4 px-2
+            transition ease-in-out duration-300 
+            hover:bg-gray-600 rounded-md shadow cursor-pointer 
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
+            w-full
+          `}
+        >
+          <IoLocationSharp className="mr-2 text-2xl" /> {/* Larger icon */}
+          {region.charAt(0).toUpperCase() + region.slice(1)}
+        </button>
+      </div>
     ));
   };
   
@@ -91,8 +96,11 @@ const AnnouncementsPage = () => {
         )}
       </TransitionGroup>
       <div className="fixed inset-x-0 bottom-16 px-5 text-center"> {/* 버튼 위치 조정 */}
-        <button onClick={() => setSelectedRegion(null)} className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded mx-auto">
-          Back to regions
+        <button
+            onClick={() => setSelectedRegion(null)}
+            className="mt-4 bg-gray-100 hover:bg-gray-200 text-indigo-800 py-2 px-4 rounded-full transition-colors duration-300"
+          >
+            Back to regions
         </button>
       </div>
     </div>

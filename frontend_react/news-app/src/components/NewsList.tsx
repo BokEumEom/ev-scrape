@@ -1,3 +1,4 @@
+// src/components/NewsList.tsx
 import React from 'react';
 import { NewsItem } from '../types';
 
