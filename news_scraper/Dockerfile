@@ -15,10 +15,8 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Playwright 및 필요한 브라우저 바이너리 설치 위치를 앱 디렉토리로 지정
-ENV PLAYWRIGHT_BROWSERS_PATH=$APP_HOME/.cache/ms-playwright
-
 # Playwright 및 필요한 브라우저 바이너리 설치
+# 예시로, Google Chrome만 설치하는 경우:
 RUN pip install playwright && \
     playwright install --with-deps
 
@@ -32,11 +30,9 @@ ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
-# 첫 번째 단계에서 빌드한 가상 환경과 브라우저 바이너리 복사
+# 첫 번째 단계에서 빌드한 가상 환경 복사
 COPY --from=builder /app /app
 
 ENV PATH="$APP_HOME/venv/bin:$PATH"
-# 최종 이미지에서도 Playwright 브라우저 바이너리의 위치를 지정
-ENV PLAYWRIGHT_BROWSERS_PATH=$APP_HOME/.cache/ms-playwright
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
