@@ -18,7 +18,7 @@ RUN pip install --upgrade pip && \
 # Playwright 및 필요한 브라우저 바이너리 설치
 # 예시로, Google Chrome만 설치하는 경우:
 RUN pip install playwright && \
-    playwright install --with-deps
+    playwright install-deps
 
 # 애플리케이션 코드 복사
 COPY . ./
