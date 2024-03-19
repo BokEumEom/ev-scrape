@@ -1,8 +1,7 @@
 // src/components/FooterBar.tsx
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IoHomeSharp, IoBookmarkOutline, IoPerson, IoChatbubbleEllipsesOutline, IoSearchOutline } from 'react-icons/io5';
-import SearchBar from './SearchBar';
 
 const FooterBar: React.FC = () => {
   // This hook gives you access to the navigation function
