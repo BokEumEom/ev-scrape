@@ -38,10 +38,10 @@ const AnnouncementsPage = () => {
           onClick={() => handleSelectRegion(region)}
           onTouchStart={() => {}}
           className={`
-            ${selectedRegion === region ? 'bg-gray-800' : 'bg-gray-700'} 
-            flex text-white font-bold py-4 px-2
+            ${selectedRegion === region ? 'bg-gray-700' : 'bg-gray-600'} 
+            flex text-white font-bold py-4 px-4
             transition ease-in-out duration-300 
-            hover:bg-gray-600 rounded-md shadow cursor-pointer 
+            hover:bg-green-600 rounded-md shadow cursor-pointer 
             focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
             w-full
           `}
