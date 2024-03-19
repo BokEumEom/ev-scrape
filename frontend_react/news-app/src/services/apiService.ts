@@ -1,5 +1,6 @@
 // src/services/apiService.ts
 import axios from 'axios';
+import { NewsItem } from '../types';
 
 export const API_BASE_URL = 'http://localhost:8000';
 
@@ -35,6 +36,21 @@ export const fetchAnnouncements = async (endpoint: string) => {
       return response.data;
     } catch (error) {
       console.error(`Failed to fetch announcements for ${endpoint}:`, error);
+      throw error;
+    }
+  };
+
+  export const searchNewsItems = async (query: string, page: number): Promise<NewsItem[]> => {
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    try {
+      const response = await axios.get(`${PUBLIC_API_BASE_URL}/news/search/`, {
+        params: { query, skip, limit }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Search API error:", error);
+      // handle the error appropriately
       throw error;
     }
   };

@@ -7,6 +7,7 @@ import AnnouncementsPage from './pages/AnnouncementsPage';
 import NotFoundPage from './pages/NotFoundPage'; // Adjust path as needed
 import NavigationBar from './components/NavigationBar';
 import FooterBar from'./components/FooterBar';
+import SearchPage from './pages/SearchPage';
 
 const App: React.FC = () => {
     return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
             <div> {/* Example height, adjust as needed */}
                 <Routes>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/search" element={<SearchPage />} />
                     <Route path="/news" element={<NewsPage />} />
                     <Route path="/announcements" element={<AnnouncementsPage />} />
                     <Route path="*" element={<NotFoundPage />} />

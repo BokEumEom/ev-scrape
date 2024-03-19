@@ -32,7 +32,7 @@ const AnnouncementsPage = () => {
 
   const renderRegionButtons = () => {
     return regions.map((region) => (
-      <div className="flex flex-col items-start w-full px-2 py-1">
+      <div key={region} className="flex flex-col items-start w-full px-2 py-1">
         <button
           key={region}
           onClick={() => handleSelectRegion(region)}
@@ -55,7 +55,7 @@ const AnnouncementsPage = () => {
   
   const renderAnnouncements = () => {
     if (isLoading) {
-      return <Spinner />;
+      return <div className="flex justify-center items-center h-full"><Spinner /></div>;
     }
 
     return (

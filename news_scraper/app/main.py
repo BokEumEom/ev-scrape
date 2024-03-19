@@ -1,11 +1,13 @@
 # app/main.py
 from typing import List, AsyncGenerator
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Query
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 import asyncio
 
-from . import crud, schemas
+from sqlalchemy.future import select
+
+from . import models, crud, schemas
 from .database import Base, engine, SessionLocal  
 from .rss_scheduler import start_rss_feed_scheduler
 from .config import get_logger
@@ -86,6 +88,15 @@ def delete_news_item(news_id: int, db: AsyncSession = Depends(get_db)):
     if deleted_news is None:
         raise HTTPException(status_code=404, detail="News item not found")
     return deleted_news
+
+@app.get("/news/search/", response_model=List[schemas.News])
+async def search_news(query: str = Query(...), db: AsyncSession = Depends(get_db)):
+    news_query = select(models.News).where(models.News.title.contains(query)).limit(10)
+    result = await db.execute(news_query)
+    news_items = result.scalars().all()
+    if not news_items:
+        raise HTTPException(status_code=404, detail="No news found for your search")
+    return news_items
 
 # 인천시 고시공고
 @app.get("/announcements/incheon/", response_model=List[Announcement])
