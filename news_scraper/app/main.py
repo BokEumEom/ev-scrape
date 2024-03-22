@@ -1,12 +1,12 @@
 # app/main.py
 from typing import List, AsyncGenerator
-from fastapi import FastAPI, Depends, HTTPException, status, Query
+from fastapi import FastAPI, Depends, HTTPException, status, Query, Path, Body
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 import asyncio
+from fastapi.encoders import jsonable_encoder
 
 from sqlalchemy.future import select
-
 from . import models, crud, schemas
 from .database import Base, engine, SessionLocal  
 from .rss_scheduler import start_rss_feed_scheduler
@@ -18,7 +18,7 @@ from .scraping_functions import scrape_bucheon_announcements, scrape_ulsan_annou
 from .scraper_seoul import scrape_seoul_announcements
 from .scraper_gwangju import scrape_gwangju_announcements
 from .scraper_incheon import scrape_incheon2_announcements
-# from .scraper_incheon import scrape_incheon_announcements
+from .scraper_goyang import scrape_goyang_announcements
 from .cache_management import load_cached_data, save_data_to_cache, get_md5_hash
 
 logger = get_logger()
@@ -88,6 +88,13 @@ def delete_news_item(news_id: int, db: AsyncSession = Depends(get_db)):
     if deleted_news is None:
         raise HTTPException(status_code=404, detail="News item not found")
     return deleted_news
+
+@app.post("/news/{news_id}/vote", response_model=schemas.News)
+async def vote_on_news(news_id: int, vote: schemas.VoteCreate, db: AsyncSession = Depends(get_db)):
+    news_item = await crud.vote_news(db=db, news_id=news_id, vote_value=vote.vote_value)
+    if not news_item:
+        raise HTTPException(status_code=404, detail="News item not found")
+    return news_item  # Directly return the ORM model, FastAPI will convert it based on your Pydantic schema
 
 @app.get("/news/search/", response_model=List[schemas.News])
 async def search_news(query: str = Query(...), db: AsyncSession = Depends(get_db)):
@@ -171,6 +178,18 @@ async def get_incheon2_announcements():
     try:
         cached_data = await load_cached_data()
         new_data = await scrape_incheon2_announcements()
+        if not cached_data or get_md5_hash(cached_data) != get_md5_hash(new_data):
+            await save_data_to_cache(new_data)
+        return new_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 고양시 고시공고
+@app.get("/announcements/goyang/", response_model=List[Announcement])
+async def get_goyang_announcements():
+    try:
+        cached_data = await load_cached_data()
+        new_data = await scrape_goyang_announcements()
         if not cached_data or get_md5_hash(cached_data) != get_md5_hash(new_data):
             await save_data_to_cache(new_data)
         return new_data

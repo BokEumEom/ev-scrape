@@ -1,6 +1,6 @@
 # app/crud.py
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select, func
 from . import models, schemas
 from datetime import datetime
 
@@ -9,7 +9,7 @@ async def create_news(db: AsyncSession, news: schemas.NewsCreate):
     Create a new news item and add it to the database.
     """
     # Using the current time as the publish date
-    db_news = models.News(published_at=datetime.now(), **news.dict())
+    db_news = models.News(published_at=datetime.now(), **news.model_dump())
     db.add(db_news)
     await db.commit()
     await db.refresh(db_news)
@@ -60,3 +60,34 @@ async def delete_news(db: AsyncSession, news_id: int):
         await db.delete(db_news)
         await db.commit()
     return db_news
+
+async def vote_news(db: AsyncSession, news_id: int, vote_value: int):
+    # Check if the news item exists
+    news_item = await db.execute(select(models.News).filter(models.News.id == news_id))
+    news_item = news_item.scalars().first()
+    if not news_item:
+        return None
+
+    # Check if a vote for this news item already exists
+    vote_item_result = await db.execute(select(models.Vote).filter(models.Vote.news_id == news_id))
+    vote_item = vote_item_result.scalars().first()
+
+    if vote_item:
+        # Update the existing vote
+        vote_item.vote_value += vote_value
+    else:
+        # Create a new vote entry
+        new_vote = models.Vote(news_id=news_id, vote_value=vote_value)
+        db.add(new_vote)
+
+    await db.commit()
+
+    # Recalculate and update the vote count
+    vote_count_result = await db.execute(select(func.sum(models.Vote.vote_value)).where(models.Vote.news_id == news_id))
+    vote_count = vote_count_result.scalar() or 0
+    news_item.voteCount = vote_count
+
+    await db.commit()
+    await db.refresh(news_item)
+
+    return news_item

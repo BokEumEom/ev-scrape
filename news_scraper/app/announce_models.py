@@ -1,6 +1,5 @@
 # announce_models.py
 from pydantic import BaseModel
-from typing import List
 
 # 전기차 충전사업 공고 모델 정의   
 class Announcement(BaseModel):

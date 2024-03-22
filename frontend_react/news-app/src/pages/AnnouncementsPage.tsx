@@ -6,11 +6,13 @@ import AnnouncementList from '../components/AnnouncementList';
 import { fetchAnnouncements } from '../services/apiService';
 import Spinner from '../components/Spinner';
 import { IoLocationSharp } from 'react-icons/io5';
+import { Reorder } from 'framer-motion';
 import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
 
-const regions = ['incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan'];
+const initialRegions = ['incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan', 'goyang'];
 
 const AnnouncementsPage = () => {
+  const [regions, setRegions] = useState(initialRegions);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,26 +33,28 @@ const AnnouncementsPage = () => {
   };
 
   const renderRegionButtons = () => {
-    return regions.map((region) => (
-      <div key={region} className="flex flex-col items-start w-full px-2 py-1">
-        <button
-          key={region}
-          onClick={() => handleSelectRegion(region)}
-          onTouchStart={() => {}}
-          className={`
-            ${selectedRegion === region ? 'bg-gray-700' : 'bg-gray-600'} 
-            flex text-white font-bold py-4 px-4
-            transition ease-in-out duration-300 
-            hover:bg-green-600 rounded-md shadow cursor-pointer 
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
-            w-full
-          `}
-        >
-          <IoLocationSharp className="mr-2 text-2xl" /> {/* Larger icon */}
-          {region.charAt(0).toUpperCase() + region.slice(1)}
-        </button>
-      </div>
-    ));
+    return (
+      <Reorder.Group axis="y" values={regions} onReorder={setRegions} className="flex flex-col items-start w-full px-1">
+        {regions.map((region: string) => (
+          <Reorder.Item key={region} value={region} className="w-full mb-1"> {/* Added margin-bottom for spacing */}
+            <button
+              onClick={() => handleSelectRegion(region)}
+              className={`
+                ${selectedRegion === region ? 'bg-gray-700' : 'bg-gray-600'} 
+                flex items-center text-white font-bold py-4 px-4
+                transition ease-in-out duration-300 
+                hover:bg-green-600 rounded-md shadow cursor-pointer 
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
+                w-full
+              `}
+            >
+              <IoLocationSharp className="mr-2 text-2xl" />
+              {region.charAt(0).toUpperCase() + region.slice(1)}
+            </button>
+          </Reorder.Item>
+        ))}
+      </Reorder.Group>
+    );
   };
   
   const renderAnnouncements = () => {
@@ -95,14 +99,18 @@ const AnnouncementsPage = () => {
           </CSSTransition>
         )}
       </TransitionGroup>
-      <div className="fixed inset-x-0 bottom-16 px-5 text-center"> {/* 버튼 위치 조정 */}
-        <button
+      
+      {/* Render the "Back to regions" button only if a region is selected */}
+      {selectedRegion && (
+        <div className="fixed inset-x-0 bottom-16 px-5 text-center">
+          <button
             onClick={() => setSelectedRegion(null)}
             className="mt-4 bg-gray-100 hover:bg-gray-200 text-indigo-800 py-2 px-4 rounded-full transition-colors duration-300"
           >
             Back to regions
-        </button>
-      </div>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { NewsItem } from '../types';
 import SearchBar from '../components/SearchBar';
-import { searchNewsItems } from '../services/apiService';
+import { searchNewsItems, submitVote } from '../services/apiService';
 import NewsList from '../components/NewsList';
 import Spinner from '../components/Spinner';
+import useBookmarks from '../hooks/useBookmarks';
+import useVotes from '../hooks/useVotes';
 
 const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -13,6 +15,8 @@ const SearchPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false); // Initially false until search is performed
   const [isLoading, setIsLoading] = useState(false);
+  const { bookmarks, toggleBookmark } = useBookmarks();
+  const { voteCounts, handleVote } = useVotes();
 
   const query = searchParams.get('query') || '';
 
@@ -55,7 +59,15 @@ const SearchPage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen pt-16 pb-20"> {/* Padding for header and search bar */}
       <SearchBar />
-      <NewsList newsItems={newsItems} />
+      <NewsList
+        newsItems={newsItems.map(item => ({
+          ...item,
+          isBookmarked: bookmarks.includes(item.id),
+          voteCount: voteCounts[item.id] || item.voteCount,
+        }))}
+        onBookmarkToggle={toggleBookmark}
+        onVote={handleVote}
+      />
       {isLoading && <div className="text-center">Loading more items...</div>}
       {!isLoading && hasMore && (
         <div className="mt-4 px-4 flex justify-center">
