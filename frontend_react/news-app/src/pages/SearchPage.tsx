@@ -9,6 +9,10 @@ import Spinner from '../components/Spinner';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
 
+interface ViewCounts {
+  [key: number]: number;
+}
+
 const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
@@ -19,6 +23,8 @@ const SearchPage: React.FC = () => {
   const { voteCounts, handleVote } = useVotes();
 
   const query = searchParams.get('query') || '';
+
+  const [viewCounts, setViewCounts] = useState<ViewCounts>({});
 
   useEffect(() => {
     if (query) {
@@ -56,6 +62,24 @@ const SearchPage: React.FC = () => {
     </button>
   );
 
+  const incrementViewCount = (newsItemId: number) => {
+    setViewCounts(prevViewCounts => {
+      if (!prevViewCounts.hasOwnProperty(newsItemId)) {
+        // If the item isn't in the viewCounts, don't attempt to increment it.
+        return prevViewCounts;
+      }
+      
+      const newCount = (prevViewCounts[newsItemId] || 0) + 1;
+      const updatedViewCounts = {
+        ...prevViewCounts,
+        [newsItemId]: newCount,
+      };
+  
+      localStorage.setItem('viewCounts', JSON.stringify(updatedViewCounts));
+      return updatedViewCounts;
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen pt-16 pb-20"> {/* Padding for header and search bar */}
       <SearchBar />
@@ -67,6 +91,8 @@ const SearchPage: React.FC = () => {
         }))}
         onBookmarkToggle={toggleBookmark}
         onVote={handleVote}
+        incrementViewCount={incrementViewCount}
+        viewCounts={viewCounts}
       />
       {isLoading && <div className="text-center">Loading more items...</div>}
       {!isLoading && hasMore && (

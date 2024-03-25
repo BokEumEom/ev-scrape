@@ -34,7 +34,7 @@ const AnnouncementsPage = () => {
 
   const renderRegionButtons = () => {
     return (
-      <Reorder.Group axis="y" values={regions} onReorder={setRegions} className="flex flex-col items-start w-full px-1">
+      <Reorder.Group axis="y" values={regions} onReorder={setRegions} className="flex flex-col items-center w-full px-1">
         {regions.map((region: string) => (
           <Reorder.Item key={region} value={region} className="w-full mb-1"> {/* Added margin-bottom for spacing */}
             <button
@@ -83,7 +83,7 @@ const AnnouncementsPage = () => {
   });
 
   return (
-    <div {...swipeHandlers} className="flex flex-col items-stretch py-16 bg-white transition-all min-h-screen"> {/* 상단 패딩 추가 */}
+    <div {...swipeHandlers} className="flex flex-col items-stretch pt-20 py-16 bg-white transition-all min-h-screen"> {/* 상단 패딩 추가 */}
       <TransitionGroup>
         {selectedRegion === null ? (
           <CSSTransition nodeRef={regionListRef} classNames="fade" timeout={300} key="region-list">

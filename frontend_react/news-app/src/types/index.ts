@@ -7,6 +7,7 @@ export interface NewsItem {
   published_at: string;
   isBookmarked?: boolean; // Optional property to track if the news item is bookmarked
   voteCount: number;
+  views: number; // 조회수 속성을 추가합니다.
 }
 
 export interface Announcement {

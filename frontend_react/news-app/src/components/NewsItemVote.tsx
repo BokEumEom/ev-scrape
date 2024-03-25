@@ -2,7 +2,7 @@
 import React from 'react';
 import { NewsItemVoteProps } from '../types';
 import { motion } from 'framer-motion';
-import { IoHeartOutline } from 'react-icons/io5';
+import { PiThumbsUpLight } from "react-icons/pi";
 
 const buttonVariants = {
   hover: {
@@ -24,11 +24,11 @@ const NewsItemVote: React.FC<NewsItemVoteProps> = ({ newsId, onVote, voteCount }
         whileHover="hover"
         whileTap="tap"
         onClick={() => onVote(newsId, 1)}
-        className="vote-button upvote"
+        className="rounded-full hover:bg-gray-100"
       >
-        <IoHeartOutline />
+        <PiThumbsUpLight />
       </motion.button>
-      <span>{voteCount}</span> {/* Display the vote count here */}
+      <span className="text-gray-700">{voteCount}</span> {/* Display the vote count here */}
     </div>
   );
 };

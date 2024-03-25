@@ -8,6 +8,10 @@ import { IoIosArrowUp } from 'react-icons/io';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
 
+interface ViewCounts {
+  [key: number]: number;
+}
+
 const NewsPage: React.FC = () => {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [page, setPage] = useState(1);
@@ -15,6 +19,7 @@ const NewsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { bookmarks, toggleBookmark } = useBookmarks();
   const { voteCounts, handleVote } = useVotes();
+  const [viewCounts, setViewCounts] = useState<ViewCounts>({});
 
   // Fetch news items whenever the page number changes or component mounts
   useEffect(() => {
@@ -48,8 +53,34 @@ const NewsPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Ensure this useEffect hook is used to load the viewCounts once when the component mounts
+  useEffect(() => {
+    const loadViewCounts = () => {
+      // Safely parse the JSON with a fallback for undefined values
+      const loadedViewCounts = JSON.parse(localStorage.getItem('viewCounts') || '{}');
+      setViewCounts(loadedViewCounts);
+    };
+  
+    loadViewCounts();
+  }, []);
+  
+
+  const incrementViewCount = (newsItemId: number) => {
+    setViewCounts(prevViewCounts => {
+      const newCount = (prevViewCounts[newsItemId] || 0) + 1;
+      const updatedViewCounts = {
+        ...prevViewCounts,
+        [newsItemId]: newCount,
+      };
+  
+      localStorage.setItem('viewCounts', JSON.stringify(updatedViewCounts));
+      return updatedViewCounts;
+    });
+  };
+  
+  
   return (
-    <div className="flex flex-col min-h-screen pt-16 pb-20">
+    <div className="flex flex-col min-h-screen pt-16 py-20">
       <NewsList
         newsItems={newsItems.map(item => ({
           ...item,
@@ -58,6 +89,8 @@ const NewsPage: React.FC = () => {
         }))}
         onBookmarkToggle={toggleBookmark}
         onVote={handleVote}
+        incrementViewCount={incrementViewCount}
+        viewCounts={viewCounts}
       />
       <div className="mt-4 px-4 flex justify-center">
         {isLoading ? <Spinner /> : <button onClick={handleLoadMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">More</button>}
