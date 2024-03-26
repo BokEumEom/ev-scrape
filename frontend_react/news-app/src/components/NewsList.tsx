@@ -1,22 +1,18 @@
 // src/components/NewsList.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { NewsItem as NewsItemType } from '../types';
 import NewsItemVote from './NewsItemVote';
 import { IoBookmark, IoBookmarkOutline, IoShareOutline, IoChatbubbleOutline } from 'react-icons/io5';
+import { ViewCountContext } from '../contexts/ViewCountContext';
 
 interface Props {
   newsItems: NewsItemType[];
   onBookmarkToggle: (newsItemId: number) => void;
   onVote: (newsId: number, voteValue: number) => void;
-  incrementViewCount: (newsItemId: number) => void;
-  viewCounts: ViewCounts;
 }
 
-interface ViewCounts {
-  [key: number]: number;
-}
-
-const NewsList: React.FC<Props> = ({ newsItems, onBookmarkToggle, onVote, incrementViewCount, viewCounts }) => {
+const NewsList: React.FC<Props> = ({ newsItems, onBookmarkToggle, onVote }) => {
+  const { viewCounts, incrementViewCount } = useContext(ViewCountContext);
 
   const handleTitleClick = (newsItemId: number, event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -27,33 +23,33 @@ const NewsList: React.FC<Props> = ({ newsItems, onBookmarkToggle, onVote, increm
     }
   };
 
-  // 조회수가 변경될 때마다 localStorage에 저장합니다.
-  useEffect(() => {
-    localStorage.setItem('viewCounts', JSON.stringify(viewCounts));
-  }, [viewCounts]);
-
   const handleShare = (newsItem: NewsItemType) => {
     if (navigator.share) {
       navigator.share({
         title: newsItem.title,
         url: newsItem.link,
-      }).then(() => {
-        console.log('Thanks for sharing!');
       })
-      .catch(console.error);
+        .then(() => {
+          console.log('Thanks for sharing!');
+        })
+        .catch(console.error);
     } else {
-      // Fallback for browsers that do not support `navigator.share`
       console.log('Web Share API not supported.');
     }
   };
 
   return (
     <div className="mx-auto px-4">
-      {newsItems.map((newsItem) => (
+      {newsItems.map(newsItem => (
         <div key={newsItem.id} className="border-b border-gray-200 px-4 p-4 flex flex-col">
           <div className="flex-grow">
-            <a href={newsItem.link} target="_blank" rel="noopener noreferrer" 
-              onClick={(event) => handleTitleClick(newsItem.id, event)}className="hover:underline">
+            <a
+              href={newsItem.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(event) => handleTitleClick(newsItem.id, event)}
+              className="hover:underline"
+            >
               <h2 className="text-lg font-semibold text-gray-900">
                 {newsItem.title.replace(/ - .*$/, '')}
               </h2>
@@ -64,11 +60,7 @@ const NewsList: React.FC<Props> = ({ newsItems, onBookmarkToggle, onVote, increm
               {newsItem.source} - {new Date(newsItem.published_at).toLocaleDateString()} - 조회 {viewCounts[newsItem.id] || 0}
             </p>
             <div className="flex items-center">
-              <NewsItemVote
-                newsId={newsItem.id}
-                onVote={onVote}
-                voteCount={newsItem.voteCount}
-              />
+              <NewsItemVote newsId={newsItem.id} onVote={onVote} voteCount={newsItem.voteCount} />
               <button
                 onClick={() => onBookmarkToggle(newsItem.id)}
                 className="p-1 rounded-full hover:bg-gray-100 ml-1"
