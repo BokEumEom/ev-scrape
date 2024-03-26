@@ -30,7 +30,7 @@ const BookmarksPage: React.FC = () => {
 
   return (
     <ViewCountProvider>
-      <div className="flex flex-col min-h-screen pt-16 pb-20">
+      <div className="flex flex-col min-h-screen pt-18 py-20">
         {bookmarkedNewsItems.length > 0 ? (
           <NewsList
             newsItems={bookmarkedNewsItems.map(item => ({

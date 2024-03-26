@@ -5,8 +5,9 @@ import {
   IoHomeOutline, IoHomeSharp,
   IoBookmarkOutline, IoBookmark,
   IoPersonOutline, IoPersonSharp,
-  IoSearchOutline, IoSearch,
-  IoChatbubblesOutline, IoChatbubbles
+  IoChatbubblesOutline, IoChatbubbles,
+  IoNewspaper, IoNewspaperOutline,
+  IoToday, IoTodayOutline
 } from 'react-icons/io5';
 
 const FooterBar: React.FC = () => {
@@ -32,23 +33,23 @@ const FooterBar: React.FC = () => {
         </div>
       </button>
       <button
-        aria-label="Search"
+        aria-label="News"
         className="flex-1"
-        onClick={() => handleIconClick('search', '/search')}
+        onClick={() => handleIconClick('news', '/news')}
       >
         <div className="flex flex-col items-center justify-center">
-          {activeIcon === 'search' ? <IoSearch className="text-indigo-500 text-xl" /> : <IoSearchOutline className="text-gray-800 text-xl" />}
-          <span className="text-gray-600 text-[10px]">검색</span>
+          {activeIcon === 'news' ? <IoNewspaper className="text-indigo-500 text-xl" /> : <IoNewspaperOutline className="text-gray-800 text-xl" />}
+          <span className="text-gray-600 text-[10px]">뉴스</span>
         </div>
       </button>
       <button
-        aria-label="Chat"
+        aria-label="Announcements"
         className="flex-1"
-        onClick={() => handleIconClick('share', '/share')}
+        onClick={() => handleIconClick('announcements', '/announcements')}
       >
         <div className="flex flex-col items-center justify-center">
-          {activeIcon === 'share' ? <IoChatbubbles className="text-indigo-500 text-xl" /> : <IoChatbubblesOutline className="text-gray-800 text-xl" />}
-          <span className="text-gray-600 text-[10px]">채팅</span>
+          {activeIcon === 'announcements' ? <IoToday className="text-indigo-500 text-xl" /> : <IoTodayOutline className="text-gray-800 text-xl" />}
+          <span className="text-gray-600 text-[10px]">공고</span>
         </div>
       </button>
       <button

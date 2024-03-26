@@ -1,5 +1,5 @@
 // src/pages/SearchPage.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { NewsItem } from '../types';
 import SearchBar from '../components/SearchBar';
@@ -9,6 +9,7 @@ import Spinner from '../components/Spinner';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
 import { ViewCountProvider } from '../contexts/ViewCountContext';
+import LoadMoreButton from '../components/LoadMoreButton';
 
 const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -22,40 +23,51 @@ const SearchPage: React.FC = () => {
   const query = searchParams.get('query') || '';
 
   useEffect(() => {
-    if (query) {
-      setIsLoading(true);
-      // Make sure to reset the list of news items if the query changes
-      if (page === 1) setNewsItems([]);
-      searchNewsItems(query, page)
-        .then(newItems => {
-          setNewsItems(currentItems => [...currentItems, ...newItems]);
-          setHasMore(newItems.length === 10); // Assume that if we get fewer than 10, there are no more results
-          setIsLoading(false);
-        })
-        .catch(err => {
-          console.error('Error fetching search results:', err);
-          setIsLoading(false);
-        });
+    if (!query) {
+      // 쿼리가 없을 경우 로딩 상태를 해제하고 함수를 종료합니다.
+      setIsLoading(false);
+      setNewsItems([]); // 기존 뉴스 아이템을 초기화합니다.
+      return;
     }
-  }, [query, page]);
+    // 검색 쿼리가 있을 경우 페이지와 관련 상태를 초기화합니다.
+    setPage(1);
+    setHasMore(true);
+    setIsLoading(true);
+    setNewsItems([]); // 새 검색 시 이전 결과를 초기화합니다.
+  }, [query]);
   
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const newItems = await searchNewsItems(query, page);
+        setNewsItems(prevItems => {
+          // 모든 이전 아이템과 새로운 아이템을 결합한 뒤 중복을 제거합니다.
+          const combinedItems = [...prevItems, ...newItems];
+          const uniqueItems = Array.from(new Set(combinedItems.map(item => item.id)))
+            .map(id => combinedItems.find(item => item.id === id)!);
+          return uniqueItems;
+        });
+        setHasMore(newItems.length === 10);
+      } catch (err) {
+        console.error('Error fetching search results:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchItems();
+  }, [query, page]);  
 
-  const handleLoadMore = () => {
-    setPage(currentPage => currentPage + 1);
-  };
+  useEffect(() => {
+    if (query) {
+      setPage(1);
+      setHasMore(true);
+    }
+  }, [query]);  
 
-  const loadMoreButton = isLoading ? (
-    <div className="flex justify-center items-center my-10">
-      <Spinner />
-    </div>
-  ) : (
-    <button
-      onClick={handleLoadMore}
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
-    >
-      More
-    </button>
-  );
+  const handleLoadMore = useCallback(() => {
+    setPage((prevPage) => prevPage + 1);
+  }, []);
 
   return (
     <ViewCountProvider>
@@ -70,11 +82,9 @@ const SearchPage: React.FC = () => {
           onBookmarkToggle={toggleBookmark}
           onVote={handleVote}
         />
-        {isLoading && <div className="text-center">Loading more items...</div>}
+        {isLoading && <div className="text-center"><Spinner /></div>}
         {!isLoading && hasMore && (
-          <div className="mt-4 px-4 flex justify-center">
-              {loadMoreButton}
-          </div>
+          <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />
         )}
       </div>
     </ViewCountProvider>

@@ -40,8 +40,8 @@ const NewsList: React.FC<Props> = ({ newsItems, onBookmarkToggle, onVote }) => {
 
   return (
     <div className="mx-auto px-4">
-      {newsItems.map(newsItem => (
-        <div key={newsItem.id} className="border-b border-gray-200 px-4 p-4 flex flex-col">
+      {newsItems.map((newsItem, index) => (
+        <div key={`${newsItem.id}-${index}`} className="border-b border-gray-200 px-4 p-4 flex flex-col">
           <div className="flex-grow">
             <a
               href={newsItem.link}
