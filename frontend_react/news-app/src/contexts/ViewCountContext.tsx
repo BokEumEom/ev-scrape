@@ -10,7 +10,12 @@ interface ViewCountContextValue {
   incrementViewCount: (newsItemId: number) => void;
 }
 
-const ViewCountContext = createContext<ViewCountContextValue | undefined>(undefined);
+const defaultContextValue: ViewCountContextValue = {
+  viewCounts: {},
+  incrementViewCount: () => {}, // 아무 작업도 하지 않는 함수
+};
+
+const ViewCountContext = createContext<ViewCountContextValue>(defaultContextValue);
 
 interface ViewCountProviderProps {
   children: ReactNode; // children에 대한 타입 선언

@@ -27,8 +27,8 @@ const FooterBar: React.FC = () => {
         onClick={() => handleIconClick('home', '/')}
       >
         <div className="flex flex-col items-center justify-center">
-          {activeIcon === 'home' ? <IoHomeSharp className="text-indigo-500 text-xl" /> : <IoHomeOutline className="text-indigo-500 text-xl" />}
-          <span className="text-indigo-600 text-[10px]">홈</span>
+          {activeIcon === 'home' ? <IoHomeSharp className="text-indigo-500 text-xl" /> : <IoHomeOutline className="text-gray-800 text-xl" />}
+          <span className="text-gray-600 text-[10px]">홈</span>
         </div>
       </button>
       <button
@@ -37,8 +37,8 @@ const FooterBar: React.FC = () => {
         onClick={() => handleIconClick('search', '/search')}
       >
         <div className="flex flex-col items-center justify-center">
-          {activeIcon === 'search' ? <IoSearch className="text-indigo-500 text-xl" /> : <IoSearchOutline className="text-indigo-500 text-xl" />}
-          <span className="text-indigo-600 text-[10px]">검색</span>
+          {activeIcon === 'search' ? <IoSearch className="text-indigo-500 text-xl" /> : <IoSearchOutline className="text-gray-800 text-xl" />}
+          <span className="text-gray-600 text-[10px]">검색</span>
         </div>
       </button>
       <button
@@ -47,8 +47,8 @@ const FooterBar: React.FC = () => {
         onClick={() => handleIconClick('share', '/share')}
       >
         <div className="flex flex-col items-center justify-center">
-          {activeIcon === 'share' ? <IoChatbubbles className="text-indigo-500 text-xl" /> : <IoChatbubblesOutline className="text-indigo-500 text-xl" />}
-          <span className="text-indigo-600 text-[10px]">채팅</span>
+          {activeIcon === 'share' ? <IoChatbubbles className="text-indigo-500 text-xl" /> : <IoChatbubblesOutline className="text-gray-800 text-xl" />}
+          <span className="text-gray-600 text-[10px]">채팅</span>
         </div>
       </button>
       <button
@@ -57,8 +57,8 @@ const FooterBar: React.FC = () => {
         onClick={() => handleIconClick('bookmarks', '/bookmarks')}
       >
         <div className="flex flex-col items-center justify-center">
-          {activeIcon === 'bookmarks' ? <IoBookmark className="text-indigo-500 text-xl" /> : <IoBookmarkOutline className="text-indigo-500 text-xl" />}
-          <span className="text-indigo-600 text-[10px]">북마크</span>
+          {activeIcon === 'bookmarks' ? <IoBookmark className="text-indigo-500 text-xl" /> : <IoBookmarkOutline className="text-gray-800 text-xl" />}
+          <span className="text-gray-600 text-[10px]">북마크</span>
         </div>
       </button>
       <button
@@ -67,8 +67,8 @@ const FooterBar: React.FC = () => {
         onClick={() => handleIconClick('my-page', '/my-page')}
       >
         <div className="flex flex-col items-center justify-center">
-          {activeIcon === 'my-page' ? <IoPersonSharp className="text-indigo-500 text-xl" /> : <IoPersonOutline className="text-indigo-500 text-xl" />}
-          <span className="text-indigo-600 text-[10px]">내 정보</span>
+          {activeIcon === 'my-page' ? <IoPersonSharp className="text-indigo-500 text-xl" /> : <IoPersonOutline className="text-gray-800 text-xl" />}
+          <span className="text-gray-600 text-[10px]">내 정보</span>
         </div>
       </button>
     </div>

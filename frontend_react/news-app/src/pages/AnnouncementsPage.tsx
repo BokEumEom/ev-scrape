@@ -83,7 +83,7 @@ const AnnouncementsPage = () => {
   });
 
   return (
-    <div {...swipeHandlers} className="flex flex-col items-stretch pt-20 py-16 bg-white transition-all min-h-screen"> {/* 상단 패딩 추가 */}
+    <div {...swipeHandlers} className="flex flex-col items-stretch pt-18 py-20 bg-white transition-all min-h-screen"> {/* 상단 패딩 추가 */}
       <TransitionGroup>
         {selectedRegion === null ? (
           <CSSTransition nodeRef={regionListRef} classNames="fade" timeout={300} key="region-list">

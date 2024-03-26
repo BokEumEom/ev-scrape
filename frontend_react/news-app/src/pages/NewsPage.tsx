@@ -46,7 +46,7 @@ const NewsPage: React.FC = () => {
 
   return (
     <ViewCountProvider>
-      <div className="flex flex-col min-h-screen pt-16 py-20">
+      <div className="flex flex-col min-h-screen pt-18 py-20">
         <NewsList
           newsItems={newsItems.map(item => ({
             ...item,
