@@ -65,7 +65,7 @@ def create_news_item(news: schemas.NewsCreate, db: AsyncSession = Depends(get_db
     return crud.create_news(db=db, news=news)
 
 @app.get("/news", response_model=List[schemas.News])
-async def read_news(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
+async def read_news(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
     news_items = await crud.get_news(db=db, skip=skip, limit=limit)  # Add 'await' here
     return news_items
 
@@ -108,8 +108,8 @@ async def search_news(query: str = Query(...), db: AsyncSession = Depends(get_db
 
 # Community
 @app.get("/community/", response_model=List[schemas.CommunityPost])
-async def read_community_posts(db: AsyncSession = Depends(get_db)):
-    posts = await crud.get_community_posts(db)
+async def read_community_posts(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
+    posts = await crud.get_community_posts(db, skip=skip, limit=limit)
     return posts
 
 @app.get("/community/{post_id}", response_model=schemas.CommunityPost)

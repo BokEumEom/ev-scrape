@@ -2,6 +2,8 @@
 import axios from 'axios';
 import { NewsItem, CommunityPost, CommunityPostCreate } from '../types';
 
+const PAGE_SIZE = 10;
+
 export const API_BASE_URL = 'http://localhost:8000';
 export const PUBLIC_API_BASE_URL = 'https://fastapi.watercharging.com';
 
@@ -54,15 +56,16 @@ export const searchNewsItems = async (query: string, page: number): Promise<News
   }
 };
 
-export const fetchCommunityPosts = async (): Promise<CommunityPost[]> => {
-  const url = `${PUBLIC_API_BASE_URL}/community/`;
+export const fetchCommunityPosts = async (page: number, limit: number = PAGE_SIZE): Promise<CommunityPost[]> => {
+  const skip = (page - 1) * limit;
+  const url = `${API_BASE_URL}/community/?skip=${skip}&limit=${limit}`;
   const response = await axios.get<CommunityPost[]>(url);
   return response.data;
 };
 
 // In your apiService.ts
 export const createCommunityPost = async (post: CommunityPostCreate): Promise<void> => {
-  const url = `${PUBLIC_API_BASE_URL}/community/`;
+  const url = `${API_BASE_URL}/community/`;
   try {
     await axios.post(url, post);
     // You might want to handle the response here if needed

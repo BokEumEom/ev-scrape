@@ -13,9 +13,9 @@ const CommunityPost: React.FC<CommunityPostProps> = ({ post }) => {
 
   return (
     <div className="bg-white shadow rounded-lg p-4 mb-4">
-      <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-      <p className="text-gray-600 mb-3">{post.content}</p>
-      <div className="flex items-center justify-between text-gray-500 text-sm">
+      <h2 className="text-sm font-semibold mb-2">{post.title}</h2>
+      <p className="text-xs text-gray-600 mb-3">{post.content}</p>
+      <div className="text-xs flex items-center justify-between text-gray-500 text-sm">
         <span>{formattedDate}</span>
         <div className="flex items-center">
           <span className="mr-2">{post.voteCount} 좋아요</span>

@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import logoIcon from '../assets/ev_logo.png';
-import { IoSearch, IoNotifications, IoChatbubblesOutline } from "react-icons/io5";
+import { IoSearch, IoNotifications, IoPeopleSharp } from "react-icons/io5";
 
 const NavigationBar: React.FC = () => {
   return (
@@ -13,17 +13,17 @@ const NavigationBar: React.FC = () => {
       </div>
       <ul className="flex">
         <li className="mr-4">
-          <NavLink to="/search" className={({ isActive }) => isActive ? 'text-yellow-500' : 'text-white'}>
+          <NavLink to="/search" className={({ isActive }) => isActive ? 'text-gray-700' : 'text-white'}>
             <IoSearch className="text-2xl" aria-label="검색"/>
           </NavLink>
         </li>
         <li className="mr-4">
-          <NavLink to="/community" className={({ isActive }) => isActive ? 'text-yellow-500' : 'text-white'}>
-            <IoChatbubblesOutline className="text-2xl" aria-label="채팅"/>
+          <NavLink to="/community" className={({ isActive }) => isActive ? 'text-gray-700' : 'text-white'}>
+            <IoPeopleSharp className="text-2xl" aria-label="채팅"/>
           </NavLink>
         </li>
         <li className="mr-8">
-          <NavLink to="/notifications" className={({ isActive }) => isActive ? 'text-yellow-500' : 'text-white'}>
+          <NavLink to="/notifications" className={({ isActive }) => isActive ? 'text-gray-700' : 'text-white'}>
             <IoNotifications className="text-2xl" aria-label="알림"/>
           </NavLink>
         </li>
