@@ -11,6 +11,8 @@ import FooterBar from './components/FooterBar';
 import SearchPage from './pages/SearchPage';
 import MyPage from './pages/MyPage';
 import BookmarksPage from './pages/BookmarksPage';
+import CommunityPage from './pages/CommunityPage';
+import WriteCommunityPost from './components/WriteCommunityPost';
 
 const App: React.FC = () => {
     return (
@@ -42,6 +44,8 @@ const RoutesWrapper = () => {
                     <Route path="/announcements" element={<AnnouncementsPage />} />
                     <Route path="/my-page" element={<MyPage />} />
                     <Route path="/bookmarks" element={<BookmarksPage />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/community/write" element={<WriteCommunityPost />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>

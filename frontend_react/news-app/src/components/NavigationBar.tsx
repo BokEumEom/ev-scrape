@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import logoIcon from '../assets/ev_logo.png';
-import { IoSearch, IoNotifications } from "react-icons/io5";
+import { IoSearch, IoNotifications, IoChatbubblesOutline } from "react-icons/io5";
 
 const NavigationBar: React.FC = () => {
   return (
@@ -15,6 +15,11 @@ const NavigationBar: React.FC = () => {
         <li className="mr-4">
           <NavLink to="/search" className={({ isActive }) => isActive ? 'text-yellow-500' : 'text-white'}>
             <IoSearch className="text-2xl" aria-label="검색"/>
+          </NavLink>
+        </li>
+        <li className="mr-4">
+          <NavLink to="/community" className={({ isActive }) => isActive ? 'text-yellow-500' : 'text-white'}>
+            <IoChatbubblesOutline className="text-2xl" aria-label="채팅"/>
           </NavLink>
         </li>
         <li className="mr-8">

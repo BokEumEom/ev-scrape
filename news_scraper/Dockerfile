@@ -6,7 +6,7 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 
 # Python 가상 환경 설정
-ENV VENV=/app/venv
+ENV VENV=$APP_HOME/venv
 RUN python -m venv $VENV
 ENV PATH="$VENV/bin:$PATH"
 
@@ -16,10 +16,9 @@ RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Playwright 및 필요한 브라우저 바이너리 설치
-# 예시로, Google Chrome만 설치하는 경우:
-RUN pip install playwright
-RUN playwright install
-RUN playwright install-deps
+RUN pip install playwright && \
+    playwright install && \
+    playwright install-deps
 
 # 애플리케이션 코드 복사
 COPY . ./
@@ -31,9 +30,10 @@ ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
-# 첫 번째 단계에서 빌드한 가상 환경 복사
-COPY --from=builder /app /app
+# 첫 번째 단계에서 빌드한 가상 환경과 애플리케이션 코드 복사
+COPY --from=builder $APP_HOME $APP_HOME
 
 ENV PATH="$APP_HOME/venv/bin:$PATH"
 
+# 기본 실행 명령 설정
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

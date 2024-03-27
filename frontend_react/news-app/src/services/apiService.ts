@@ -1,6 +1,6 @@
 // src/services/apiService.ts
 import axios from 'axios';
-import { NewsItem } from '../types';
+import { NewsItem, CommunityPost, CommunityPostCreate } from '../types';
 
 export const API_BASE_URL = 'http://localhost:8000';
 export const PUBLIC_API_BASE_URL = 'https://fastapi.watercharging.com';
@@ -53,6 +53,25 @@ export const searchNewsItems = async (query: string, page: number): Promise<News
     throw error;
   }
 };
+
+export const fetchCommunityPosts = async (): Promise<CommunityPost[]> => {
+  const url = `${PUBLIC_API_BASE_URL}/community/`;
+  const response = await axios.get<CommunityPost[]>(url);
+  return response.data;
+};
+
+// In your apiService.ts
+export const createCommunityPost = async (post: CommunityPostCreate): Promise<void> => {
+  const url = `${PUBLIC_API_BASE_URL}/community/`;
+  try {
+    await axios.post(url, post);
+    // You might want to handle the response here if needed
+  } catch (error) {
+    console.error('Failed to create community post:', error);
+    throw error; // It's good practice to re-throw the error so that it can be caught and handled by the caller
+  }
+};
+
 
 export const submitVote = async (newsId: number, voteValue: number): Promise<NewsItem> => {
   try {

@@ -106,6 +106,37 @@ async def search_news(query: str = Query(...), db: AsyncSession = Depends(get_db
         raise HTTPException(status_code=404, detail="No news found for your search")
     return news_items
 
+# Community
+@app.get("/community/", response_model=List[schemas.CommunityPost])
+async def read_community_posts(db: AsyncSession = Depends(get_db)):
+    posts = await crud.get_community_posts(db)
+    return posts
+
+@app.get("/community/{post_id}", response_model=schemas.CommunityPost)
+async def read_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
+    post = await crud.get_community_post(db, post_id)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return post
+
+@app.post("/community/", response_model=schemas.CommunityPost)
+async def create_community_post(post: schemas.CommunityPostCreate, db: AsyncSession = Depends(get_db)):
+    return await crud.create_community_post(db, post)
+
+@app.put("/community/{post_id}", response_model=schemas.CommunityPost)
+async def update_community_post(post_id: int, post: schemas.CommunityPostCreate, db: AsyncSession = Depends(get_db)):
+    updated_post = await crud.update_community_post(db, post_id, post)
+    if updated_post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return updated_post
+
+@app.delete("/community/{post_id}", response_model=schemas.CommunityPost)
+async def delete_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
+    deleted_post = await crud.delete_community_post(db, post_id)
+    if deleted_post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return deleted_post
+
 # 인천시 고시공고
 @app.get("/announcements/incheon/", response_model=List[Announcement])
 async def get_icn_announcements():

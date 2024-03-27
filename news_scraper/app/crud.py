@@ -42,7 +42,7 @@ async def update_news(db: AsyncSession, news_id: int, updated_news: schemas.News
     db_news = result.scalars().first()
     if db_news:
         # Apply the updates from updated_news to db_news
-        update_data = updated_news.dict(exclude_unset=True)
+        update_data = updated_news.model_dump(exclude_unset=True)
         for key, value in update_data.items():
             setattr(db_news, key, value)
         await db.commit()
@@ -91,3 +91,43 @@ async def vote_news(db: AsyncSession, news_id: int, vote_value: int):
     await db.refresh(news_item)
 
     return news_item
+
+# Community
+async def get_community_posts(db: AsyncSession, skip: int = 0, limit: int = 10):
+    result = await db.execute(
+        select(models.CommunityPost)
+        .order_by(models.CommunityPost.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    return result.scalars().all()
+
+async def get_community_post(db: AsyncSession, post_id: int):
+    result = await db.execute(
+        select(models.CommunityPost).where(models.CommunityPost.id == post_id)
+    )
+    return result.scalars().first()
+
+async def create_community_post(db: AsyncSession, post: schemas.CommunityPostCreate):
+    db_post = models.CommunityPost(**post.dict())
+    db.add(db_post)
+    await db.commit()
+    await db.refresh(db_post)
+    return db_post
+
+async def update_community_post(db: AsyncSession, post_id: int, post: schemas.CommunityPostCreate):
+    db_post = await get_community_post(db, post_id)
+    if db_post:
+        for var, value in vars(post).items():
+            setattr(db_post, var, value) if value else None
+        db_post.updated_at = datetime.utcnow()
+        await db.commit()
+        await db.refresh(db_post)
+    return db_post
+
+async def delete_community_post(db: AsyncSession, post_id: int):
+    db_post = await get_community_post(db, post_id)
+    if db_post:
+        await db.delete(db_post)
+        await db.commit()
+    return db_post
