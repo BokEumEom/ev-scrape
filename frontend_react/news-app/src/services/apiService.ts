@@ -58,14 +58,14 @@ export const searchNewsItems = async (query: string, page: number): Promise<News
 
 export const fetchCommunityPosts = async (page: number, limit: number = PAGE_SIZE): Promise<CommunityPost[]> => {
   const skip = (page - 1) * limit;
-  const url = `${API_BASE_URL}/community/?skip=${skip}&limit=${limit}`;
+  const url = `${PUBLIC_API_BASE_URL}/community/?skip=${skip}&limit=${limit}`;
   const response = await axios.get<CommunityPost[]>(url);
   return response.data;
 };
 
 // In your apiService.ts
 export const createCommunityPost = async (post: CommunityPostCreate): Promise<void> => {
-  const url = `${API_BASE_URL}/community/`;
+  const url = `${PUBLIC_API_BASE_URL}/community/`;
   try {
     await axios.post(url, post);
     // You might want to handle the response here if needed
