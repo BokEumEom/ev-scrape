@@ -19,6 +19,7 @@ from .scraper_seoul import scrape_seoul_announcements
 from .scraper_gwangju import scrape_gwangju_announcements
 from .scraper_incheon import scrape_incheon2_announcements
 from .scraper_goyang import scrape_goyang_announcements
+from .scraper_gangneung import scrape_gn_announcements
 from .cache_management import load_cached_data, save_data_to_cache, get_md5_hash
 
 logger = get_logger()
@@ -190,6 +191,18 @@ async def get_goyang_announcements():
     try:
         cached_data = await load_cached_data()
         new_data = await scrape_goyang_announcements()
+        if not cached_data or get_md5_hash(cached_data) != get_md5_hash(new_data):
+            await save_data_to_cache(new_data)
+        return new_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# 강릉시 고시공고
+@app.get("/announcements/gangneung/", response_model=List[Announcement])
+async def get_gangneung_announcements():
+    try:
+        cached_data = await load_cached_data()
+        new_data = await scrape_gn_announcements()
         if not cached_data or get_md5_hash(cached_data) != get_md5_hash(new_data):
             await save_data_to_cache(new_data)
         return new_data
