@@ -1,27 +1,48 @@
 // src/pages/SearchPage.tsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { NewsItem } from '../types';
 import SearchBar from '../components/SearchBar';
-import { searchNewsItems, submitVote } from '../services/apiService';
+import { searchNewsItems } from '../services/apiService';
 import NewsList from '../components/NewsList';
 import Spinner from '../components/Spinner';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
 import { ViewCountProvider } from '../contexts/ViewCountContext';
 import LoadMoreButton from '../components/LoadMoreButton';
+import RecentSearches from '../components/RecentSearches';
 
 const SearchPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false); // Initially false until search is performed
   const [isLoading, setIsLoading] = useState(false);
   const { bookmarks, toggleBookmark } = useBookmarks();
   const { voteCounts, handleVote } = useVotes();
-
   const query = searchParams.get('query') || '';
+  const inputRef = useRef<HTMLInputElement>(null);
 
+  // Automatically focus the search input when the component is mounted
+  useEffect(() => {
+    if (!query) {
+      inputRef.current?.focus();
+    }
+  }, []);
+
+  // Page load transition effect
+  const pageTransition = {
+    initial: { opacity: 0 },
+    animate: { 
+      opacity: 1, 
+      transition: { duration: 0.5, delayChildren: 0.3 } 
+    },
+    exit: { opacity: 0, transition: { duration: 0.5 } }
+  };
+  
   useEffect(() => {
     if (!query) {
       // 쿼리가 없을 경우 로딩 상태를 해제하고 함수를 종료합니다.
@@ -69,25 +90,45 @@ const SearchPage: React.FC = () => {
     setPage((prevPage) => prevPage + 1);
   }, []);
 
+  const updateSearchQuery = (newQuery: string) => {
+    setSearchQuery(newQuery);
+    // Update the search parameters in the URL
+    setSearchParams({ query: newQuery });
+  };
+
   return (
-    <ViewCountProvider>
-      <div className="flex flex-col min-h-screen pt-16 pb-20"> {/* Padding for header and search bar */}
-        <SearchBar />
-        <NewsList
-          newsItems={newsItems.map(item => ({
-            ...item,
-            isBookmarked: bookmarks.includes(item.id),
-            voteCount: voteCounts[item.id] || item.voteCount,
-          }))}
-          onBookmarkToggle={toggleBookmark}
-          onVote={handleVote}
-        />
-        {isLoading && <div className="text-center"><Spinner /></div>}
-        {!isLoading && hasMore && (
-          <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />
+    <motion.div
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageTransition}
+      className="flex flex-col min-h-screen pt-16 pb-20"
+    >
+      <ViewCountProvider>
+        {/* Pass down the searchQuery and update function to SearchBar */}
+        <SearchBar searchQuery={searchQuery} setSearchQuery={updateSearchQuery} ref={inputRef} />
+        {query ? (
+          <>
+            {isLoading && <Spinner />}
+            <NewsList
+              newsItems={newsItems.map(item => ({
+                ...item,
+                isBookmarked: bookmarks.includes(item.id),
+                voteCount: voteCounts[item.id] || item.voteCount,
+              }))}
+              onBookmarkToggle={toggleBookmark}
+              onVote={handleVote}
+            />
+            {!isLoading && hasMore && (
+              <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />
+            )}
+          </>
+        ) : (
+          // Now `setSearchQuery` is defined and passed to `RecentSearches`
+          <RecentSearches recentSearches={recentSearches} setSearchQuery={updateSearchQuery} />
         )}
-      </div>
-    </ViewCountProvider>
+      </ViewCountProvider>
+    </motion.div>
   );
 };
 

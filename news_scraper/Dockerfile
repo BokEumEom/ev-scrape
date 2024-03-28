@@ -1,42 +1,39 @@
-# First stage: build the application with all dependencies and playwright browsers
+# 첫 번째 단계: 빌드 이미지
 FROM python:3.10-slim-bullseye AS builder
 
 ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
-# Set the Playwright cache location to app directory
-ENV PLAYWRIGHT_BROWSERS_PATH $APP_HOME/.cache/ms-playwright
-
-# Create a virtual environment and add it to the PATH
+# Python 가상 환경 설정
 ENV VENV=$APP_HOME/venv
 RUN python -m venv $VENV
 ENV PATH="$VENV/bin:$PATH"
 
-# Install dependencies
+# 의존성 설치
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Install Playwright and browser dependencies
-RUN playwright install --with-deps
+# Playwright 및 필요한 브라우저 바이너리 설치
+RUN pip install playwright && \
+    playwright install && \
+    playwright install-deps
 
-# Copy application code to container
+# 애플리케이션 코드 복사
 COPY . ./
 
-# Second stage: create the final runtime image
+# 두 번째 단계: 최종 이미지
 FROM python:3.10-slim-bullseye
 
 ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
-# Copy the virtual environment from the builder stage
+# 첫 번째 단계에서 빌드한 가상 환경과 애플리케이션 코드 복사
 COPY --from=builder $APP_HOME $APP_HOME
 
-# Make sure scripts in .venv are usable:
 ENV PATH="$APP_HOME/venv/bin:$PATH"
-ENV PLAYWRIGHT_BROWSERS_PATH $APP_HOME/.cache/ms-playwright
 
-# Start the application
+# 기본 실행 명령 설정
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,18 +1,35 @@
 // src/components/FooterBar.tsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   IoHomeOutline, IoHomeSharp,
   IoBookmarkOutline, IoBookmark,
   IoPersonOutline, IoPersonSharp,
-  IoChatbubblesOutline, IoChatbubbles,
   IoNewspaper, IoNewspaperOutline,
   IoToday, IoTodayOutline
 } from 'react-icons/io5';
 
 const FooterBar: React.FC = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const [activeIcon, setActiveIcon] = useState('');
+
+  // Determine the active icon based on the current route
+  const determineActiveIcon = (pathname: string) => {
+    if (pathname === '/') return 'home';
+    if (pathname.includes('news')) return 'news';
+    if (pathname.includes('announcements')) return 'announcements';
+    if (pathname.includes('bookmarks')) return 'bookmarks';
+    if (pathname.includes('my-page')) return 'my-page';
+    return '';
+  };
+
+  const [activeIcon, setActiveIcon] = useState(determineActiveIcon(location.pathname));
+
+  useEffect(() => {
+    // Update the active icon based on the current route whenever it changes
+    const currentActiveIcon = determineActiveIcon(location.pathname);
+    setActiveIcon(currentActiveIcon);
+  }, [location.pathname]);
 
   const handleIconClick = (iconName: string, path: string) => {
     setActiveIcon(iconName); // Set the clicked icon as active

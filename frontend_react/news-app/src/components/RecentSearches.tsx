@@ -1,7 +1,8 @@
 // src/components/RecentSearches.tsx
 import React from 'react';
+import { RecentSearchesProps } from '../types';
 
-const RecentSearches: React.FC<{ recentSearches: string[], setSearchQuery: React.Dispatch<React.SetStateAction<string>> }> = ({ recentSearches, setSearchQuery }) => {
+const RecentSearches: React.FC<RecentSearchesProps> = ({ recentSearches, setSearchQuery }) => {
   return (
     <div className="flex overflow-x-auto mx-4 mt-2 pb-2">
       {recentSearches.length > 0 && recentSearches.map((search, index) => (

@@ -50,7 +50,7 @@ const NewsList: React.FC<Props> = ({ newsItems, onBookmarkToggle, onVote }) => {
               onClick={(event) => handleTitleClick(newsItem.id, event)}
               className="hover:underline"
             >
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-sm font-semibold text-gray-900">
                 {newsItem.title.replace(/ - .*$/, '')}
               </h2>
             </a>

@@ -14,7 +14,7 @@ const AnnouncementsList: React.FC<AnnouncementsListProps> = ({ announcements }) 
           // Assuming 'id' is unique; use it as a key. If not, use index, but prefer unique IDs.
           <div key={index} className="border-b border-gray-200 p-2 flex flex-col">
             <a href={announcement.link} target="_blank" rel="noopener noreferrer" className="hover:underline block">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-sm font-semibold text-gray-900">
                 {announcement.title}
               </h2>
               <p className="text-xs text-gray-500 mt-2">

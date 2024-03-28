@@ -5,6 +5,7 @@ import { fetchCommunityPosts } from '../services/apiService';
 import CommunityPostComponent from '../components/CommunityPost';
 import LoadMoreButton from '../components/LoadMoreButton';
 import { CommunityPost } from '../types';
+import { motion } from 'framer-motion';
 
 const PAGE_SIZE = 10;
 
@@ -14,6 +15,16 @@ const CommunityPage: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Page load transition effect
+  const pageTransition = {
+    initial: { opacity: 0 },
+    animate: { 
+      opacity: 1, 
+      transition: { duration: 0.5, delayChildren: 0.3 } 
+    },
+    exit: { opacity: 0, transition: { duration: 0.5 } }
+  };
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -44,29 +55,37 @@ const CommunityPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-white pt-18 py-20">
-      <div className="container mx-auto px-4">
-        <div className="text-right mb-4">
-          <button
-            onClick={handleWritePost}
-            className="fixed bottom-16 right-4 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-lg"
-            style={{ transition: 'background-color 0.3s' }}
-          >
-            + 글쓰기
-          </button>
-        </div>
-        {posts.length ? (
-          <>
-            {posts.map((post) => <CommunityPostComponent key={post.id} post={post} />)}
-            {hasMore && <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />}
-          </>
-        ) : (
-          <div className="text-center mt-4">
-            <p>No posts yet. Be the first to start a discussion!</p>
+    <motion.div
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageTransition}
+      className="flex flex-col min-h-screen pb-18"
+    >
+      <div className="flex min-h-screen bg-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-right mb-4">
+            <button
+              onClick={handleWritePost}
+              className="fixed bottom-16 right-4 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-lg"
+              style={{ transition: 'background-color 0.3s' }}
+            >
+              + 글쓰기
+            </button>
           </div>
-        )}
+          {posts.length ? (
+            <>
+              {posts.map((post) => <CommunityPostComponent key={post.id} post={post} />)}
+              {hasMore && <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />}
+            </>
+          ) : (
+            <div className="text-center mt-4">
+              <p>No posts yet. Be the first to start a discussion!</p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -44,17 +44,16 @@ export const fetchAnnouncements = async (endpoint: string) => {
 export const searchNewsItems = async (query: string, page: number): Promise<NewsItem[]> => {
   const limit = 10;
   const skip = (page - 1) * limit;
+  const url = `${PUBLIC_API_BASE_URL}/news/search/?query=${encodeURIComponent(query)}&skip=${skip}&limit=${limit}`;
+  console.log("Requesting URL:", url); // Add this line to log the URL
   try {
-    const response = await axios.get(`${PUBLIC_API_BASE_URL}/news/search/`, {
-      params: { query, skip, limit }
-    });
+    const response = await axios.get(url);
     return response.data;
   } catch (error) {
     console.error("Search API error:", error);
-    // handle the error appropriately
     throw error;
   }
-};
+};  
 
 export const fetchCommunityPosts = async (page: number, limit: number = PAGE_SIZE): Promise<CommunityPost[]> => {
   const skip = (page - 1) * limit;

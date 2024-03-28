@@ -41,3 +41,13 @@ export interface CommunityPostCreate {
   title: string;
   content: string;
 }
+
+export interface SearchBarProps {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+}
+
+export interface RecentSearchesProps {
+  recentSearches: string[];
+  setSearchQuery: (query: string) => void;
+}
