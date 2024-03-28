@@ -33,6 +33,11 @@ const SearchPage = () => {
     setRecentSearches(loadedRecentSearches);
   }, []);
 
+  // Focus the input when the component mounts
+  useEffect(() => {
+    inputRef.current?.focus(); // This will focus the input element
+  }, []);
+
   // Fetch news items when query changes
   useEffect(() => {
     if (query) {
