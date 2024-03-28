@@ -10,6 +10,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const fetchNewsItems = async (page: number = 1, limit: number = 10): Promise<NewsItem[]> => {
   const skip = (page - 1) * limit; // Calculate the correct skip value
   const url = `${API_BASE_URL}/news?skip=${skip}&limit=${limit}`;
+  console.log("Requesting URL:", url); // Add this line to log the URL
   
   try {
       const response = await fetch(url);

@@ -3,19 +3,29 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserProfile } from '../types';
 import { getUserProfile, signOutUser } from '../services/userService';
+import Spinner from '../components/Spinner';
+import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
+import { FaPencilAlt } from "react-icons/fa";
+import { HiFire } from "react-icons/hi2";
 
 const MyPage: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [activeTab, setActiveTab] = useState('posts');
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userData = await getUserProfile();
-      setUser(userData);
+      try {
+        const userData = await getUserProfile();
+        setUser(userData);
+      } catch (error) {
+        console.error(error);
+        // Handle errors, maybe navigate to a login page if not authenticated
+      }
     };
 
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
   const handleSignOut = async () => {
     await signOutUser();
@@ -23,25 +33,127 @@ const MyPage: React.FC = () => {
   };
 
   if (!user) {
-    return <div>Loading...</div>; // or any loading indicator
+    return <div><Spinner /></div>; // or any loading indicator
   }
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'posts':
+        // Replace with actual post content
+        return <div>작성한 글 내용</div>;
+      case 'comments':
+        // Replace with actual comments content
+        return <div>댓글단 글 내용</div>;
+      case 'saves':
+        // Replace with actual saved posts content
+        return <div>저장한 글 내용</div>;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4 py-16 pt-20">
-      <div className="flex flex-col items-center mb-8">
-        <img src={user.avatarUrl} alt="Profile" className="w-24 h-24 rounded-full" />
-        <h1 className="text-xl font-bold my-2">{user.name}</h1>
-        <p>{user.email}</p>
+    <div className="container mx-auto px-4 py-20">
+      <div className="bg-white shadow rounded-lg p-2 mb-4">
+        <div className="flex flex-col items-center">
+          <img src={user.avatarUrl} alt="Profile" className="w-24 h-24 rounded-full" />
+          <h2 className="mt-4 font-bold text-lg">{user.name}</h2>
+          <p className="text-sm text-gray-600">{user.joinDate}</p>
+          {/* More user details can be added here */}
+        </div>
+
+        <div className="flex justify-around my-4 text-center">
+          <div>
+            <span className="block font-bold">{user.postsCount}</span>
+            <span className="text-gray-600">조회수</span>
+          </div>
+          <div>
+            <span className="block font-bold">{user.followersCount}</span>
+            <span className="text-gray-600">작성글/댓글</span>
+          </div>
+          <div>
+            <span className="block font-bold">{user.followingCount}</span>
+            <span className="text-gray-600">받은 공감</span>
+          </div>
+        </div>
+
+        <div className="flex justify-around my-4">
+          {/* Example: Some achievement badges here */}
+          {/* ... */}
+        </div>
+
+        <div className="text-center mt-8">
+          <button
+            onClick={handleSignOut}
+            className="text-white bg-gray-500 hover:bg-red-700 font-medium rounded-lg text-sm w-full py-2.5 text-center"
+          >
+            프로필 등록
+          </button>
+        </div>
       </div>
 
-      {/* Add more sections as needed */}
+      <div className="bg-white shadow rounded-lg p-2 mb-4 ">
+        <div className="border-b border-gray-200">
+          <nav className="flex space-x-1 justify-around">
+            {['posts', 'comments', 'saves'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 py-4 text-sm font-medium text-center ${
+                  activeTab === tab
+                    ? 'border-b-2 border-blue-500 text-blue-600'
+                    : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab === 'posts' && '작성한 글'}
+                {tab === 'comments' && '댓글단 글'}
+                {tab === 'saves' && '저장한 글'}
+              </button>
+            ))}
+          </nav>
+        </div>
 
-      <button
-        onClick={handleSignOut}
-        className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Sign Out
-      </button>
+        {/* Tab Content */}
+        <div className="p-4">
+          {renderTabContent()}
+        </div>
+
+        <div className="text-center py-8">
+          <span className="text-lg font-medium">전기차 오너 이야기를 이곳에서 들려주세요.</span>
+          <button
+            onClick={handleSignOut} // Update this onClick event to handle the actual action you want
+            className="w-full bg-blue-500 text-white rounded-lg mt-4 py-2 px-4 hover:bg-blue-600"
+          >
+            전기차 생활 글쓰기
+          </button>
+        </div>
+        
+      </div>
+
+      <div className="bg-white shadow rounded-lg p-5">
+        <div className="flex justify-around my-4 text-center">
+            <div className="flex flex-col items-center justify-center">
+              <span className="block font-bold">{user.postsCount}</span>
+              <span className="text-gray-600 py-2">글쓰기</span>
+              <FaPencilAlt className="text-gray-700 text-2xl mb-2" />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <span className="block font-bold">{user.followersCount}</span>
+              <span className="text-gray-600 py-2">댓글쓰기</span>
+              <IoChatbubbleEllipses className="text-gray-700 text-2xl mb-2" />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <span className="block font-bold">{user.followingCount}</span>
+              <span className="text-gray-600 py-2">인기글 조회</span>
+              <HiFire className="text-gray-700 text-2xl mb-2" />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <span className="block font-bold">{user.followingCount}</span>
+              <span className="text-gray-600 py-2">공감 보내기</span>
+              <IoHeartSharp className="text-gray-700 text-2xl mb-2" />
+            </div>
+          </div>
+      </div>
     </div>
   );
 };
