@@ -13,122 +13,152 @@ import { ViewCountProvider } from '../contexts/ViewCountContext';
 import LoadMoreButton from '../components/LoadMoreButton';
 import RecentSearches from '../components/RecentSearches';
 
-const SearchPage: React.FC = () => {
+const MAX_RECENT_SEARCHES = 5;
+
+const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false); // Initially false until search is performed
   const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const { bookmarks, toggleBookmark } = useBookmarks();
   const { voteCounts, handleVote } = useVotes();
   const query = searchParams.get('query') || '';
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Automatically focus the search input when the component is mounted
+  // Load recent searches from localStorage
   useEffect(() => {
-    if (!query) {
-      inputRef.current?.focus();
-    }
+    const loadedRecentSearches: string[] = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+    setRecentSearches(loadedRecentSearches);
   }, []);
+
+  // Fetch news items when query changes
+  useEffect(() => {
+    if (query) {
+      setIsLoading(true); // Starts the loading indicator
+      fetchSearchResults(query, page); // Fetches search results
+    }
+  }, [query, page]);
+
+  // Fetch search results only when the user submits a search, not on every keystroke
+  const fetchSearchResults = async (searchQuery, currentPage) => {
+    if (!searchQuery.trim()) return;
+    setIsLoading(true);
+    try {
+      const newItems = await searchNewsItems(searchQuery, currentPage);
+      setNewsItems(prevItems => currentPage === 1 ? newItems : [...prevItems, ...newItems]);
+      setHasMore(newItems.length === 10);
+      if (currentPage === 1 && newItems.length > 0) {
+        updateRecentSearches(searchQuery); // Update recent searches here
+      }
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Function to update recent searches
+  const updateRecentSearches = (searchTerm: string): void => {
+    // Ensure searchTerm is a string and not empty
+    if (searchTerm.trim() === '') return;
+  
+    // Add the new search term to the beginning of the array, removing duplicates
+    const updatedSearches = [searchTerm, ...recentSearches.filter(term => term !== searchTerm)];
+  
+    // Limit the number of recent searches to store
+    const recentSearchesToStore = updatedSearches.slice(0, MAX_RECENT_SEARCHES);
+  
+    // Update state and localStorage
+    setRecentSearches(recentSearchesToStore);
+    localStorage.setItem('recentSearches', JSON.stringify(recentSearchesToStore));
+  };
+
+  // Search submission handler
+  const handleSearch = (newQuery: string) => {
+    if (newQuery.trim()) {
+      updateRecentSearches(newQuery);
+      setIsLoading(true); // Start the loading state
+      setNewsItems([]); // Clear current news items
+      setPage(1); // Reset page count
+      setSearchParams({ query: newQuery }); // Set URL search params
+      fetchSearchResults(newQuery, 1); // Explicitly fetch search results
+    }
+  };
+
+  const handleLoadMore = useCallback(() => {
+    // Increment page state which will trigger a re-fetch in the useEffect
+    setPage(prevPage => prevPage + 1);
+  }, []);
+
+  useEffect(() => {
+    if (page > 1) {
+      // When page changes and it's not the first page, fetch more items
+      setIsLoading(true);
+      const fetchMoreResults = async () => {
+        try {
+          const moreItems = await searchNewsItems(query, page);
+          setNewsItems(prevItems => [...prevItems, ...moreItems]);
+          setHasMore(moreItems.length === 10);
+        } catch (error) {
+          console.error('Error fetching more search results:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchMoreResults();
+    }
+  }, [page, query]);
 
   // Page load transition effect
   const pageTransition = {
     initial: { opacity: 0 },
-    animate: { 
-      opacity: 1, 
-      transition: { duration: 0.5, delayChildren: 0.3 } 
+    animate: {
+      opacity: 1,
+      transition: { duration: 0.5, delayChildren: 0.3 },
     },
-    exit: { opacity: 0, transition: { duration: 0.5 } }
-  };
-  
-  useEffect(() => {
-    if (!query) {
-      // 쿼리가 없을 경우 로딩 상태를 해제하고 함수를 종료합니다.
-      setIsLoading(false);
-      setNewsItems([]); // 기존 뉴스 아이템을 초기화합니다.
-      return;
-    }
-    // 검색 쿼리가 있을 경우 페이지와 관련 상태를 초기화합니다.
-    setPage(1);
-    setHasMore(true);
-    setIsLoading(true);
-    setNewsItems([]); // 새 검색 시 이전 결과를 초기화합니다.
-  }, [query]);
-  
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const newItems = await searchNewsItems(query, page);
-        setNewsItems(prevItems => {
-          // 모든 이전 아이템과 새로운 아이템을 결합한 뒤 중복을 제거합니다.
-          const combinedItems = [...prevItems, ...newItems];
-          const uniqueItems = Array.from(new Set(combinedItems.map(item => item.id)))
-            .map(id => combinedItems.find(item => item.id === id)!);
-          return uniqueItems;
-        });
-        setHasMore(newItems.length === 10);
-      } catch (err) {
-        console.error('Error fetching search results:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    fetchItems();
-  }, [query, page]);  
-
-  useEffect(() => {
-    if (query) {
-      setPage(1);
-      setHasMore(true);
-    }
-  }, [query]);  
-
-  const handleLoadMore = useCallback(() => {
-    setPage((prevPage) => prevPage + 1);
-  }, []);
-
-  const updateSearchQuery = (newQuery: string) => {
-    setSearchQuery(newQuery);
-    // Update the search parameters in the URL
-    setSearchParams({ query: newQuery });
+    exit: { opacity: 0, transition: { duration: 0.5 } },
   };
 
   return (
-    <motion.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageTransition}
-      className="flex flex-col min-h-screen pt-16 pb-20"
-    >
-      <ViewCountProvider>
-        {/* Pass down the searchQuery and update function to SearchBar */}
-        <SearchBar searchQuery={searchQuery} setSearchQuery={updateSearchQuery} ref={inputRef} />
-        {query ? (
-          <>
-            {isLoading && <Spinner />}
-            <NewsList
-              newsItems={newsItems.map(item => ({
-                ...item,
-                isBookmarked: bookmarks.includes(item.id),
-                voteCount: voteCounts[item.id] || item.voteCount,
-              }))}
-              onBookmarkToggle={toggleBookmark}
-              onVote={handleVote}
-            />
-            {!isLoading && hasMore && (
-              <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />
-            )}
-          </>
+    <ViewCountProvider>
+      <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageTransition}
+        className="flex flex-col min-h-screen pt-16 pb-20"
+      >  
+        <SearchBar searchQuery={query} setSearchQuery={handleSearch} ref={inputRef} />
+        <span 
+          className="font-bold text-xs text-gray-800 px-6 py-4"
+        >
+          최근 검색
+        </span>
+        <RecentSearches
+          recentSearches={recentSearches}
+          setSearchQuery={handleSearch}
+          setRecentSearches={setRecentSearches}
+        />
+        {isLoading ? (
+          <Spinner />
         ) : (
-          // Now `setSearchQuery` is defined and passed to `RecentSearches`
-          <RecentSearches recentSearches={recentSearches} setSearchQuery={updateSearchQuery} />
+          <NewsList
+            newsItems={newsItems.map((item) => ({
+              ...item,
+              isBookmarked: bookmarks.includes(item.id),
+              voteCount: voteCounts[item.id] || item.voteCount,
+            }))}
+            onBookmarkToggle={toggleBookmark}
+            onVote={handleVote}
+          />
         )}
-      </ViewCountProvider>
-    </motion.div>
+        {!isLoading && hasMore && (
+          <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />
+        )}
+      </motion.div>
+    </ViewCountProvider>
   );
 };
 

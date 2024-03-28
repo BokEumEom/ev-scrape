@@ -50,4 +50,10 @@ export interface SearchBarProps {
 export interface RecentSearchesProps {
   recentSearches: string[];
   setSearchQuery: (query: string) => void;
+  setRecentSearches: (searches: string[]) => void;
+}
+
+export interface LoadMoreButtonProps {
+  isLoading: boolean;
+  onClick: () => void;
 }

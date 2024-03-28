@@ -4,12 +4,12 @@ import { NewsItem, CommunityPost, CommunityPostCreate } from '../types';
 
 const PAGE_SIZE = 10;
 
-export const API_BASE_URL = 'http://localhost:8000';
-export const PUBLIC_API_BASE_URL = 'https://fastapi.watercharging.com';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// export const PUBLIC_API_BASE_URL = 'https://fastapi.watercharging.com';
 
 export const fetchNewsItems = async (page: number = 1, limit: number = 10): Promise<NewsItem[]> => {
   const skip = (page - 1) * limit; // Calculate the correct skip value
-  const url = `${PUBLIC_API_BASE_URL}/news?skip=${skip}&limit=${limit}`;
+  const url = `${API_BASE_URL}/news?skip=${skip}&limit=${limit}`;
   
   try {
       const response = await fetch(url);
@@ -31,7 +31,7 @@ export const fetchNewsItems = async (page: number = 1, limit: number = 10): Prom
 };
 
 export const fetchAnnouncements = async (endpoint: string) => {
-    const url = `${PUBLIC_API_BASE_URL}/announcements/${endpoint}/`;
+    const url = `${API_BASE_URL}/announcements/${endpoint}/`;
     try {
       const response = await axios.get(url);
       return response.data;
@@ -44,7 +44,7 @@ export const fetchAnnouncements = async (endpoint: string) => {
 export const searchNewsItems = async (query: string, page: number): Promise<NewsItem[]> => {
   const limit = 10;
   const skip = (page - 1) * limit;
-  const url = `${PUBLIC_API_BASE_URL}/news/search/?query=${encodeURIComponent(query)}&skip=${skip}&limit=${limit}`;
+  const url = `${API_BASE_URL}/news/search/?query=${encodeURIComponent(query)}&skip=${skip}&limit=${limit}`;
   console.log("Requesting URL:", url); // Add this line to log the URL
   try {
     const response = await axios.get(url);
@@ -57,14 +57,14 @@ export const searchNewsItems = async (query: string, page: number): Promise<News
 
 export const fetchCommunityPosts = async (page: number, limit: number = PAGE_SIZE): Promise<CommunityPost[]> => {
   const skip = (page - 1) * limit;
-  const url = `${PUBLIC_API_BASE_URL}/community/?skip=${skip}&limit=${limit}`;
+  const url = `${API_BASE_URL}/community/?skip=${skip}&limit=${limit}`;
   const response = await axios.get<CommunityPost[]>(url);
   return response.data;
 };
 
 // In your apiService.ts
 export const createCommunityPost = async (post: CommunityPostCreate): Promise<void> => {
-  const url = `${PUBLIC_API_BASE_URL}/community/`;
+  const url = `${API_BASE_URL}/community/`;
   try {
     await axios.post(url, post);
     // You might want to handle the response here if needed
@@ -77,13 +77,13 @@ export const createCommunityPost = async (post: CommunityPostCreate): Promise<vo
 
 export const submitVote = async (newsId: number, voteValue: number): Promise<NewsItem> => {
   try {
-    const response = await axios.post(`${PUBLIC_API_BASE_URL}/news/${newsId}/vote`, {
+    const response = await axios.post(`${API_BASE_URL}/news/${newsId}/vote`, {
       vote_value: voteValue,
     });
     // Assuming the response data is a NewsItem object
     return response.data;
   } catch (error) {
-    console.error(`Error submitting vote to ${PUBLIC_API_BASE_URL}/news/${newsId}/vote:`, error);
+    console.error(`Error submitting vote to ${API_BASE_URL}/news/${newsId}/vote:`, error);
     throw error;
   }
 };
