@@ -8,6 +8,10 @@ import pytz
 # Get the KST timezone
 kst = pytz.timezone('Asia/Seoul')
 
+class Region(Base):
+    __tablename__ = "regions"
+    name = Column(String, primary_key=True, index=True)
+
 class News(Base):
     __tablename__ = 'news'
     id = Column(Integer, primary_key=True, index=True)

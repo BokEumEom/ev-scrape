@@ -131,3 +131,6 @@ async def delete_community_post(db: AsyncSession, post_id: int):
         await db.delete(db_post)
         await db.commit()
     return db_post
+
+def get_regions(db: AsyncSession):
+    return db.query(models.Region).all()

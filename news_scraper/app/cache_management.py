@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 
 CACHE_FILE_PATH = 'incheon_announcements_cache.json'
 
-async def load_cached_data():
+async def load_cached_data(region: str):
     if not os.path.exists(CACHE_FILE_PATH):
         return []
     try:
@@ -21,7 +21,7 @@ async def load_cached_data():
         logger.error("Failed to load cached data", exc_info=True)
         return []
 
-async def save_data_to_cache(data):
+async def save_data_to_cache(region: str, data):
     try:
         async with aiofiles.open(CACHE_FILE_PATH, 'w', encoding='utf-8') as file:
             await file.write(json.dumps(data, ensure_ascii=False))

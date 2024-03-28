@@ -1,10 +1,11 @@
 # app/main.py
 from typing import List, AsyncGenerator
-from fastapi import FastAPI, Depends, HTTPException, status, Query, Path, Body
+from fastapi import FastAPI, Depends, HTTPException, status, Query, Path, Body, Request
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 import asyncio
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 from sqlalchemy.future import select
 from . import models, crud, schemas
@@ -21,6 +22,20 @@ from .scraper_incheon import scrape_incheon2_announcements
 from .scraper_goyang import scrape_goyang_announcements
 from .scraper_gangneung import scrape_gn_announcements
 from .cache_management import load_cached_data, save_data_to_cache, get_md5_hash
+from .scraping_utils import fetch_announcements_with_caching
+
+SCRAPERS = {
+    'seoul': scrape_seoul_announcements,
+    'gyeonggi': scrape_gyeonggi_announcements,
+    'incheon': scrape_incheon_announcements,
+    'koroad': scraper_koroad_announcements,
+    'gwangju': scrape_gwangju_announcements,
+    'bucheon': scrape_bucheon_announcements,
+    'ulsan': scrape_ulsan_announcements,
+    'incheon2': scrape_incheon2_announcements,
+    'goyang': scrape_goyang_announcements,
+    # ... add other regions
+}
 
 logger = get_logger()
 
@@ -136,6 +151,27 @@ async def delete_community_post(post_id: int, db: AsyncSession = Depends(get_db)
     if deleted_post is None:
         raise HTTPException(status_code=404, detail="Post not found")
     return deleted_post
+
+@app.get("/regions/", response_model=List[str])
+async def list_regions():
+    return list(SCRAPERS.keys())
+
+@app.get("/announcements/{region_name}/", response_model=List[Announcement])
+async def get_regional_announcements(region_name: str):
+    if region_name not in SCRAPERS:
+        raise HTTPException(status_code=404, detail="Region not found")
+    try:
+        return await fetch_announcements_with_caching(SCRAPERS[region_name], region_name)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled exception: {exc}")  # Log the error for debugging purposes
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"An error occurred: {exc}"}
+    )
 
 # 인천시 고시공고
 @app.get("/announcements/incheon/", response_model=List[Announcement])
