@@ -7,10 +7,17 @@ import Spinner from '../components/Spinner';
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import { FaPencilAlt } from "react-icons/fa";
 import { HiFire } from "react-icons/hi2";
+import { motion, AnimatePresence } from 'framer-motion';
+
+const tabs = [
+  { name: '작성한 글', key: 'posts' },
+  { name: '댓글단 글', key: 'comments' },
+  { name: '저장한 글', key: 'saves' },
+];
 
 const MyPage: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [activeTab, setActiveTab] = useState('posts');
+  const [activeTab, setActiveTab] = useState(tabs[0].key);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,14 +46,11 @@ const MyPage: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'posts':
-        // Replace with actual post content
-        return <div>작성한 글 내용</div>;
+        return <div>Posts content...</div>;
       case 'comments':
-        // Replace with actual comments content
-        return <div>댓글단 글 내용</div>;
+        return <div>Comments content...</div>;
       case 'saves':
-        // Replace with actual saved posts content
-        return <div>저장한 글 내용</div>;
+        return <div>Saves content...</div>;
       default:
         return null;
     }
@@ -95,28 +99,42 @@ const MyPage: React.FC = () => {
       <div className="bg-white shadow rounded-lg p-2 mb-4 ">
         <div className="border-b border-gray-200">
           <nav className="flex space-x-1 justify-around">
-            {['posts', 'comments', 'saves'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
+            {tabs.map((tab) => (
+              <motion.button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
                 className={`flex-1 py-4 text-sm font-medium text-center ${
-                  activeTab === tab
-                    ? 'border-b-2 border-blue-500 text-blue-600'
-                    : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  activeTab === tab.key
+                    ? 'text-blue-600'
+                    : 'text-gray-500 hover:text-gray-700'
                 }`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
-                {tab === 'posts' && '작성한 글'}
-                {tab === 'comments' && '댓글단 글'}
-                {tab === 'saves' && '저장한 글'}
-              </button>
+                {tab.name}
+                {activeTab === tab.key && (
+                  <motion.div
+                    className="border-b-2 border-blue-500"
+                    layoutId="underline"
+                  />
+                )}
+              </motion.button>
             ))}
           </nav>
         </div>
 
-        {/* Tab Content */}
-        <div className="p-4">
-          {renderTabContent()}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="p-4"
+          >
+            {renderTabContent()}
+          </motion.div>
+        </AnimatePresence>
 
         <div className="text-center py-8">
           <span className="text-lg font-medium">전기차 오너 이야기를 이곳에서 들려주세요.</span>
@@ -127,7 +145,6 @@ const MyPage: React.FC = () => {
             전기차 생활 글쓰기
           </button>
         </div>
-        
       </div>
 
       <div className="bg-white shadow rounded-lg p-5">
