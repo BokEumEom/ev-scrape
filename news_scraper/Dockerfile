@@ -10,15 +10,17 @@ ENV VENV=$APP_HOME/venv
 RUN python -m venv $VENV
 ENV PATH="$VENV/bin:$PATH"
 
+# 시스템 의존성 설치
+RUN apt-get update && apt-get install -y \
+    wget \
+    xvfb \
+    # Playwright에 필요한 추가 의존성들을 여기에 추가하세요
+    && rm -rf /var/lib/apt/lists/*
+
 # 의존성 설치
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
-
-# Playwright 및 필요한 브라우저 바이너리 설치
-RUN pip install playwright && \
-    playwright install && \
-    playwright install-deps
 
 # 애플리케이션 코드 복사
 COPY . ./
@@ -35,5 +37,9 @@ COPY --from=builder $APP_HOME $APP_HOME
 
 ENV PATH="$APP_HOME/venv/bin:$PATH"
 
-# 기본 실행 명령 설정
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Playwright 설치 스크립트를 실행 파일로 복사 (선택사항)
+COPY ./scripts/install_playwright.sh /usr/local/bin/install_playwright.sh
+RUN chmod +x /usr/local/bin/install_playwright.sh
+
+# 기본 실행 명령 설정. Playwright 설치 스크립트를 실행하도록 변경
+CMD ["sh", "-c", "/usr/local/bin/install_playwright.sh && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
