@@ -20,9 +20,18 @@ async def get_news(db: AsyncSession, skip: int = 0, limit: int = 100):
     Asynchronously fetch news items from the database.
     """
     query = select(models.News).order_by(models.News.published_at.desc()).offset(skip).limit(limit)
-    result = await db.execute(query)  # Make sure to await the execution
+    result = await db.execute(query)
     news_items = result.scalars().all()
     return news_items
+
+async def get_news_count(db: AsyncSession):
+    """
+    Asynchronously get the total count of news items in the database.
+    """
+    query = select(func.count()).select_from(models.News)
+    result = await db.execute(query)
+    total_count = result.scalar_one()
+    return total_count
 
 async def get_news_by_id(db: AsyncSession, news_id: int):
     """

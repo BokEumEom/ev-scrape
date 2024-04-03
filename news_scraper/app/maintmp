@@ -1,0 +1,102 @@
+# # 인천시 고시공고
+# @app.get("/announcements/incheon/", response_model=List[Announcement])
+# async def get_icn_announcements():
+#     try:
+#         announcements_data = scrape_incheon_announcements()
+#         return announcements_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# # 경기도 사업공고
+# @app.get("/announcements/gyeonggi/", response_model=List[Announcement])
+# async def get_gyeonggi_announcements():
+#     try:
+#         announcements_data = scrape_gyeonggi_announcements()
+#         return announcements_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+
+# # 서울시 사업공고             
+# @app.get("/announcements/seoul/", response_model=List[Announcement])
+# async def get_seoul_announcements():
+#     try:
+#         # Ensure scrape_seoul_announcements() is awaited if it's an async function
+#         announcements_data = await scrape_seoul_announcements()
+#         return announcements_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# # 도로교통공단 사업공고
+# @app.get("/announcements/koroad/", response_model=List[Announcement])
+# async def get_koroad_announcements():
+#     try:
+#         announcements_data = scraper_koroad_announcements()
+#         return announcements_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# # 광주광역시 사업공고
+# @app.get("/announcements/gwangju/", response_model=List[Announcement])
+# async def get_gwangju_announcements():
+#     try:
+#         # Ensure scrape_seoul_announcements() is awaited if it's an async function
+#         announcements_data = await scrape_gwangju_announcements()
+#         return announcements_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# # 부천시 사업공고
+# @app.get("/announcements/bucheon/", response_model=List[Announcement])
+# async def get_bucheon_announcements():
+#     try:
+#         # Ensure scrape_seoul_announcements() is awaited if it's an async function
+#         announcements_data = scrape_bucheon_announcements()
+#         return announcements_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# # 울산광역시 사업공고
+# @app.get("/announcements/ulsan/", response_model=List[Announcement])
+# async def get_ulsan_announcements():
+#     try:
+#         # Ensure scrape_seoul_announcements() is awaited if it's an async function
+#         announcements_data = scrape_ulsan_announcements()
+#         return announcements_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# # 인천광역시 고시공고
+# @app.get("/announcements/incheon2/", response_model=List[Announcement])
+# async def get_incheon2_announcements():
+#     try:
+#         cached_data = await load_cached_data()
+#         new_data = await scrape_incheon2_announcements()
+#         if not cached_data or get_md5_hash(cached_data) != get_md5_hash(new_data):
+#             await save_data_to_cache(new_data)
+#         return new_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# # 고양시 고시공고
+# @app.get("/announcements/goyang/", response_model=List[Announcement])
+# async def get_goyang_announcements():
+#     try:
+#         cached_data = await load_cached_data()
+#         new_data = await scrape_goyang_announcements()
+#         if not cached_data or get_md5_hash(cached_data) != get_md5_hash(new_data):
+#             await save_data_to_cache(new_data)
+#         return new_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")
+    
+# # 강릉시 고시공고
+# @app.get("/announcements/gangneung/", response_model=List[Announcement])
+# async def get_gangneung_announcements():
+#     try:
+#         cached_data = await load_cached_data()
+#         new_data = await scrape_gn_announcements()
+#         if not cached_data or get_md5_hash(cached_data) != get_md5_hash(new_data):
+#             await save_data_to_cache(new_data)
+#         return new_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred while fetching announcements: {str(e)}")

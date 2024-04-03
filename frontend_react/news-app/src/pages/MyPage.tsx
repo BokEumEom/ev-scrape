@@ -56,7 +56,21 @@ const MyPage: React.FC = () => {
     }
   };
 
+  // Page load transition effect
+  const pageTransition = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.5 } },
+    exit: { opacity: 0, transition: { duration: 0.5 } },
+  };
+
   return (
+    <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageTransition}
+        className="flex flex-col min-h-screen pt-16 pb-20"
+      >
     <div className="container mx-auto px-4 py-20">
       <div className="bg-white shadow rounded-lg p-2 mb-4">
         <div className="flex flex-col items-center">
@@ -172,6 +186,7 @@ const MyPage: React.FC = () => {
           </div>
       </div>
     </div>
+    </motion.div>
   );
 };
 

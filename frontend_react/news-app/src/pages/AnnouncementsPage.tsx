@@ -1,35 +1,31 @@
 // src/pages/AnnouncementsPage.tsx
 import React, { useState, useRef } from 'react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { useQuery } from '@tanstack/react-query';
 import { useSwipeable } from 'react-swipeable';
 import AnnouncementList from '../components/AnnouncementList';
 import { fetchAnnouncements } from '../services/apiService';
 import Spinner from '../components/Spinner';
 import { IoLocationSharp, IoEllipsisVertical } from 'react-icons/io5';
-import { Reorder } from 'framer-motion';
-import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
+import { Reorder, AnimatePresence, motion } from 'framer-motion';
+// import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
 
-const initialRegions = ['incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan', 'goyang', 'gangneung'];
+const initialRegions = ['incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan', 'goyang', 'sejong', 'wonju'];
 
 const AnnouncementsPage = () => {
   const [regions, setRegions] = useState(initialRegions);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  const [announcements, setAnnouncements] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const regionListRef = useRef(null);
-  const announcementListRef = useRef(null);
+  // const regionListRef = useRef(null);
+  // const announcementListRef = useRef(null);
 
-  const handleSelectRegion = async (region: string) => {
+  // React Query를 사용하여 선택된 지역에 대한 공고 데이터를 가져옵니다.
+  const { data: announcements, isLoading, isError, error } = useQuery({
+    queryKey: ['announcements', selectedRegion],
+    queryFn: () => fetchAnnouncements(selectedRegion!),
+    enabled: !!selectedRegion, // selectedRegion이 설정되어 있을 때만 쿼리를 활성화합니다.
+  });
+
+  const handleSelectRegion = (region: string) => {
     setSelectedRegion(region);
-    setIsLoading(true);
-    try {
-      const data = await fetchAnnouncements(region);
-      setAnnouncements(data);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(`Fetching announcements for ${region} failed:`, error);
-      setIsLoading(false);
-    }
   };
 
   const renderRegionButtons = () => {
@@ -93,31 +89,41 @@ const AnnouncementsPage = () => {
     trackMouse: true
   });
 
+  const pageTransitionVariants = {
+    hidden: { opacity: 0, x: -100 },
+    visible: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: 100 },
+  };
+
   return (
-    <div {...swipeHandlers} className="flex flex-col items-stretch pt-16 py-20 bg-white transition-all min-h-screen md:flex-row"> {/* 상단 패딩 추가 */}
-      <TransitionGroup>
+    <div {...swipeHandlers} className="flex flex-col items-stretch pt-16 py-20 bg-white transition-all min-h-screen md:flex-row">
+      <AnimatePresence mode="wait">
         {selectedRegion === null ? (
-          <CSSTransition nodeRef={regionListRef} classNames="fade" timeout={300} key="region-list">
-            <div ref={regionListRef} className="w-full flex flex-col items-center">
-              {renderRegionButtons()}
-            </div>
-          </CSSTransition>
+          <motion.div
+            key="region-list"
+            variants={pageTransitionVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            {renderRegionButtons()}
+          </motion.div>
         ) : (
-          <CSSTransition nodeRef={announcementListRef} classNames="fade" timeout={300} key="announcement-list">
-            <div ref={announcementListRef} className="w-full pt-4 pb-20"> {/* 컨텐츠에 패딩 추가 */}
-              {renderAnnouncements()}
-            </div>
-          </CSSTransition>
+          <motion.div
+            key="announcement-list"
+            variants={pageTransitionVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            {renderAnnouncements()}
+          </motion.div>
         )}
-      </TransitionGroup>
+      </AnimatePresence>
       
-      {/* Render the "Back to regions" button only if a region is selected */}
       {selectedRegion && (
         <div className="fixed inset-x-0 bottom-16 px-5 text-center">
-          <button
-            onClick={() => setSelectedRegion(null)}
-            className="mt-4 bg-gray-100 hover:bg-gray-200 text-indigo-800 py-2 px-4 rounded-full transition-colors duration-300"
-          >
+          <button onClick={() => setSelectedRegion(null)} className="mt-4 bg-gray-100 hover:bg-gray-200 text-indigo-800 py-2 px-4 rounded-full transition-colors duration-300">
             Back to regions
           </button>
         </div>

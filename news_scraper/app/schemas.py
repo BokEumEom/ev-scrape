@@ -1,7 +1,10 @@
 # app/schemas.py
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+from typing import List, Generic, TypeVar, Generic, Optional
+from pydantic.generics import GenericModel
+
+DataT = TypeVar('DataT')
 
 # News
 class NewsBase(BaseModel):
@@ -19,6 +22,10 @@ class News(NewsBase):
 
     class Config:
         orm_mode = True
+
+class NewsResponse(GenericModel, Generic[DataT]):
+    items: List[DataT]
+    total: int
 
 # Vote
 class VoteCreate(BaseModel):

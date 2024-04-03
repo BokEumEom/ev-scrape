@@ -1,50 +1,58 @@
 // src/pages/BookmarksPage.tsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import NewsList from '../components/NewsList';
-import { NewsItem } from '../types';
 import { fetchNewsItems } from '../services/apiService';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
 import { ViewCountProvider } from '../contexts/ViewCountContext';
+import Spinner from '../components/Spinner'; // Assuming a Spinner component exists
+import { motion } from 'framer-motion';
 
-const BookmarksPage: React.FC = () => {
-  const [bookmarkedNewsItems, setBookmarkedNewsItems] = useState<NewsItem[]>([]);
+const BookmarksPage = () => {
   const { bookmarks, toggleBookmark } = useBookmarks();
   const { voteCounts, handleVote } = useVotes();
 
-  useEffect(() => {
-    const fetchAndFilterBookmarkedNewsItems = async () => {
-      try {
-        const allNewsItems: NewsItem[] = await fetchNewsItems();
-        const filteredBookmarkedItems: NewsItem[] = allNewsItems.filter((item: NewsItem) =>
-          bookmarks.includes(item.id),
-        );
-        setBookmarkedNewsItems(filteredBookmarkedItems);
-      } catch (error) {
-        console.error('Failed to fetch news items:', error);
-      }
-    };
+  const { data: allNewsItems, isLoading, error } = useQuery({
+    queryKey: ['allNewsItems'],
+    // Ensure fetchNewsItems is called with valid default parameters
+    queryFn: () => fetchNewsItems(1, 10)
+  });
 
-    fetchAndFilterBookmarkedNewsItems();
-  }, [bookmarks]);
+  const bookmarkedNewsItems = allNewsItems?.items?.filter(item => bookmarks.includes(item.id)) ?? [];
+
+  // Page load transition effect
+  const pageTransition = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.5 } },
+    exit: { opacity: 0, transition: { duration: 0.5 } },
+  };
+
+  if (isLoading) return <Spinner />;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <ViewCountProvider>
-      <div className="flex flex-col min-h-screen pt-18 py-20">
-        {bookmarkedNewsItems.length > 0 ? (
-          <NewsList
-            newsItems={bookmarkedNewsItems.map(item => ({
-              ...item,
-              isBookmarked: bookmarks.includes(item.id),
-              voteCount: voteCounts[item.id] || item.voteCount,
-            }))}
-            onBookmarkToggle={toggleBookmark}
-            onVote={handleVote}
-          />
-        ) : (
-          <p className="text-center">No bookmarks added.</p>
-        )}
+      <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageTransition}
+        className="flex flex-col min-h-screen pt-16 pb-20"
+      >
+      <div>
+        <NewsList
+          newsItems={bookmarkedNewsItems.map(item => ({
+            ...item,
+            isBookmarked: bookmarks.includes(item.id),
+            voteCount: voteCounts[item.id] || item.voteCount,
+          }))}
+          onBookmarkToggle={toggleBookmark}
+          onVote={handleVote}
+        />
+        {bookmarkedNewsItems.length === 0 && <p className="text-center">No bookmarks added.</p>}
       </div>
+      </motion.div>
     </ViewCountProvider>
   );
 };

@@ -1,6 +1,6 @@
 // src/pages/NewsPage.tsx
-import React, { useState, useEffect, useCallback } from 'react';
-import { NewsItem } from '../types';
+import React from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { fetchNewsItems } from '../services/apiService';
 import NewsList from '../components/NewsList';
 import useBookmarks from '../hooks/useBookmarks';
@@ -8,75 +8,74 @@ import useVotes from '../hooks/useVotes';
 import { ViewCountProvider } from '../contexts/ViewCountContext';
 import LoadMoreButton from '../components/LoadMoreButton';
 import ScrollToTopButton from '../components/ScrollToTopButton';
+import Spinner from '../components/Spinner';
+import { motion } from 'framer-motion';
 
 const NewsPage: React.FC = () => {
-  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { bookmarks, toggleBookmark } = useBookmarks();
   const { voteCounts, handleVote } = useVotes();
 
-  const fetchItems = async () => {
-    setIsLoading(true);
-    setError(null); // 에러 상태를 초기화
-    try {
-      const fetchedItems = await fetchNewsItems(page);
-      const combinedItems = [...newsItems, ...fetchedItems];
-      const uniqueItemsMap = new Map(combinedItems.map(item => [item.id, item]));
-      const uniqueItems = Array.from(uniqueItemsMap.values());
-      setNewsItems(uniqueItems);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching news items:', error);
-      setError('Failed to load news items. Please try again later.');
-      setIsLoading(false);
-    }
-  };
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['newsItems'],
+    queryFn: async ({ pageParam = 1 }) => {
+      return await fetchNewsItems(pageParam);
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      // Assuming each response includes a 'total' count for all pages
+      const morePagesExist = allPages.flatMap(page => page.items).length < lastPage.total;
+      if (morePagesExist) {
+        return allPages.length + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: undefined, // Or some other value if there's a better one
+  });
 
-  useEffect(() => {
-    fetchItems();
-  }, [page]);
+  if (isError) return <div>Error: {error?.message}</div>;
+  if (isLoading) return <Spinner />;
 
-  const handleLoadMore = useCallback(() => {
-    setPage((prevPage) => prevPage + 1);
-  }, []);
+  const newsItems = data?.pages.flatMap(page => page.items) || [];
 
-  const handleRetry = () => {
-    fetchItems();
+  // Page load transition effect
+  const pageTransition = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.5 } },
+    exit: { opacity: 0, transition: { duration: 0.5 } },
   };
 
   return (
     <ViewCountProvider>
-      <div className="flex flex-col min-h-screen pt-18 py-20">
-        {error ? (
-          <div className="text-center my-4">
-            <p className="text-red-500">{error}</p>
-            <button
-              onClick={handleRetry}
-              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Retry
-            </button>
-          </div>
-        ) : (
-          <>
-            <NewsList
-              newsItems={newsItems.map(item => ({
-                ...item,
-                isBookmarked: bookmarks.includes(item.id),
-                voteCount: voteCounts[item.id] || item.voteCount,
-              }))}
-              onBookmarkToggle={toggleBookmark}
-              onVote={handleVote}
-            />
-            <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />
-          </>
-        )}
+      <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageTransition}
+        className="flex flex-col min-h-screen pt-16 pb-20"
+      >
+      <div>
+        <NewsList
+          newsItems={newsItems.map(item => ({
+            ...item,
+            isBookmarked: bookmarks.includes(item.id),
+            voteCount: voteCounts[item.id] || item.voteCount,
+          }))}
+          onBookmarkToggle={toggleBookmark}
+          onVote={handleVote}
+        />
+        {hasNextPage && <LoadMoreButton isLoading={isLoading} onClick={() => fetchNextPage()} />}
         <ScrollToTopButton />
       </div>
+      </motion.div>
     </ViewCountProvider>
   );
 };
 
 export default NewsPage;
+

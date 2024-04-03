@@ -2,32 +2,27 @@
 import axios from 'axios';
 import { NewsItem, CommunityPost, CommunityPostCreate } from '../types';
 
-const PAGE_SIZE = 10;
+export const PAGE_SIZE = 10;
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 // export const PUBLIC_API_BASE_URL = 'https://fastapi.watercharging.com';
 
-export const fetchNewsItems = async (page: number = 1, limit: number = 10): Promise<NewsItem[]> => {
-  const skip = (page - 1) * limit; // Calculate the correct skip value
-  const url = `${API_BASE_URL}/news?skip=${skip}&limit=${limit}`;
-  console.log("Requesting URL:", url); // Add this line to log the URL
-  
-  try {
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-          // Provide a more specific message with status code and status text
-          throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
-      }
+export const fetchNewsItems = async (page = 1, limit = 10) => {
+  // Ensure 'page' and 'limit' are positive integers
+  page = Math.max(Number(page), 1);
+  limit = Math.max(Number(limit), 1);
 
-      const data = await response.json();
-      return data;
-      
+  const skip = (page - 1) * limit;
+
+  const url = `${API_BASE_URL}/news?skip=${skip}&limit=${limit}`;
+
+  try {
+    const { data } = await axios.get(url);
+    console.log(data); // API 응답 구조 확인
+    return data;
   } catch (error) {
-      console.error("Failed to fetch news items:", error.message);
-      // Depending on how you want to handle errors,
-      // you might want to re-throw the error or handle it accordingly
-      throw error;
+    console.error("Failed to fetch news items:", error);
+    throw error;
   }
 };
 
@@ -74,7 +69,6 @@ export const createCommunityPost = async (post: CommunityPostCreate): Promise<vo
     throw error; // It's good practice to re-throw the error so that it can be caught and handled by the caller
   }
 };
-
 
 export const submitVote = async (newsId: number, voteValue: number): Promise<NewsItem> => {
   try {
