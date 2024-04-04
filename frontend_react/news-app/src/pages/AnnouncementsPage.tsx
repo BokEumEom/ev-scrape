@@ -2,10 +2,12 @@
 import React, { useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSwipeable } from 'react-swipeable';
-import AnnouncementList from '../components/AnnouncementList';
+import RegionButtons from '../components/RegionButtons';
+import Announcements from '../components/Announcements';
+// import AnnouncementList from '../components/AnnouncementList';
 import { fetchAnnouncements } from '../services/apiService';
-import Spinner from '../components/Spinner';
-import { IoLocationSharp, IoEllipsisVertical } from 'react-icons/io5';
+// import Spinner from '../components/Spinner';
+// import { IoLocationSharp, IoEllipsisVertical } from 'react-icons/io5';
 import { Reorder, AnimatePresence, motion } from 'framer-motion';
 // import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
 
@@ -28,51 +30,51 @@ const AnnouncementsPage = () => {
     setSelectedRegion(region);
   };
 
-  const renderRegionButtons = () => {
-    return (
-      <div className="w-full md:max-w-md mx-auto">
-        <Reorder.Group
-          axis="y"
-          values={regions}
-          onReorder={setRegions}
-          className="flex flex-col items-center w-full px-1"
-        >
-          {regions.map((region: string) => (
-            <Reorder.Item key={region} value={region} className="w-full mb-1">
-              {/* Added margin-bottom for spacing */}
-              <button
-                onClick={() => handleSelectRegion(region)}
-                className={`
-                  ${selectedRegion === region ? 'bg-gray-700' : 'bg-gray-600'}
-                  flex items-center justify-between text-white font-bold py-4 px-4
-                  transition ease-in-out duration-300
-                  hover:bg-green-600 rounded-md shadow cursor-pointer
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-                  w-full
-                `}
-              >
-                <div className="flex items-center">
-                  <IoLocationSharp className="mr-2 text-2xl" />
-                  {region.charAt(0).toUpperCase() + region.slice(1)}
-                </div>
-                <IoEllipsisVertical className="ml-2 text-2xl" />
-              </button>
-            </Reorder.Item>
-          ))}
-        </Reorder.Group>
-      </div>
-    );
-  };
+  // const renderRegionButtons = () => {
+  //   return (
+  //     <div className="w-full md:max-w-md mx-auto">
+  //       <Reorder.Group
+  //         axis="y"
+  //         values={regions}
+  //         onReorder={setRegions}
+  //         className="flex flex-col items-center w-full px-1"
+  //       >
+  //         {regions.map((region: string) => (
+  //           <Reorder.Item key={region} value={region} className="w-full mb-1">
+  //             {/* Added margin-bottom for spacing */}
+  //             <button
+  //               onClick={() => handleSelectRegion(region)}
+  //               className={`
+  //                 ${selectedRegion === region ? 'bg-gray-700' : 'bg-gray-600'}
+  //                 flex items-center justify-between text-white font-bold py-4 px-4
+  //                 transition ease-in-out duration-300
+  //                 hover:bg-green-600 rounded-md shadow cursor-pointer
+  //                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+  //                 w-full
+  //               `}
+  //             >
+  //               <div className="flex items-center">
+  //                 <IoLocationSharp className="mr-2 text-2xl" />
+  //                 {region.charAt(0).toUpperCase() + region.slice(1)}
+  //               </div>
+  //               <IoEllipsisVertical className="ml-2 text-2xl" />
+  //             </button>
+  //           </Reorder.Item>
+  //         ))}
+  //       </Reorder.Group>
+  //     </div>
+  //   );
+  // };
   
-  const renderAnnouncements = () => {
-    if (isLoading) {
-      return <div className="flex justify-center items-center h-full"><Spinner /></div>;
-    }
+  // const renderAnnouncements = () => {
+  //   if (isLoading) {
+  //     return <div className="flex justify-center items-center h-full"><Spinner /></div>;
+  //   }
 
-    return (
-      <AnnouncementList announcements={announcements} />
-    );
-  };
+  //   return (
+  //     <AnnouncementList announcements={announcements} />
+  //   );
+  // };
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
@@ -106,7 +108,7 @@ const AnnouncementsPage = () => {
             animate="visible"
             exit="exit"
           >
-            {renderRegionButtons()}
+            <RegionButtons regions={regions} selectedRegion={selectedRegion} onSelectRegion={handleSelectRegion} setRegions={setRegions} />
           </motion.div>
         ) : (
           <motion.div
@@ -116,7 +118,7 @@ const AnnouncementsPage = () => {
             animate="visible"
             exit="exit"
           >
-            {renderAnnouncements()}
+            <Announcements isLoading={isLoading} announcements={announcements} />
           </motion.div>
         )}
       </AnimatePresence>

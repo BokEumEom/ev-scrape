@@ -1,11 +1,12 @@
 # app/main.py
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException, Query, Path, Body, Request
+from app.api.v1.endpoints import news, community
 from contextlib import asynccontextmanager
 import asyncio
 from fastapi.responses import JSONResponse
-from .news_routes import router as news_router
-from .community_routes import router as community_router
+# from .news_routes import router as news_router
+# from .community_routes import router as community_router
 from .database import Base, engine  
 from .rss_scheduler import start_rss_feed_scheduler
 from .config import get_logger
@@ -62,8 +63,10 @@ async def app_lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=app_lifespan)
 
-app.include_router(news_router, prefix="/news", tags=["news"])
-app.include_router(community_router, prefix="/community", tags=["community"])
+# app.include_router(news_router, prefix="/news", tags=["news"])
+# app.include_router(community_router, prefix="/community", tags=["community"])
+app.include_router(news.router, prefix="/api/v1/news", tags=["News"])
+app.include_router(community.router, prefix="/api/v1/community", tags=["Community"])
 
 # Add CORS middleware to allow requests from any origin
 app.add_middleware(
@@ -74,11 +77,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/announcements/regions", response_model=List[str])
+@app.get("/api/v1/announcements/regions", response_model=List[str])
 async def list_regions():
     return list(SCRAPERS.keys())
 
-@app.get("/announcements/{region_name}", response_model=List[Announcement])
+@app.get("/api/v1/announcements/{region_name}", response_model=List[Announcement])
 async def get_regional_announcements(region_name: str = Path(..., description="The name of the region")):
     scraper = SCRAPERS.get(region_name)
     if scraper is None:
