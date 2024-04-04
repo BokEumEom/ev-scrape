@@ -27,7 +27,7 @@ export const fetchNewsItems = async (page = 1, limit = 10) => {
 };
 
 export const fetchAnnouncements = async (endpoint: string) => {
-    const url = `${API_BASE_URL}/announcements/${endpoint}/`;
+    const url = `${API_BASE_URL}/announcements/${endpoint}`;
     try {
       const response = await axios.get(url);
       return response.data;
