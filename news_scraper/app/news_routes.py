@@ -13,11 +13,11 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with SessionLocal() as session:
         yield session
 
-@router.post("/", response_model=schemas.News, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=schemas.News, status_code=status.HTTP_201_CREATED)
 async def create_news_item(news: schemas.NewsCreate, db: AsyncSession = Depends(get_db)):
     return await crud.create_news(db=db, news=news)
 
-@router.get("/", response_model=schemas.NewsResponse[schemas.News])  # Adjust this line
+@router.get("", response_model=schemas.NewsResponse[schemas.News])  # Adjust this line
 async def read_news(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
     items = await crud.get_news(db=db, skip=skip, limit=limit)
     total = await crud.get_news_count(db=db)
@@ -38,7 +38,7 @@ async def update_news_item(news_id: int, news: schemas.NewsCreate, db: AsyncSess
 async def delete_news_item(news_id: int, db: AsyncSession = Depends(get_db)):
     return await crud.delete_news(db=db, news_id=news_id)
 
-@router.get("/search/", response_model=List[schemas.News])
+@router.get("/search", response_model=List[schemas.News])
 async def search_news(query: str = Query(...), db: AsyncSession = Depends(get_db)):
     news_query = select(models.News).where(models.News.title.contains(query)).limit(10)
     result = await db.execute(news_query)

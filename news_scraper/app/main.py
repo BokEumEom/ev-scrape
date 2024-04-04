@@ -74,11 +74,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/announcements/regions/", response_model=List[str])
+@app.get("/announcements/regions", response_model=List[str])
 async def list_regions():
     return list(SCRAPERS.keys())
 
-@app.get("/announcements/{region_name}/", response_model=List[Announcement])
+@app.get("/announcements/{region_name}", response_model=List[Announcement])
 async def get_regional_announcements(region_name: str = Path(..., description="The name of the region")):
     scraper = SCRAPERS.get(region_name)
     if scraper is None:

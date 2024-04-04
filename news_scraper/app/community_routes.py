@@ -12,7 +12,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with SessionLocal() as session:
         yield session
 
-@router.get("/", response_model=List[schemas.CommunityPost])
+@router.get("", response_model=List[schemas.CommunityPost])
 async def read_community_posts(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
     return await crud.get_community_posts(db, skip=skip, limit=limit)
 
@@ -20,7 +20,7 @@ async def read_community_posts(skip: int = 0, limit: int = 10, db: AsyncSession 
 async def read_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
     return await crud.get_community_post(db, post_id)
 
-@router.post("/", response_model=schemas.CommunityPost)
+@router.post("", response_model=schemas.CommunityPost)
 async def create_community_post(post: schemas.CommunityPostCreate, db: AsyncSession = Depends(get_db)):
     return await crud.create_community_post(db, post)
 
