@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserProfile, signOutUser } from '../services/userService';
 import Spinner from '../components/Spinner';
+import UserProfileForm from '../components/UserProfileForm';
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import { FaPencilAlt } from "react-icons/fa";
 import { HiFire } from "react-icons/hi2";
@@ -19,12 +20,19 @@ const MyPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState(tabs[0].key);
+  const [showProfileForm, setShowProfileForm] = useState(false);
 
   // Fetch user profile with React Query (updated to match v5 requirements)
   const { data: user, isLoading, error } = useQuery({
     queryKey: ['userProfile'],
     queryFn: getUserProfile
   });
+
+  const handleWritePost = () => navigate('/community/write');
+
+  const handleProfileButtonClick = () => {
+    navigate('/userprofileform'); // ProfileForm으로 라우팅
+  };
 
   const handleSignOut = async () => {
     await signOutUser();
@@ -60,7 +68,7 @@ const MyPage: React.FC = () => {
         className="flex flex-col min-h-screen pt-16 pb-20"
       >
     <div className="container mx-auto px-4">
-      <div className="bg-white shadow rounded-lg p-2 mb-4">
+      <div className="bg-white shadow rounded-lg p-4 mb-4">
         <div className="flex flex-col items-center">
           <img src={user.avatarUrl} alt="Profile" className="w-24 h-24 rounded-full" />
           <h2 className="mt-4 font-bold text-lg">{user.name}</h2>
@@ -90,15 +98,42 @@ const MyPage: React.FC = () => {
 
         <div className="text-center mt-8">
           <button
-            onClick={handleSignOut}
+            onClick={handleProfileButtonClick}
             className="text-white bg-gray-500 hover:bg-red-700 font-medium rounded-lg text-sm w-full py-2.5 text-center"
           >
             프로필 등록
           </button>
+          {showProfileForm && <UserProfileForm />}
         </div>
       </div>
 
-      <div className="bg-white shadow rounded-lg p-2 mb-4 ">
+      <div className="bg-white shadow rounded-lg p-4 mb-4">
+        <span className="text-sm font-bold">내 활동 내역</span>
+        <div className="flex justify-around my-4 text-center">
+            <div className="flex flex-col items-center justify-center">
+              <span className="block font-bold">{user.postsCount}</span>
+              <span className="text-gray-600 py-2">글쓰기</span>
+              <FaPencilAlt className="text-gray-700 text-2xl mb-2" />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <span className="block font-bold">{user.followersCount}</span>
+              <span className="text-gray-600 py-2">댓글쓰기</span>
+              <IoChatbubbleEllipses className="text-gray-700 text-2xl mb-2" />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <span className="block font-bold">{user.followingCount}</span>
+              <span className="text-gray-600 py-2">인기글 조회</span>
+              <HiFire className="text-gray-700 text-2xl mb-2" />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <span className="block font-bold">{user.followingCount}</span>
+              <span className="text-gray-600 py-2">공감 보내기</span>
+              <IoHeartSharp className="text-gray-700 text-2xl mb-2" />
+            </div>
+          </div>
+      </div>
+
+      <div className="bg-white shadow rounded-lg p-4 mb-4">
         <div className="border-b border-gray-200">
           <nav className="flex space-x-1 justify-around">
             {tabs.map((tab) => (
@@ -138,40 +173,15 @@ const MyPage: React.FC = () => {
           </motion.div>
         </AnimatePresence>
 
-        <div className="text-center py-8">
-          <span className="text-lg font-medium">전기차 오너 이야기를 이곳에서 들려주세요.</span>
+        <div className="text-center py-12">
+          <span className="text-sm font-medium">전기차 오너 이야기를 이곳에서 들려주세요.</span>
           <button
-            onClick={handleSignOut} // Update this onClick event to handle the actual action you want
-            className="w-full bg-blue-500 text-white rounded-lg mt-4 py-2 px-4 hover:bg-blue-600"
+            onClick={handleWritePost} // Update this onClick event to handle the actual action you want
+            className="w-full bg-blue-500 text-white rounded-lg mt-4 py-2 px-4 hover:bg-blue-600 "
           >
             전기차 생활 글쓰기
           </button>
         </div>
-      </div>
-
-      <div className="bg-white shadow rounded-lg p-5">
-        <div className="flex justify-around my-4 text-center">
-            <div className="flex flex-col items-center justify-center">
-              <span className="block font-bold">{user.postsCount}</span>
-              <span className="text-gray-600 py-2">글쓰기</span>
-              <FaPencilAlt className="text-gray-700 text-2xl mb-2" />
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <span className="block font-bold">{user.followersCount}</span>
-              <span className="text-gray-600 py-2">댓글쓰기</span>
-              <IoChatbubbleEllipses className="text-gray-700 text-2xl mb-2" />
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <span className="block font-bold">{user.followingCount}</span>
-              <span className="text-gray-600 py-2">인기글 조회</span>
-              <HiFire className="text-gray-700 text-2xl mb-2" />
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <span className="block font-bold">{user.followingCount}</span>
-              <span className="text-gray-600 py-2">공감 보내기</span>
-              <IoHeartSharp className="text-gray-700 text-2xl mb-2" />
-            </div>
-          </div>
       </div>
     </div>
     </motion.div>

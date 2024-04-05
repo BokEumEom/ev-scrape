@@ -13,6 +13,7 @@ import MyPage from './pages/MyPage';
 import BookmarksPage from './pages/BookmarksPage';
 import CommunityPage from './pages/CommunityPage';
 import WriteCommunityPost from './components/WriteCommunityPost';
+import UserProfileForm from './components/UserProfileForm';
 
 const App: React.FC = () => {
     return (
@@ -43,6 +44,7 @@ const RoutesWrapper = () => {
                     <Route path="/news" element={<NewsPage />} />
                     <Route path="/announcements" element={<AnnouncementsPage />} />
                     <Route path="/my-page" element={<MyPage />} />
+                    <Route path="/userprofileform" element={<UserProfileForm />} />
                     <Route path="/bookmarks" element={<BookmarksPage />} />
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/community/write" element={<WriteCommunityPost />} />
