@@ -22,8 +22,7 @@ RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Playwright 및 필요한 브라우저 바이너리 설치
-RUN pip install playwright && \
-    playwright install-deps
+RUN pip install playwright
 
 # 애플리케이션 코드 복사
 COPY . ./
@@ -37,6 +36,7 @@ WORKDIR $APP_HOME
 
 # 첫 번째 단계에서 빌드한 가상 환경과 애플리케이션 코드 복사
 COPY --from=builder $APP_HOME $APP_HOME
+RUN playwright install && playwright install-deps
 
 ENV PATH="$APP_HOME/venv/bin:$PATH"
 
