@@ -37,20 +37,24 @@ export const fetchAnnouncements = async (endpoint: string) => {
     }
   };
 
-export const searchNewsItems = async (query: string, page: number): Promise<NewsItem[]> => {
-  const limit = 10;
-  const skip = (page - 1) * limit;
-  const url = `${API_BASE_URL}/api/v1/news/search?query=${encodeURIComponent(query)}&skip=${skip}&limit=${limit}`;
-  console.log("Requesting URL:", url); // Add this line to log the URL
-  try {
-    const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    console.error("Search API error:", error);
-    throw error;
-  }
-};  
-
+  export const searchNewsItems = async (query: string, page: number): Promise<NewsItem[]> => {
+    // 검색 쿼리가 빈 문자열인 경우 기본 검색 쿼리를 사용하도록 설정
+    const effectiveQuery = query || "default_search_query"; // "default_search_query"는 기본 검색 쿼리로, 실제 사용 사례에 맞게 조정해야 합니다.
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const url = `${API_BASE_URL}/api/v1/news/search?query=${encodeURIComponent(effectiveQuery)}&skip=${skip}&limit=${limit}`;
+    console.log("Requesting URL:", url);
+  
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      console.error("Search API error:", error.response?.data || error.message);
+      throw error;
+    }
+  };
+  
+  
 export const fetchCommunityPosts = async (page: number, limit: number = PAGE_SIZE): Promise<CommunityPost[]> => {
   const skip = (page - 1) * limit;
   const url = `${API_BASE_URL}/api/v1/community?skip=${skip}&limit=${limit}`;
