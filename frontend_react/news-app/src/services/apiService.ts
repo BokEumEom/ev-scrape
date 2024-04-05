@@ -1,6 +1,6 @@
 // src/services/apiService.ts
 import axios from 'axios';
-import { NewsItem, CommunityPost, CommunityPostCreate } from '../types';
+import { NewsItem, CommunityPost, CommunityPostCreate, CommunityPostsResponse } from '../types';
 
 export const PAGE_SIZE = 10;
 
@@ -37,36 +37,36 @@ export const fetchAnnouncements = async (endpoint: string) => {
     }
   };
 
-  export const searchNewsItems = async (query: string, page: number): Promise<NewsItem[]> => {
-    // 검색 쿼리가 빈 문자열인 경우 기본 검색 쿼리를 사용하도록 설정
-    const effectiveQuery = query || "default_search_query"; // "default_search_query"는 기본 검색 쿼리로, 실제 사용 사례에 맞게 조정해야 합니다.
-    const limit = 10;
-    const skip = (page - 1) * limit;
-    const url = `${API_BASE_URL}/api/v1/news/search?query=${encodeURIComponent(effectiveQuery)}&skip=${skip}&limit=${limit}`;
-    console.log("Requesting URL:", url);
-  
-    try {
-      const response = await axios.get(url);
-      return response.data;
-    } catch (error) {
-      console.error("Search API error:", error.response?.data || error.message);
-      throw error;
-    }
-  };
-  
-  
-export const fetchCommunityPosts = async (page: number, limit: number = PAGE_SIZE): Promise<CommunityPost[]> => {
+export const searchNewsItems = async (query: string, page: number): Promise<NewsItem[]> => {
+  // 검색 쿼리가 빈 문자열인 경우 기본 검색 쿼리를 사용하도록 설정
+  const effectiveQuery = query || "default_search_query"; // "default_search_query"는 기본 검색 쿼리로, 실제 사용 사례에 맞게 조정해야 합니다.
+  const limit = 10;
   const skip = (page - 1) * limit;
-  const url = `${API_BASE_URL}/api/v1/community?skip=${skip}&limit=${limit}`;
-  const response = await axios.get<CommunityPost[]>(url);
+  const url = `${API_BASE_URL}/api/v1/news/search?query=${encodeURIComponent(effectiveQuery)}&skip=${skip}&limit=${limit}`;
+  console.log("Requesting URL:", url);
+
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("Search API error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+  
+export const fetchCommunityPosts = async (page: number): Promise<CommunityPostsResponse> => {
+  const skip = (page - 1) * PAGE_SIZE;
+  const url = `${API_BASE_URL}/api/v1/community?skip=${skip}&limit=${PAGE_SIZE}`;
+  console.log("Requesting URL:", url);
+  const response = await axios.get<{items: CommunityPost[], total: number}>(url);
   return response.data;
 };
 
-// In your apiService.ts
 export const createCommunityPost = async (post: CommunityPostCreate): Promise<void> => {
   const url = `${API_BASE_URL}/api/v1/community`;
   try {
     await axios.post(url, post);
+    console.log("Requesting URL:", url);
     // You might want to handle the response here if needed
   } catch (error) {
     console.error('Failed to create community post:', error);

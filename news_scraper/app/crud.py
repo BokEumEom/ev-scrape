@@ -117,6 +117,18 @@ async def get_community_post(db: AsyncSession, post_id: int):
     )
     return result.scalars().first()
 
+async def get_community_posts_with_count(db: AsyncSession, skip: int = 0, limit: int = 10):
+    posts_query = select(models.CommunityPost).order_by(models.CommunityPost.created_at.desc()).offset(skip).limit(limit)
+    total_count_query = select(func.count()).select_from(models.CommunityPost)
+    
+    posts_result = await db.execute(posts_query)
+    posts = posts_result.scalars().all()
+    
+    total_count_result = await db.execute(total_count_query)
+    total_count = total_count_result.scalar_one()
+    
+    return posts, total_count
+
 async def create_community_post(db: AsyncSession, post: schemas.CommunityPostCreate):
     db_post = models.CommunityPost(**post.dict())
     db.add(db_post)

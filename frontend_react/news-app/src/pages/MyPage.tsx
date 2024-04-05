@@ -1,7 +1,7 @@
 // In src/pages/MyPage.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserProfile } from '../types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserProfile, signOutUser } from '../services/userService';
 import Spinner from '../components/Spinner';
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
@@ -16,43 +16,31 @@ const tabs = [
 ];
 
 const MyPage: React.FC = () => {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [activeTab, setActiveTab] = useState(tabs[0].key);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState(tabs[0].key);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = await getUserProfile();
-        setUser(userData);
-      } catch (error) {
-        console.error(error);
-        // Handle errors, maybe navigate to a login page if not authenticated
-      }
-    };
-
-    fetchUserData();
-  }, [navigate]);
+  // Fetch user profile with React Query (updated to match v5 requirements)
+  const { data: user, isLoading, error } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: getUserProfile
+  });
 
   const handleSignOut = async () => {
     await signOutUser();
-    navigate('/login'); // or wherever you'd like to redirect the user to
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    navigate('/login');
   };
 
-  if (!user) {
-    return <div><Spinner /></div>; // or any loading indicator
-  }
+  if (isLoading) return <Spinner />;
+  if (error instanceof Error) return <div>Error: {error.message}</div>;
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'posts':
-        return <div>Posts content...</div>;
-      case 'comments':
-        return <div>Comments content...</div>;
-      case 'saves':
-        return <div>Saves content...</div>;
-      default:
-        return null;
+      case 'posts': return <div>Posts content...</div>;
+      case 'comments': return <div>Comments content...</div>;
+      case 'saves': return <div>Saves content...</div>;
+      default: return null;
     }
   };
 
@@ -71,7 +59,7 @@ const MyPage: React.FC = () => {
         variants={pageTransition}
         className="flex flex-col min-h-screen pt-16 pb-20"
       >
-    <div className="container mx-auto px-4 py-20">
+    <div className="container mx-auto px-4">
       <div className="bg-white shadow rounded-lg p-2 mb-4">
         <div className="flex flex-col items-center">
           <img src={user.avatarUrl} alt="Profile" className="w-24 h-24 rounded-full" />

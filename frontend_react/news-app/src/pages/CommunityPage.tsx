@@ -1,65 +1,29 @@
 // src/pages/CommunityPage.tsx
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchCommunityPosts } from '../services/apiService';
+import { useCommunityPosts } from '../hooks/useCommunityPosts';
 import CommunityPostComponent from '../components/CommunityPost';
 import LoadMoreButton from '../components/LoadMoreButton';
-import { CommunityPost } from '../types';
 import { motion } from 'framer-motion';
 
-const PAGE_SIZE = 10;
-
 const CommunityPage: React.FC = () => {
-  const [posts, setPosts] = useState<CommunityPost[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    data = { pages: [] }, // data에 기본값을 할당하여 초기 상태에서 undefined가 되지 않도록 함
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useCommunityPosts();
+
   const navigate = useNavigate();
 
-  // Page load transition effect
-  const pageTransition = {
-    initial: { opacity: 0 },
-    animate: { 
-      opacity: 1, 
-      transition: { duration: 0.5, delayChildren: 0.3 } 
-    },
-    exit: { opacity: 0, transition: { duration: 0.5 } }
-  };
+  const handleWritePost = () => navigate('/community/write');
 
-  useEffect(() => {
-    const loadPosts = async () => {
-      setIsLoading(true);
-      try {
-        const newPosts = await fetchCommunityPosts(page, PAGE_SIZE);
-        console.log('Fetched posts:', newPosts); // Log the fetched posts
-        const updatedPosts = [...posts, ...newPosts];
-        console.log('Updated posts before setting state:', updatedPosts); // Inspect combined posts
-        setPosts(updatedPosts);
-        setIsLoading(false);
-        setHasMore(newPosts.length === PAGE_SIZE);
-      } catch (error) {
-        console.error("Failed to fetch community posts:", error);
-        setIsLoading(false);
-      }
-    };
-  
-    loadPosts();
-  }, [page]);
-
-  const handleWritePost = () => {
-    navigate('/community/write');
-  };
-
-  const handleLoadMore = useCallback(() => {
-    setPage(prevPage => prevPage + 1); // Increment page number to fetch next set of posts
-  }, []);
-
+  // data와 data.pages의 존재 여부를 확인하지 않고 직접 접근
   return (
     <motion.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageTransition}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 0.5, delayChildren: 0.3 } }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
       className="flex flex-col min-h-screen pb-18"
     >
       <div className="flex min-h-screen bg-white py-20">
@@ -73,10 +37,12 @@ const CommunityPage: React.FC = () => {
               + 글쓰기
             </button>
           </div>
-          {posts.length ? (
+          {data.pages.flat().length ? (
             <>
-              {posts.map((post) => <CommunityPostComponent key={post.id} post={post} />)}
-              {hasMore && <LoadMoreButton isLoading={isLoading} onClick={handleLoadMore} />}
+              {data.pages.flatMap(page => page.data).map((post, index) => (
+                <CommunityPostComponent key={`${post.id}-${index}`} post={post} />
+              ))}
+              {hasNextPage && <LoadMoreButton isLoading={isFetchingNextPage} onClick={() => fetchNextPage()} />}
             </>
           ) : (
             <div className="text-center mt-4">

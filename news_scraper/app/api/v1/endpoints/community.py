@@ -12,9 +12,11 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with SessionLocal() as session:
         yield session
 
-@router.get("", response_model=List[schemas.CommunityPost])
+@router.get("", response_model=schemas.CommunityPostsResponse[schemas.CommunityPost])  # 스키마 타입을 올바르게 지정하세요.
 async def read_community_posts(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
-    return await crud.get_community_posts(db, skip=skip, limit=limit)
+    posts, total_count = await crud.get_community_posts_with_count(db, skip=skip, limit=limit)
+    total_pages = (total_count + limit - 1) // limit  # 총 페이지 수 계산
+    return schemas.CommunityPostsResponse(items=posts, total=total_pages)  # 여기서 total=total_pages 로 변경
 
 @router.get("/{post_id}", response_model=schemas.CommunityPost)
 async def read_community_post(post_id: int, db: AsyncSession = Depends(get_db)):

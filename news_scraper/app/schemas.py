@@ -49,3 +49,7 @@ class CommunityPost(CommunityPostBase):
 
     class Config:
         orm_mode = True
+
+class CommunityPostsResponse(GenericModel, Generic[DataT]):
+    items: List[DataT]
+    total: int

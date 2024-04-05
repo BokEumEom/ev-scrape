@@ -33,6 +33,7 @@ export interface CommunityPost {
   id: number;
   title: string;
   content: string;
+  voteCount: number;
   created_at: string;
   updated_at: string;
 }
@@ -40,6 +41,11 @@ export interface CommunityPost {
 export interface CommunityPostCreate {
   title: string;
   content: string;
+}
+
+export interface CommunityPostsResponse {
+  items: CommunityPost[];
+  total: number;
 }
 
 export interface SearchBarProps {
