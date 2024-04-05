@@ -23,7 +23,7 @@ RUN pip install --upgrade pip && \
 
 # Playwright 및 필요한 브라우저 바이너리 설치
 RUN pip install playwright && \
-    playwright install-deps
+    playwright install --with-deps
 
 # 애플리케이션 코드 복사
 COPY . ./
@@ -35,7 +35,7 @@ ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
-# 첫 번째 단계에서 빌드한 가상 환경과 애플리케이션 코드 복사
+# 첫 번째 단계에서 빌드한 가상 환경과 애플리케이션 코드, Playwright 및 브라우저 바이너리 복사
 COPY --from=builder $APP_HOME $APP_HOME
 
 ENV PATH="$APP_HOME/venv/bin:$PATH"
