@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { IoChevronBackOutline } from "react-icons/io5";
 
 const interests = [
-  '운동', '스터디', '가족여행', '독서치료', 
-  '예/미술', '반려동물', '게임', '업무',
+  '운동', '스터디', '가족/육아', '영화', 
+  '공예/미술', '반려동물', '게임', '음악',
   '음식', '문화/예술', '여행', '사진/영상',
-  '독서', '패션', '테크', '치/요로바이', '투자/금융',
-  '앙숙생활', '뷰티/미용', '실험', '인테리어'
+  '독서', '패션', '테크', '차/오토바이', '투자/금융',
+  '봉사활동', '뷰티/미용', '식물', '인테리어'
 ];
 
 const UserProfileForm = () => {
@@ -33,58 +34,78 @@ const UserProfileForm = () => {
   };
 
   return (
-    <div className="p-4 pt-16 pb-20">
+    <div className="p-4 pt-16 pb-20 bg-white max-w-md mx-auto">
       {/* 상단 바에 취소/뒤로 가기 버튼 추가 */}
-      <div className="flex justify-between items-center">
-          <button
+      <div className="flex justify-between items-center mb-6">
+        <button
           onClick={() => navigate(-1)}
-          className="text-gray-500 text-lg p-2 rounded-md"
-          >
-          &larr;
-          </button>
-          <div>
+          className="text-gray-500 text-lg p-3 rounded-full"
+        >
+          <IoChevronBackOutline />
+        </button>
+        <div>
           {/* 상단 바 우측 아이콘 배치 */}
-          </div>
+        </div>
       </div>
       {/* 폼 제출 시 onSubmit 호출 */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* 프로필 이미지 및 이름 */}
-        <div className="text-center">
-          {/* 프로필 이미지를 여기에 추가하십시오 */}
-          <h2 className="font-bold text-lg">{/* 사용자 이름 */}</h2>
-          <p className="text-sm text-gray-600">{/* 가입 날짜 등 추가 정보 */}</p>
+        <label htmlFor="introduction" className="text-xs font-bold block mb-2">내 정보</label>
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center">
+            <div className="profile-image mr-4">
+              {/* Add your profile image here */}
+            </div>
+            <h2 className="font-bold text-lg">퍼펙트데이{/* 사용자 이름 */}</h2>
+          </div>
+          <button
+            type="button"
+            className="text-slate-700 font-semibold rounded-lg bg-gray-200 py-2 px-3 text-xs"
+          >
+            수정하기
+          </button>
         </div>
 
         {/* 자기소개 입력 필드 */}
         <div>
+          <label htmlFor="introduction" className="text-xs font-bold block mb-2">자기소개</label>
           <textarea
+            id="introduction"
             {...register("introduction", { required: "자기소개를 입력해주세요." })}
             placeholder="내용을 입력해주세요."
-            className="w-full rounded border p-2"
-            rows={3}
+            className="w-full rounded border border-gray-300 p-3"
+            rows={4}
           />
-          {errors.introduction && <p className="text-red-500">{errors.introduction.message}</p>}
+          {errors.introduction && <p className="text-red-500 text-xs mt-1">{errors.introduction.message}</p>}
         </div>
 
         {/* 관심사 선택 버튼 */}
-        <div className="grid grid-cols-3 gap-2">
-          {interests.map((interest, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={() => toggleInterest(interest)}
-              className={`py-2 px-4 rounded ${selectedInterests.includes(interest) ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            >
-              {interest}
-            </button>
-          ))}
+        <div>
+          <span className="text-xs font-bold block mb-2">관심사</span>
+          <div className="flex flex-wrap overflow-x-auto">
+            {interests.map((interest, index) => (
+              <div key={index} className="flex pb-2 items-center mr-2 last:mr-0">
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => toggleInterest(interest)}
+                  className={`text-xs whitespace-nowrap mr-2 px-4 py-2 border border-gray-300 rounded-full cursor-pointer 
+                    ${selectedInterests.includes(interest) ? 
+                      'bg-blue-500 text-white' : 
+                      'text-gray-700 bg-white hover:bg-gray-100'}`}
+                >
+                  {interest}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* 폼 제출 버튼 */}
-        <div className="text-center mt-8">
+        <div className="mt-10">
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600"
+            className="w-full bg-blue-500 text-white rounded-lg py-3 px-4 text-sm hover:bg-blue-600"
           >
             프로필 등록
           </button>
