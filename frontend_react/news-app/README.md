@@ -1,46 +1,22 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Key Features
 
-## Available Scripts
+- **Vite**: A fast, modern build tool for JavaScript projects, offering hot module replacement out of the box.
+- **React**: A library for building user interfaces, structured around reusable components.
+- **Tailwind CSS**: A utility-first CSS framework for rapidly building custom designs without having to leave your HTML.
+- **TypeScript**: Adds types to JavaScript, improving developer productivity and code quality.
 
-In the project directory, you can run:
+## Getting Started
 
-### `npm start`
+1. **Installation**: Run `npm install` to install the project dependencies.
+2. **Development**: Start the development server with `npm run dev`.
+3. **Build**: Build the application for production with `npm run build`.
+4. **Preview**: Preview the production build with `npm run preview`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Additional Information
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Tailwind CSS is integrated via the `postcss` configuration. Customize your design system in `tailwind.config.js`.
+- The project uses TypeScript for static type checking. Configure TypeScript in `tsconfig.json`.
+- The application structure is modular, promoting separation of concerns. Components, contexts, hooks, and services are organized into separate directories for better maintainability.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+This README provides a comprehensive guide to navigating and understanding the project structure, setup, and key features. Whether you're a new developer on the team or revisiting the project after some time, this document should help you get up to speed quickly.
