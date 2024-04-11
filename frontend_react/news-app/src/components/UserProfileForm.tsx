@@ -10,6 +10,14 @@ interface UserProfileFormProps {
   onClose: () => void; // 폼을 닫는 함수입니다.
 }
 
+const interests = [
+  '운동', '스터디', '가족/육아', '영화', 
+  '공예/미술', '반려동물', '게임', '음악',
+  '음식', '문화/예술', '여행', '사진/영상',
+  '독서', '패션', '테크', '차/오토바이', '투자/금융',
+  '봉사활동', '뷰티/미용', '식물', '인테리어'
+];
+
 const UserProfileForm: React.FC<UserProfileFormProps> = ({ user, onClose }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -34,7 +42,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user, onClose }) => {
   return (
     <div className="p-4 pt-16 pb-20 bg-white max-w-md mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <button onClick={onClose} className="text-gray-500 text-lg p-3 rounded-full">
+        <button onClick={() => navigate(-1)} className="text-gray-500 text-lg p-3 rounded-full">
           <IoChevronBackOutline />
         </button>
       </div>

@@ -19,9 +19,9 @@ const App: React.FC = () => {
     return (
         <Router>
             <NavigationBar />
-            <AnimatePresence>
-                <RoutesWrapper />
-            </AnimatePresence>
+                <AnimatePresence>
+                    <RoutesWrapper />
+                </AnimatePresence>
             <FooterBar />
         </Router>
     );

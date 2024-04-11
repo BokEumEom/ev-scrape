@@ -1,3 +1,4 @@
+// src/constants/constants.ts
 import { MotionProps } from 'framer-motion';
 
 // 탭 구성 상수

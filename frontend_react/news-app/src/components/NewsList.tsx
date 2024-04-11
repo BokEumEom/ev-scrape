@@ -1,9 +1,11 @@
 // src/components/NewsList.tsx
-import React, { useContext } from 'react';
+import React from 'react';
+import { useAtom } from 'jotai';
+import { viewCountAtom, incrementViewCountAtom } from '../atoms/viewCountAtom';
 import { NewsItem as NewsItemType } from '../types';
 import NewsItemVote from './NewsItemVote';
 import { IoBookmark, IoBookmarkOutline, IoShareOutline, IoChatbubbleOutline } from 'react-icons/io5';
-import { ViewCountContext } from '../contexts/ViewCountContext';
+// import { ViewCountContext } from '../contexts/ViewCountContext';
 
 interface Props {
   newsItems: NewsItemType[];
@@ -12,7 +14,9 @@ interface Props {
 }
 
 const NewsList: React.FC<Props> = ({ newsItems, onBookmarkToggle, onVote }) => {
-  const { viewCounts, incrementViewCount } = useContext(ViewCountContext);
+  // const { viewCounts, incrementViewCount } = useContext(ViewCountContext);
+  const [viewCounts] = useAtom(viewCountAtom);
+  const [, incrementViewCount] = useAtom(incrementViewCountAtom);
 
   const handleTitleClick = (newsItemId: number, event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();

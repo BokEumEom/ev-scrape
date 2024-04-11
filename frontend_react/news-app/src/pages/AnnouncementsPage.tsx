@@ -1,23 +1,17 @@
 // src/pages/AnnouncementsPage.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSwipeable } from 'react-swipeable';
 import RegionButtons from '../components/RegionButtons';
 import Announcements from '../components/Announcements';
-// import AnnouncementList from '../components/AnnouncementList';
 import { fetchAnnouncements } from '../services/apiService';
-// import Spinner from '../components/Spinner';
-// import { IoLocationSharp, IoEllipsisVertical } from 'react-icons/io5';
-import { Reorder, AnimatePresence, motion } from 'framer-motion';
-// import '../styles/AnnouncementsPage.css'; // Ensure this import is correct
+import { AnimatePresence, motion } from 'framer-motion';
 
 const initialRegions = ['incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan', 'goyang', 'sejong', 'wonju'];
 
 const AnnouncementsPage = () => {
   const [regions, setRegions] = useState(initialRegions);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  // const regionListRef = useRef(null);
-  // const announcementListRef = useRef(null);
 
   // React Query를 사용하여 선택된 지역에 대한 공고 데이터를 가져옵니다.
   const { data: announcements, isLoading, isError, error } = useQuery({
@@ -29,52 +23,6 @@ const AnnouncementsPage = () => {
   const handleSelectRegion = (region: string) => {
     setSelectedRegion(region);
   };
-
-  // const renderRegionButtons = () => {
-  //   return (
-  //     <div className="w-full md:max-w-md mx-auto">
-  //       <Reorder.Group
-  //         axis="y"
-  //         values={regions}
-  //         onReorder={setRegions}
-  //         className="flex flex-col items-center w-full px-1"
-  //       >
-  //         {regions.map((region: string) => (
-  //           <Reorder.Item key={region} value={region} className="w-full mb-1">
-  //             {/* Added margin-bottom for spacing */}
-  //             <button
-  //               onClick={() => handleSelectRegion(region)}
-  //               className={`
-  //                 ${selectedRegion === region ? 'bg-gray-700' : 'bg-gray-600'}
-  //                 flex items-center justify-between text-white font-bold py-4 px-4
-  //                 transition ease-in-out duration-300
-  //                 hover:bg-green-600 rounded-md shadow cursor-pointer
-  //                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-  //                 w-full
-  //               `}
-  //             >
-  //               <div className="flex items-center">
-  //                 <IoLocationSharp className="mr-2 text-2xl" />
-  //                 {region.charAt(0).toUpperCase() + region.slice(1)}
-  //               </div>
-  //               <IoEllipsisVertical className="ml-2 text-2xl" />
-  //             </button>
-  //           </Reorder.Item>
-  //         ))}
-  //       </Reorder.Group>
-  //     </div>
-  //   );
-  // };
-  
-  // const renderAnnouncements = () => {
-  //   if (isLoading) {
-  //     return <div className="flex justify-center items-center h-full"><Spinner /></div>;
-  //   }
-
-  //   return (
-  //     <AnnouncementList announcements={announcements} />
-  //   );
-  // };
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {

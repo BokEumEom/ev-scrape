@@ -2,11 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // QueryClient 인스턴스를 생성합니다.
 const queryClient = new QueryClient();
+
+const ErrorFallback = () => {
+  return (
+    <div
+      className="text-red-500 w-screen h-screen flex flex-col justify-center items-center"
+      role="alert"
+    >
+      <h2 className="text-lg font-semibold">Ooops, something went wrong :( </h2>
+      <button className="mt-4" onClick={() => window.location.assign(window.location.origin)}>
+        Refresh
+      </button>
+    </div>
+  );
+};
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,9 +30,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     {/* QueryClientProvider로 전체 앱을 감싸고, queryClient prop을 제공합니다. */}
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </HelmetProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
 
