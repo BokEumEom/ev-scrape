@@ -30,21 +30,19 @@ async def read_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
         if post is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
         
-        # Get like and comment counts
         like_count = await crud.get_like_count(db, post_id)
         comment_count = await crud.get_comment_count(db, post_id)
 
-        # Convert ORM model to dict and add counts
+        # Properly integrate likeCount and commentCount into the response.
+        # Ensure the response schema (schemas.CommunityPost) has likeCount and commentCount defined.
         post_data = jsonable_encoder(post)
         post_data['likeCount'] = like_count
         post_data['commentCount'] = comment_count
         
-        return post_data
+        return schemas.CommunityPost.parse_obj(post_data)
     except SQLAlchemyError as e:
-        # 데이터베이스 연결 실패 또는 쿼리 실패 시
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
     except Exception as e:
-        # 기타 모든 예외를 처리
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.post("", response_model=schemas.CommunityPost)

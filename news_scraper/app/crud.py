@@ -275,7 +275,7 @@ async def like_community_post(db: AsyncSession, post_id: int) -> models.Communit
 
 async def create_comment(db: AsyncSession, post_id: int, comment_data: schemas.CommentCreate):
     try:
-        new_comment = models.Comment(post_id=post_id, **comment_data.dict())
+        new_comment = models.Comment(post_id=post_id, **comment_data.model_dump())
         db.add(new_comment)
         await db.commit()
         await db.refresh(new_comment)

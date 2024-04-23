@@ -58,12 +58,11 @@ class CommunityPostLike(Base):
     __tablename__ = 'community_post_likes'
     id = Column(Integer, primary_key=True, index=True)
     post_id = Column(Integer, ForeignKey('community_posts.id'), nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # 사용자 ID 열 추가
     created_at = Column(DateTime, default=datetime.datetime.now(kst))
     post = relationship("CommunityPost", back_populates="likes")
-
+    
     __table_args__ = (
-        UniqueConstraint('post_id', 'user_id', name='uix_post_user_like'),  # 복합 유니크 제약 조건 추가
+        UniqueConstraint('post_id', name='uix_1'),
     )
     
 CommunityPost.likes = relationship("CommunityPostLike", back_populates="post")

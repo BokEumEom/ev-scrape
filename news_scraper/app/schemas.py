@@ -42,14 +42,14 @@ class CommunityPostBase(BaseModel):
 class CommunityPostCreate(CommunityPostBase):
     pass
 
-class CommunityPost(CommunityPostBase):
+class CommunityPost(BaseModel):
     id: int
     title: str
     content: str
     created_at: datetime
     updated_at: Optional[datetime]
-    likeCount: Optional[int] = Field(default=0, alias='like_count')
-    commentCount: Optional[int] = Field(default=0, alias='comment_count')
+    likeCount: int = 0
+    commentCount: int = 0
 
     class Config:
         orm_mode = True
