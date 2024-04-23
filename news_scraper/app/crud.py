@@ -125,14 +125,13 @@ from sqlalchemy import select, func
 from .models import CommunityPost, CommunityPostLike, Comment
 
 async def get_community_posts_with_count(db: AsyncSession, skip: int = 0, limit: int = 10):
-    # Construct a query that joins CommunityPost with CommunityPostLike and Comment
-    # and calculates the count of likes and comments for each post.
+    # Construct a query that calculates the count of likes and comments for each post.
     posts_query = (
-        select([
-            CommunityPost,
+        select(
+            CommunityPost, 
             func.count(CommunityPostLike.id).label('like_count'),
             func.count(Comment.id).label('comment_count')
-        ])
+        )
         .outerjoin(CommunityPostLike, CommunityPostLike.post_id == CommunityPost.id)
         .outerjoin(Comment, Comment.post_id == CommunityPost.id)
         .group_by(CommunityPost.id)
@@ -141,24 +140,21 @@ async def get_community_posts_with_count(db: AsyncSession, skip: int = 0, limit:
         .limit(limit)
     )
 
+    # Execute the query to fetch posts with like and comment counts
+    result = await db.execute(posts_query)
+    posts_with_counts = result.all()  # Returns tuples of (CommunityPost, like_count, comment_count)
+
     # Also fetch the total count of posts to facilitate pagination
     total_count_query = select(func.count()).select_from(CommunityPost)
-
-    # Execute the query to fetch posts with like and comment counts
-    posts_result = await db.execute(posts_query)
-    posts_with_counts = posts_result.all()  # Returns tuples of (CommunityPost, like_count, comment_count)
-
-    # Execute the query to fetch total count of posts
     total_count_result = await db.execute(total_count_query)
     total_count = total_count_result.scalar_one()
 
-    # Structure the results to include the like and comment counts directly in the post data
-    formatted_posts = []
-    for post, like_count, comment_count in posts_with_counts:
-        post_data = jsonable_encoder(post)
-        post_data['likeCount'] = like_count
-        post_data['commentCount'] = comment_count
-        formatted_posts.append(post_data)
+    # Formatting the results correctly
+    formatted_posts = [{
+        **jsonable_encoder(post),
+        'likeCount': like_count,
+        'commentCount': comment_count
+    } for post, like_count, comment_count in posts_with_counts]
 
     return formatted_posts, total_count
 
