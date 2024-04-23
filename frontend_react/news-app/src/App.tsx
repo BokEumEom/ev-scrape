@@ -14,6 +14,7 @@ import BookmarksPage from './pages/BookmarksPage';
 import CommunityPage from './pages/CommunityPage';
 import WriteCommunityPost from './components/WriteCommunityPost';
 import UserProfileForm from './components/UserProfileForm';
+import CommunityPostDetailPage from './pages/CommunityPostDetailPage';
 
 const App: React.FC = () => {
     return (
@@ -48,6 +49,7 @@ const RoutesWrapper = () => {
                     <Route path="/bookmarks" element={<BookmarksPage />} />
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/community/write" element={<WriteCommunityPost />} />
+                    <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>

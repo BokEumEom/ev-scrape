@@ -33,7 +33,16 @@ export interface CommunityPost {
   id: number;
   title: string;
   content: string;
-  voteCount: number;
+  likeCount: number;
+  commentCount: number;
+  comments: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Comments {
+  id: number;
+  content: string;
   created_at: string;
   updated_at: string;
 }

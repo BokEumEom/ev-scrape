@@ -3,7 +3,6 @@ import axios from 'axios';
 import { NewsItem, CommunityPost, CommunityPostCreate, CommunityPostsResponse } from '../types';
 
 export const PAGE_SIZE = 10;
-
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const fetchNewsItems = async (page = 1, limit = 10) => {
@@ -71,6 +70,66 @@ export const createCommunityPost = async (post: CommunityPostCreate): Promise<vo
   } catch (error) {
     console.error('Failed to create community post:', error);
     throw error; // It's good practice to re-throw the error so that it can be caught and handled by the caller
+  }
+};
+
+export const fetchCommunityPostDetails = async (postId: number) => {
+  const url = `${API_BASE_URL}/api/v1/community/${postId}`;
+  try {
+    const response = await axios.get(url);
+    console.log("Requesting URL:", url);
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch community post details for post ${postId}:`, error);
+    throw error;
+  }
+};
+
+export const likeCommunityPost = async (postId: number) => {
+  try {
+    const url = `${API_BASE_URL}/api/v1/community/${postId}/like`;
+    const response = await axios.post(url);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 500) {
+      console.error('Internal server error occurred while liking post:', error.response.data);
+      // 또는 적절한 에러 메시지 표시
+      alert('Internal server error occurred while liking post. Please try again later.');
+    } else {
+      console.error(`Failed to like post ${postId}:`, error);
+      throw error;
+    }
+  }
+};
+
+export const fetchCommentsByPostId = async (postId: number) => {
+  const url = `${API_BASE_URL}/api/v1/community/${postId}/comments`;
+  try {
+      const response = await axios.get(url);
+      console.log("Requesting URL:", url);
+      return response.data;
+  } catch (error) {
+      console.error(`Failed to fetch comments for post ${postId}:`, error);
+      throw error;
+  }
+};
+
+export const createComment = async (postId: number, content: string) => {
+  const url = `${API_BASE_URL}/api/v1/community/${postId}/comments`;
+  try {
+    // Ensure that both postId and content are included in the body of the POST request
+    const response = await axios.post(url, { content });
+    console.log("Requesting URL:", url);
+    console.log("Post ID:", postId, "Content:", content);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error('Failed to create comment:', error.response.data);
+      alert('Error: ' + JSON.stringify(error.response.data));
+    } else {
+      console.error('An unexpected error occurred:', error);
+    }
+    throw new Error(`Failed to create comment on post ${postId}`);
   }
 };
 

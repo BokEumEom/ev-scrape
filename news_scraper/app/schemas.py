@@ -1,5 +1,5 @@
 # app/schemas.py
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import List, Generic, TypeVar, Generic, Optional
 from pydantic.generics import GenericModel
@@ -44,12 +44,31 @@ class CommunityPostCreate(CommunityPostBase):
 
 class CommunityPost(CommunityPostBase):
     id: int
+    title: str
+    content: str
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime]
+    likeCount: Optional[int] = Field(default=0, alias='like_count')
+    commentCount: Optional[int] = Field(default=0, alias='comment_count')
 
     class Config:
         orm_mode = True
 
-class CommunityPostsResponse(GenericModel, Generic[DataT]):
-    items: List[DataT]
+class CommunityPostsResponse(BaseModel):
+    items: List[CommunityPost]
     total: int
+    
+class CommentBase(BaseModel):
+    content: str
+
+class CommentCreate(BaseModel):
+    content: str
+
+class Comment(CommentBase):
+    id: int
+    post_id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        orm_mode = True
