@@ -1,45 +1,48 @@
 // src/hooks/useLikeCommunityPost.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { likeCommunityPost } from '../services/apiService';
-import { toast } from 'react-toastify'; // Assuming react-toastify is installed
+import { toast } from 'react-toastify';
+import { CommunityPost } from '../types'; // Assume you have correct type definitions
 
-export function useLikeCommunityPost() {
+export function useLikeCommunityPost(setIsLiked, setLikeCount) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<number, any, number, { previousPost?: CommunityPost }>({
+    mutationKey: ['likePost'],
     mutationFn: likeCommunityPost,
-    onMutate: async ({ postId }) => {
-      // postId가 undefined인 경우 처리
-      if (!postId) {
-        return;
-      }
-    
-      await queryClient.cancelQueries(['communityPost', postId]);
-      const previousPost = queryClient.getQueryData(['communityPost', postId]);
-    
-      if (!previousPost) {
-        console.warn('No post data available in cache to update for post:', postId);
-        return;
-      }
-    
-      queryClient.setQueryData(['communityPost', postId], {
-        ...previousPost,
-        isLikedByCurrentUser: !previousPost.isLikedByCurrentUser,
-        likeCount: previousPost.isLikedByCurrentUser
-          ? previousPost.likeCount - 1
-          : previousPost.likeCount + 1,
+    onMutate: async (postId) => {
+      await queryClient.cancelQueries({
+        queryKey: ['communityPost', postId],
+        exact: true
       });
-    
-      return { previousPost };
-    },
-    onError: (error, variables, context) => {
-      if (context?.previousPost) {
-        queryClient.setQueryData(['communityPost', variables.postId], context.previousPost);
+      const previousPost = queryClient.getQueryData<CommunityPost>(['communityPost', postId]);
+      if (previousPost) {
+        const newIsLiked = !previousPost.isLikedByCurrentUser;
+        const newLikeCount = previousPost.isLikedByCurrentUser ? previousPost.likeCount - 1 : previousPost.likeCount + 1;
+
+        queryClient.setQueryData(['communityPost', postId], {
+          ...previousPost,
+          isLikedByCurrentUser: newIsLiked,
+          likeCount: newLikeCount,
+        });
+
+        setIsLiked(newIsLiked);
+        setLikeCount(newLikeCount);
+
+        return { previousPost };
       }
-      toast.error('Error liking the post: ' + error.message);
+      return { previousPost: undefined };
     },
-    onSettled: () => {
-      queryClient.invalidateQueries(['communityPost']);
+    onError: (error, postId, context) => {
+      if (context?.previousPost) {
+        queryClient.setQueryData(['communityPost', postId], context.previousPost);
+      }
+      toast.error(`Error liking the post: ${error.message}`);
+    },
+    onSettled: (data, error, postId) => {
+      queryClient.invalidateQueries({
+        queryKey: ['communityPost', postId]
+      });
     }
   });
 }

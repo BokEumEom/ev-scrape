@@ -1,6 +1,7 @@
 # app/models.py
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, UniqueConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from .database import Base
 import datetime
 import pytz
@@ -18,7 +19,7 @@ class News(Base):
     title = Column(String, index=True, nullable=False)
     source = Column(String, nullable=False)
     link = Column(String, nullable=False)
-    published_at = Column(DateTime)
+    published_at = Column(DateTime, server_default=func.now())
     votes = relationship("Vote", back_populates="news")
 
 class Vote(Base):
@@ -33,39 +34,26 @@ class Like(Base):
     id = Column(Integer, primary_key=True, index=True)
     post_id = Column(Integer, ForeignKey('community_posts.id'), nullable=False)
 
+
 class CommunityPost(Base):
     __tablename__ = 'community_posts'
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
     content = Column(String, nullable=False)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(kst))
-    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(kst), onupdate=lambda: datetime.datetime.now(kst))
-    
-    # Relationships
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    likeCount = Column(Integer, default=0)
+
+    # Relationships correctly defined once
     likes = relationship("CommunityPostLike", back_populates="post", cascade="all, delete-orphan")
-    comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
-
-    # Dynamic properties to automatically count likes and comments
-    @property
-    def like_count(self):
-        return len(self.likes)
-
-    @property
-    def comment_count(self):
-        return len(self.comments)
+    comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan", order_by="Comment.created_at")
     
 class CommunityPostLike(Base):
     __tablename__ = 'community_post_likes'
     id = Column(Integer, primary_key=True, index=True)
     post_id = Column(Integer, ForeignKey('community_posts.id'), nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.now(kst))
+    created_at = Column(DateTime, server_default=func.now())
     post = relationship("CommunityPost", back_populates="likes")
-    
-    __table_args__ = (
-        UniqueConstraint('post_id', name='uix_1'),
-    )
-    
-CommunityPost.likes = relationship("CommunityPostLike", back_populates="post")
 
 class Comment(Base):
     __tablename__ = 'comments'
@@ -73,11 +61,8 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey('community_posts.id'), nullable=False)
     content = Column(Text, nullable=False)  # Now Text is properly imported and recognized
     author = Column(String, nullable=True)  # Optional: Include if comments have visible authors
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(kst))
-    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(kst), onupdate=lambda: datetime.datetime.now(kst))
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     # Relationships
     post = relationship("CommunityPost", back_populates="comments")
-
-# Adding the relationship to the CommunityPost model
-CommunityPost.comments = relationship("Comment", back_populates="post", order_by=Comment.created_at)

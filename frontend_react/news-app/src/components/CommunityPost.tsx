@@ -22,7 +22,7 @@ const CommunityPost: React.FC<CommunityPostProps> = ({ post }) => {
   };
 
   return (
-    <div className="bg-white shadow rounded-lg p-4 mb-4">
+    <div className="bg-white border-b border-gray-200 p-4">
       <h2 className="text-sm font-semibold mb-2" onClick={handleViewComments}>{post.title}</h2>
       <p className="text-xs text-gray-600 mb-3" onClick={handleViewComments}>{post.content}</p>
       <div className="text-xs flex items-center justify-between text-gray-500 text-sm">

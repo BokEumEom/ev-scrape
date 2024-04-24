@@ -26,7 +26,7 @@ const CommunityPage: React.FC = () => {
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
       className="flex flex-col min-h-screen pb-18"
     >
-      <div className="flex min-h-screen bg-white py-20">
+      <div className="flex min-h-screen bg-white py-12">
         <div className="container mx-auto px-4">
           <div className="text-right mb-4">
             <button

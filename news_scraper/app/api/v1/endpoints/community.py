@@ -56,23 +56,11 @@ async def create_community_post(post: schemas.CommunityPostCreate, db: AsyncSess
 @router.put("/{post_id}", response_model=schemas.CommunityPost)
 async def update_community_post(post_id: int, post: schemas.CommunityPostCreate, db: AsyncSession = Depends(get_db)):
     try:
-        # SQLAlchemy의 컨텍스트 관리자를 사용하여 트랜잭션을 처리합니다.
-        async with db.begin():
-            updated_post = await crud.update_community_post(db, post_id, post)
-            if not updated_post:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
-            return updated_post
-    except IntegrityError as e:
-        # 데이터 무결성 오류 처리
-        await db.rollback()  # 명시적 롤백
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e.orig))
-    except SQLAlchemyError as e:
-        # 기타 SQL 오류 처리
-        await db.rollback()  # 명시적 롤백
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
+        updated_post = await crud.update_community_post(db, post_id, post)
+        if not updated_post:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+        return updated_post
     except Exception as e:
-        # 예상치 못한 오류 처리
-        await db.rollback()  # 명시적 롤백
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.delete("/{post_id}", response_model=schemas.CommunityPost)

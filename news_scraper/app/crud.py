@@ -196,15 +196,12 @@ async def update_community_post(db: AsyncSession, post_id: int, post_update_data
             if not existing_post:
                 raise HTTPException(status_code=404, detail="Post not found")
 
-            for key, value in post_update_data.dict(exclude_unset=True).items():
+            for key, value in post_update_data.model_dump(exclude_unset=True).items():
                 setattr(existing_post, key, value)
 
-            existing_post.updated_at = datetime.utcnow()  # Ensure updated_at is refreshed
+            existing_post.updated_at = datetime.datetime.now()  # Ensure updated_at is refreshed
             await db.commit()  # Commit the updates
             return existing_post
-        except Exception as e:
-            await transaction.rollback()  # Rollback in case of any exception
-            raise HTTPException(status_code=500, detail=str(e))
 
 async def delete_community_post(db: AsyncSession, post_id: int):
     """
@@ -235,28 +232,27 @@ async def delete_community_post(db: AsyncSession, post_id: int):
 
 async def like_community_post(db: AsyncSession, post_id: int) -> models.CommunityPost:
     # 게시물이 존재하는지 확인
-    post = await db.get(CommunityPost, post_id)
+    post = await db.get(models.CommunityPost, post_id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 
     try:
-        # 기존의 like 추가 코드
+        # 기존의 좋아요 추가 코드
         existing_like = await db.execute(
-            select(CommunityPostLike)
-            .where(CommunityPostLike.post_id == post_id)
+            select(models.CommunityPostLike).where(models.CommunityPostLike.post_id == post_id)
         )
         existing_like = existing_like.scalars().first()
 
         if existing_like:
             raise HTTPException(status_code=400, detail="User has already liked this post")
 
-        new_like = CommunityPostLike(post_id=post_id)
+        new_like = models.CommunityPostLike(post_id=post_id)
         db.add(new_like)
-        await db.commit()
 
-        # Update the post like count (optional, if you want to cache the like count in the post)
+        # 좋아요 수 증가
         post.likeCount += 1
         await db.commit()
+
         await db.refresh(post)
 
         return post

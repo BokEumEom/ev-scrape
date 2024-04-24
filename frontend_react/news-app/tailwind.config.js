@@ -51,6 +51,12 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        resize: { // Adding resize utilities
+          'none': 'none',
+          'both': 'both',
+          'horizontal': 'horizontal',
+          'vertical': 'vertical'
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -80,6 +86,11 @@ module.exports = {
         gmsL: ["Gmarket-Sans-Light", "Inter", "system-ui","sans-serif"],
       },
     },
+  },
+  variants: {
+    extend: {
+      resize: ['responsive']
+    }
   },
   plugins: [require("tailwindcss-animate")],
 }

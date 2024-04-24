@@ -85,20 +85,37 @@ export const fetchCommunityPostDetails = async (postId: number) => {
   }
 };
 
-export const likeCommunityPost = async (postId: number) => {
+/**
+ * Updates a community post by sending a PUT request to the server.
+ *
+ * @param {number} postId - The ID of the post to update.
+ * @param {object} postData - The data to update the post with, containing title and content.
+ */
+export const updateCommunityPost = async ({ postId, postData }) => {
   try {
-    const url = `${API_BASE_URL}/api/v1/community/${postId}/like`;
-    const response = await axios.post(url);
+    console.log('Updating post with ID:', postId);  // Should display a number
+    console.log('Post Data:', postData);  // Should display the object with title and content
+
+    const url = `${API_BASE_URL}/api/v1/community/${postId}`;
+    console.log('Making PUT request to:', url);  // Check the full URL
+
+    const response = await axios.put(url, postData);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 500) {
-      console.error('Internal server error occurred while liking post:', error.response.data);
-      // 또는 적절한 에러 메시지 표시
-      alert('Internal server error occurred while liking post. Please try again later.');
-    } else {
-      console.error(`Failed to like post ${postId}:`, error);
-      throw error;
-    }
+    console.error('Failed to update post:', error);
+    throw error;
+  }
+};
+
+export const likeCommunityPost = async (postId: number) => {
+  try {
+      console.log('Liking post with ID:', postId);  // Debug log
+      const url = `${API_BASE_URL}/api/v1/community/${postId}/like`;
+      const response = await axios.post(url);
+      return response.data;
+  } catch (error) {
+      console.error('Failed to like post:', error);
+      throw error;  // Rethrow the error after logging for further handling by caller
   }
 };
 

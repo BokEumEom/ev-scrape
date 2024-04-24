@@ -34,6 +34,7 @@ export interface CommunityPost {
   title: string;
   content: string;
   likeCount: number;
+  isLikedByCurrentUser: boolean;
   commentCount: number;
   comments: string;
   created_at: string;
