@@ -60,9 +60,22 @@ const usePostDetails = () => {
 
       return { previousPostData };
     },
-    onError: (error, updatedPostData, context) => {
-      queryClient.setQueryData(['communityPost', numericPostId], context?.previousPostData);
-      toast.error(`Failed to update post: ${error.message}`);
+    onError: (error) => {
+      if (error.response) {
+        // 서버 응답이 있는 경우 (상태 코드 포함)
+        const statusCode = error.response.status;
+        const errorMessage = error.response.data.message || 'An error occurred while updating the post.';
+        console.error(`Error ${statusCode}: ${errorMessage}`);
+        toast.error(errorMessage);
+      } else if (error.request) {
+        // 요청이 전송되었지만 응답이 없는 경우
+        console.error('No response received from the server.');
+        toast.error('Failed to update the post. Please try again later.');
+      } else {
+        // 요청 설정 시 문제가 발생한 경우
+        console.error('Error occurred while setting up the request:', error.message);
+        toast.error('Failed to update the post. Please try again later.');
+      }
     },
     onSettled: () => {
       queryClient.invalidateQueries(['communityPost', numericPostId]);

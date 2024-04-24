@@ -47,7 +47,7 @@ const WriteCommunityPost: React.FC = () => {
           {...register("content", { required: true })}
           placeholder="내용"
           rows={15}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-4"
+          className="resize-y shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-4"
         ></textarea>
         {errors.content && <span className="text-red-500">내용은 필수입니다.</span>}
 

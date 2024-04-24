@@ -21,12 +21,12 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave }) => {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="block w-full px-4 py-2 border border-gray-300 rounded-md resize-both"
+          className="block w-full px-4 py-2 border border-gray-300 rounded-md"
         />
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="block w-full h-52 px-4 py-2 border border-gray-300 rounded-md"
+          className="resize-y block w-full h-52 px-4 py-2 border border-gray-300 rounded-md"
         />
         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Save Changes
