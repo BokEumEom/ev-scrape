@@ -91,14 +91,22 @@ export const fetchCommunityPostDetails = async (postId: number) => {
  * @param {number} postId - The ID of the post to update.
  * @param {object} postData - The data to update the post with, containing title and content.
  */
-export const updateCommunityPost = async ({ postId, postData }) => {
+export const updateCommunityPost = async ({ postId, postData }: { postId: number; postData: Partial<CommunityPost> }) => {
+  // Validation checks for postId and postData
+  if (typeof postId !== 'number' || isNaN(postId)) {
+    console.error('Invalid postId:', postId);
+    throw new Error('Invalid post ID: must be a valid number.');
+  }
+  if (!postData || typeof postData !== 'object' || Object.keys(postData).length === 0) {
+    console.error('Invalid postData:', postData);
+    throw new Error('Invalid post data: must be a non-empty object.');
+  }
+
   try {
     console.log('Updating post with ID:', postId);  // Should display a number
     console.log('Post Data:', postData);  // Should display the object with title and content
-
     const url = `${API_BASE_URL}/api/v1/community/${postId}`;
     console.log('Making PUT request to:', url);  // Check the full URL
-
     const response = await axios.put(url, postData);
     return response.data;
   } catch (error) {

@@ -1,11 +1,15 @@
 # app/api/v1/endpoints/community_routes.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from fastapi.exceptions import RequestValidationError
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, AsyncGenerator
 from app import crud, schemas
+from app.config import get_logger
 from app.database import SessionLocal
+
+logger = get_logger()
 
 router = APIRouter()
 
@@ -29,20 +33,20 @@ async def read_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
         post = await crud.get_community_post(db, post_id)
         if post is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
-        
+
         like_count = await crud.get_like_count(db, post_id)
         comment_count = await crud.get_comment_count(db, post_id)
 
-        # Properly integrate likeCount and commentCount into the response.
-        # Ensure the response schema (schemas.CommunityPost) has likeCount and commentCount defined.
         post_data = jsonable_encoder(post)
         post_data['likeCount'] = like_count
         post_data['commentCount'] = comment_count
         
         return schemas.CommunityPost.parse_obj(post_data)
     except SQLAlchemyError as e:
+        print(f"SQLAlchemy Error: {e}")
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
     except Exception as e:
+        print(f"General Error: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.post("", response_model=schemas.CommunityPost)
@@ -60,7 +64,14 @@ async def update_community_post(post_id: int, post: schemas.CommunityPostCreate,
         if not updated_post:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
         return updated_post
+    except SQLAlchemyError as e:
+        logger.error(f"Database error during post update: {e}")
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
+    except RequestValidationError as e:
+        logger.error(f"Validation error: {e}")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
     except Exception as e:
+        logger.error(f"Unexpected error: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.delete("/{post_id}", response_model=schemas.CommunityPost)
