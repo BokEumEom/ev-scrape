@@ -190,18 +190,19 @@ async def update_community_post(db: AsyncSession, post_id: int, post_update_data
     Raises:
     HTTPException: If the post cannot be found (404) or if there is a database error (500).
     """
-    async with db.begin() as transaction:
-        try:
-            existing_post = await db.get(CommunityPost, post_id)
-            if not existing_post:
-                raise HTTPException(status_code=404, detail="Post not found")
+    async with db.begin():  # Transaction begins here
+        result = await db.execute(select(models.CommunityPost).where(models.CommunityPost.id == post_id))
+        existing_post = result.scalars().first()
+        if not existing_post:
+            raise HTTPException(status_code=404, detail="Post not found")
+            
+        update_data = post_update_data.model_dump(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(existing_post, key, value)
 
-            for key, value in post_update_data.model_dump(exclude_unset=True).items():
-                setattr(existing_post, key, value)
-
-            existing_post.updated_at = datetime.datetime.now()  # Ensure updated_at is refreshed
-            await db.commit()  # Commit the updates
-            return existing_post
+        existing_post.updated_at = datetime.datetime.now()  # Ensure updated_at is refreshed
+        # No need to call commit here, it's handled by the context manager
+        return existing_post
 
 async def delete_community_post(db: AsyncSession, post_id: int):
     """
