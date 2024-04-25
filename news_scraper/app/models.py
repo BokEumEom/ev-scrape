@@ -9,6 +9,9 @@ import pytz
 # Get the KST timezone
 kst = pytz.timezone('Asia/Seoul')
 
+def get_kst_now():
+    return datetime.datetime.now(tz=kst)
+
 class Region(Base):
     __tablename__ = "regions"
     name = Column(String, primary_key=True, index=True)
@@ -40,8 +43,8 @@ class CommunityPost(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
     content = Column(String, nullable=False)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, default=get_kst_now)
+    updated_at = Column(DateTime, default=get_kst_now, onupdate=get_kst_now)
     likeCount = Column(Integer, default=0)
 
     # Relationships correctly defined once

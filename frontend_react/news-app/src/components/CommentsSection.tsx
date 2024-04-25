@@ -38,6 +38,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
     );
   };
 
+  const iconColor = commentText.trim() ? "text-blue-500" : "text-gray-300";
+
   return (
     <>
       {/* Comment List */}
@@ -78,7 +80,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
           >
           </button>
           <button type="submit" className="absolute right-0 top-0 mt-2 mr-2" aria-label="Post comment">
-            <IoSendSharp className="w-6 h-6 text-gray-300" />
+            <IoSendSharp className={`w-6 h-6 ${iconColor}`} />
           </button>
         </div>
       </form>
