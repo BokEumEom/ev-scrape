@@ -24,6 +24,15 @@ const CommunityPostDetailPage = () => {
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 
+  // Save 후 편집 모드 종료
+  const handleSave = (postData) => {
+    updateMutation.mutate(postData, {
+      onSuccess: () => {
+        setIsEditing(false); // 편집 모드 종료
+      }
+    });
+  };
+
   if (isLoading) return <div>Loading post details...</div>;
   if (isError) return <div>Error loading post details: {error.message}</div>;
   if (!post) return <div>Post not found.</div>;
@@ -40,7 +49,7 @@ const CommunityPostDetailPage = () => {
       </div>
       <div className="bg-white p-4 mb-2">
         {isEditing ? (
-          <PostEditor post={post} onSave={updateMutation.mutate} />
+          <PostEditor post={post} onSave={handleSave} />
         ) : (
           <PostDisplay post={post} onLike={likeMutation.mutate} isLiked={isLiked} likeCount={likeCount} />
         )}

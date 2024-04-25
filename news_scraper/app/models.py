@@ -1,5 +1,5 @@
 # app/models.py
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
@@ -40,8 +40,8 @@ class CommunityPost(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
     content = Column(String, nullable=False)
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     likeCount = Column(Integer, default=0)
 
     # Relationships correctly defined once
@@ -52,7 +52,7 @@ class CommunityPostLike(Base):
     __tablename__ = 'community_post_likes'
     id = Column(Integer, primary_key=True, index=True)
     post_id = Column(Integer, ForeignKey('community_posts.id'), nullable=False)
-    created_at = Column(DateTime, server_default=func.now())
+    created_at = Column(DateTime, default=func.now())
     post = relationship("CommunityPost", back_populates="likes")
 
 class Comment(Base):
@@ -61,8 +61,8 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey('community_posts.id'), nullable=False)
     content = Column(Text, nullable=False)  # Now Text is properly imported and recognized
     author = Column(String, nullable=True)  # Optional: Include if comments have visible authors
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     # Relationships
     post = relationship("CommunityPost", back_populates="comments")

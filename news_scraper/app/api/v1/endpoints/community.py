@@ -1,4 +1,4 @@
-# app/api/v1/endpoints/community_routes.py
+# app/api/v1/endpoints/community.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
@@ -24,104 +24,58 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 @router.get("", response_model=schemas.CommunityPostsResponse)
 async def read_community_posts(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
     posts_with_counts, total_count = await crud.get_community_posts_with_count(db, skip=skip, limit=limit)
-
     return {'items': posts_with_counts, 'total': total_count}
 
 @router.get("/{post_id}", response_model=schemas.CommunityPost)
 async def read_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
-    try:
-        post = await crud.get_community_post(db, post_id)
-        if post is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+    post = await crud.get_community_post(db, post_id)
+    if post is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
 
-        like_count = await crud.get_like_count(db, post_id)
-        comment_count = await crud.get_comment_count(db, post_id)
+    like_count = await crud.get_like_count(db, post_id)
+    comment_count = await crud.get_comment_count(db, post_id)
 
-        post_data = jsonable_encoder(post)
-        post_data['likeCount'] = like_count
-        post_data['commentCount'] = comment_count
-        
-        return schemas.CommunityPost.parse_obj(post_data)
-    except SQLAlchemyError as e:
-        print(f"SQLAlchemy Error: {e}")
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
-    except Exception as e:
-        print(f"General Error: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    post_data = jsonable_encoder(post)
+    post_data['likeCount'] = like_count
+    post_data['commentCount'] = comment_count
+    
+    return schemas.CommunityPost.parse_obj(post_data)
 
 @router.post("", response_model=schemas.CommunityPost)
 async def create_community_post(post: schemas.CommunityPostCreate, db: AsyncSession = Depends(get_db)):
-    try:
-        created_post = await crud.create_community_post(db, post)
-        return created_post
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"Failed to create post: {str(e)}")
+    created_post = await crud.create_community_post(db, post)
+    return created_post
 
 @router.put("/{post_id}", response_model=schemas.CommunityPost)
-async def update_community_post(post_id: int, post: schemas.CommunityPostCreate, db: AsyncSession = Depends(get_db)):
-    try:
-        updated_post = await crud.update_community_post(db, post_id, post)
-        if not updated_post:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
-        return updated_post
-    except SQLAlchemyError as e:
-        logger.error(f"Database error during post update: {e}")
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
-    except RequestValidationError as e:
-        logger.error(f"Validation error: {e}")
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+async def update_community_post(post_id: int, post: schemas.CommunityPostUpdate, db: AsyncSession = Depends(get_db)):
+    updated_post = await crud.update_community_post(db, post_id, post)
+    if not updated_post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+    return updated_post
 
 @router.delete("/{post_id}", response_model=schemas.CommunityPost)
 async def delete_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
-    try:
-        return await crud.delete_community_post(db, post_id)
-    except SQLAlchemyError:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    return await crud.delete_community_post(db, post_id)
 
 @router.post("/{post_id}/like", response_model=schemas.CommunityPost)
 async def like_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
-    try:
-        post = await crud.like_community_post(db, post_id)
-        if not post:
-            raise HTTPException(status_code=404, detail="Post not found")
-        return post
-    except SQLAlchemyError as e:
-        print(f"Database error occurred: {e}")
-        raise HTTPException(status_code=503, detail="Service unavailable due to database error")
-    except Exception as e:
-        print(f"Unexpected error occurred: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    post = await crud.like_community_post(db, post_id)
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+    return post
 
 @router.post("/{post_id}/comments", response_model=schemas.Comment)
 async def create_comment(post_id: int, comment: schemas.CommentCreate, db: AsyncSession = Depends(get_db)):
-    try:
-        return await crud.create_comment(db, post_id, comment)
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"Database connection error: {str(e)}")
+    return await crud.create_comment(db, post_id, comment)
 
 @router.get("/{post_id}/comments", response_model=List[schemas.Comment])
 async def read_comments(post_id: int, db: AsyncSession = Depends(get_db)):
-    try:
-        comments = await crud.get_comments_by_post_id(db, post_id)
-        return comments
-    except SQLAlchemyError:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    comments = await crud.get_comments_by_post_id(db, post_id)
+    return comments
 
 @router.delete("/comments/{comment_id}", response_model=schemas.Comment)
 async def delete_comment(comment_id: int, db: AsyncSession = Depends(get_db)):
-    try:
-        deleted_comment = await crud.delete_comment(db, comment_id)
-        if not deleted_comment:
-            raise HTTPException(status_code=404, detail="Comment not found")
-        return deleted_comment
-    except SQLAlchemyError:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database connection error")
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    deleted_comment = await crud.delete_comment(db, comment_id)
+    if not deleted_comment:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comment not found")
+    return deleted_comment

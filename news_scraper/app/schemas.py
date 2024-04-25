@@ -58,6 +58,16 @@ class CommunityPostsResponse(BaseModel):
     items: List[CommunityPost]
     total: int
     
+class CommunityPostUpdate(BaseModel):
+    title: Optional[str] = Field(None, title="The title of the post")
+    content: Optional[str] = Field(None, title="The content of the post")
+    updated_at: Optional[datetime] = Field(default_factory=datetime.now, title="The time of the update")
+    
+    # Optional: 다른 필드가 필요하다면 여기에 추가하세요.
+
+    class Config:
+        orm_mode = True
+    
 class CommentBase(BaseModel):
     content: str
 

@@ -4,9 +4,8 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select, func
-from . import models, schemas
+from app import models, schemas
 from datetime import datetime
-from typing import List
 
 async def create_news(db: AsyncSession, news: schemas.NewsCreate):
     """
@@ -170,7 +169,7 @@ async def create_community_post(db: AsyncSession, post_data: schemas.CommunityPo
         await db.rollback()
         raise
 
-async def update_community_post(db: AsyncSession, post_id: int, post_update_data: schemas.CommunityPostCreate):
+async def update_community_post(db: AsyncSession, post_id: int, post_update_data: schemas.CommunityPostUpdate) -> models.CommunityPost:
     """
     Updates a specific community post with new data within a transaction.
 
@@ -190,19 +189,25 @@ async def update_community_post(db: AsyncSession, post_id: int, post_update_data
     Raises:
     HTTPException: If the post cannot be found (404) or if there is a database error (500).
     """
-    async with db.begin():  # Transaction begins here
-        result = await db.execute(select(models.CommunityPost).where(models.CommunityPost.id == post_id))
-        existing_post = result.scalars().first()
+    async with db.begin():  # 시작: 비동기 트랜잭션
+        # `get` 메서드를 사용하여 특정 포스트를 조회합니다.
+        existing_post = await db.get(models.CommunityPost, post_id)
         if not existing_post:
             raise HTTPException(status_code=404, detail="Post not found")
-            
+
+        # JSON 인코더를 사용하여 Pydantic 모델에서 변경할 데이터를 추출합니다.
         update_data = jsonable_encoder(post_update_data, exclude_unset=True)
+        
+        # 변환된 데이터로 기존 포스트 객체의 속성을 업데이트합니다.
         for key, value in update_data.items():
             setattr(existing_post, key, value)
 
-        existing_post.updated_at = datetime.now()  # Ensure updated_at is refreshed
-        # No need to call commit here, it's handled by the context manager
-        return existing_post
+        # `add`를 호출하여 세션에 변경사항을 추가하고 커밋합니다.
+        db.add(existing_post)
+
+    # 변경사항이 커밋된 후, 업데이트된 객체를 반환합니다.
+    await db.refresh(existing_post)
+    return existing_post
 
 async def delete_community_post(db: AsyncSession, post_id: int):
     """
