@@ -196,11 +196,11 @@ async def update_community_post(db: AsyncSession, post_id: int, post_update_data
         if not existing_post:
             raise HTTPException(status_code=404, detail="Post not found")
             
-        update_data = post_update_data.model_dump(exclude_unset=True)
+        update_data = jsonable_encoder(post_update_data, exclude_unset=True)
         for key, value in update_data.items():
             setattr(existing_post, key, value)
 
-        existing_post.updated_at = datetime.datetime.now()  # Ensure updated_at is refreshed
+        existing_post.updated_at = datetime.now()  # Ensure updated_at is refreshed
         # No need to call commit here, it's handled by the context manager
         return existing_post
 

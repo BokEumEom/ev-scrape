@@ -11,8 +11,8 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave }) => {
     const [content, setContent] = useState(post.content);
   
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      onSave({ title, content });
+        e.preventDefault();
+        onSave({ title, content });
     };
   
     return (

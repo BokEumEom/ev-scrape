@@ -13,8 +13,8 @@ const PostDisplay: React.FC<PostDisplayProps> = ({ post, onLike, isLiked, likeCo
 return (
     <>
     <h1 className="text-lg font-semibold mb-2">{post.title}</h1>
-    <p className="text-sm text-gray-600">{post.content}</p>
-    <button onClick={onLike} className="flex items-center text-sm py-3">
+    <p className="text-sm text-gray-600 mb-2" style={{ whiteSpace: 'pre-wrap' }}>{post.content}</p>
+    <button onClick={onLike} className="flex items-center border rounded-full text-sm p-2">
         {isLiked ? <IoHeart className="text-red-500" /> : <IoHeartOutline className="text-red-500" />}
         <span className="ml-1">좋아요</span>
     </button>

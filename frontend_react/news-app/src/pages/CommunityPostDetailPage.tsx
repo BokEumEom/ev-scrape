@@ -1,11 +1,11 @@
 // src/pages/CommunityPostDetailPage.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoChevronBackOutline, IoPencil, IoSave } from "react-icons/io5";
 import usePostDetails from '../hooks/usePostDetails';
 import PostEditor from '../components/PostEditor';
-import CommentsSection from '../components/CommentsSection';
 import PostDisplay from '../components/PostDisplay';
+import CommentsSection from '../components/CommentsSection';
 
 const CommunityPostDetailPage = () => {
   const navigate = useNavigate();
@@ -16,12 +16,11 @@ const CommunityPostDetailPage = () => {
     error,
     likeMutation,
     updateMutation,
+    isEditing,
+    setIsEditing,
     isLiked,
     likeCount,
-    setLikeCount,
   } = usePostDetails();
-  
-  const [isEditing, setIsEditing] = useState(false);  // Define editing state here
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 

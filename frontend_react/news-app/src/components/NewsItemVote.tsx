@@ -26,7 +26,7 @@ const NewsItemVote: React.FC<NewsItemVoteProps> = ({ newsId, onVote, voteCount }
         onClick={() => onVote(newsId, 1)}
         className="rounded-full hover:bg-gray-100"
       >
-        <PiThumbsUpLight />
+        <PiThumbsUpLight className="text-gray-500 text-lg" size={18} />
       </motion.button>
       <span className="text-gray-700">{voteCount}</span> {/* Display the vote count here */}
     </div>

@@ -6,7 +6,8 @@ from contextlib import asynccontextmanager
 import asyncio
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException as StarletteHTTPException
+from sqlalchemy.exc import SQLAlchemyError
+from pydantic import ValidationError
 # from .news_routes import router as news_router
 # from .community_routes import router as community_router
 from .database import Base, engine  
@@ -99,24 +100,33 @@ async def get_regional_announcements(region_name: str = Path(..., description="T
         logger.error(f"An error occurred while fetching announcements: {str(e)}")
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
     
-@app.exception_handler(Exception)
-async def general_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unhandled exception: {exc}")  # Log the error for debugging purposes
-    return JSONResponse(
-        status_code=500,
-        content={"detail": f"An error occurred: {exc}"}
-    )
-    
-@app.exception_handler(StarletteHTTPException)
-async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"detail": str(exc.detail)}
+        content={"success": False, "message": exc.detail}
+    )
+
+@app.exception_handler(SQLAlchemyError)
+async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
+    logger.error(f"Database error: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"success": False, "message": "Database error"}
     )
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    logger.error(f"Validation error: {exc}")
     return JSONResponse(
         status_code=422,
-        content={"detail": exc.errors()}
+        content={"success": False, "message": "Validation failed", "errors": exc.errors()}
+    )
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unexpected error: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"success": False, "message": "An unexpected error occurred"}
     )
