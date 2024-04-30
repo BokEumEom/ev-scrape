@@ -1,8 +1,10 @@
 // src/hooks/usePostDetails.tsx
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
+import { useAtom } from 'jotai';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchCommunityPostDetails, updateCommunityPost, likeCommunityPost } from '../services/apiService';
+import { fetchCommunityPostDetails, updateCommunityPost } from '../services/apiService';
+import { isEditingAtom } from '../atoms/postAtoms';
 import { toast } from 'react-toastify';
 import { CommunityPost } from '../types';
 
@@ -11,40 +13,18 @@ const usePostDetails = () => {
   const numericPostId = Number(postId);
   const queryClient = useQueryClient();
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+  const [isEditing, setIsEditing] = useAtom(isEditingAtom);
+
+  // useCallback으로 setIsEditing 래핑
+  const toggleIsEditing = useCallback(() => {
+    setIsEditing(!isEditing);
+  }, [isEditing, setIsEditing]);
 
   // Fetch post details and initialize like state when post data is available
-  const {
-    data: post,
-    isLoading,
-    isError,
-    error,
-  } = useQuery<CommunityPost>({
+  const { data: post, isLoading, isError, error } = useQuery<CommunityPost>({
     queryKey: ['communityPost', numericPostId],
     queryFn: () => fetchCommunityPostDetails(numericPostId),
-    enabled: !!numericPostId,
-    onSuccess: (data) => {
-      // Ensure that like-related states are updated with the latest post data
-      setIsLiked(data.isLikedByCurrentUser || false);
-      setLikeCount(data.likeCount || 0);
-    }
-  });
-
-  // Define mutation for liking a post
-  const likeMutation = useMutation({
-    mutationFn: () => likeCommunityPost(numericPostId),
-    onSuccess: () => {
-      toast.success('Post liked successfully');
-      // Safely toggle like status and update count
-      setIsLiked((prev) => !prev);
-      setLikeCount((prev) => prev + (isLiked ? -1 : 1));
-      queryClient.invalidateQueries(['communityPost', numericPostId]);
-    },
-    onError: (error) => {
-      toast.error(`Failed to like the post: ${error.message}`);
-    }
+    enabled: !!numericPostId
   });
 
   // Define mutation for updating a post
@@ -73,6 +53,7 @@ const usePostDetails = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries(['communityPost', numericPostId]);
+      setIsEditing(false); // 편집 모드 종료
     },
   });
 
@@ -81,14 +62,10 @@ const usePostDetails = () => {
     isLoading,
     isError,
     error,
-    likeMutation,
     updateMutation,
     isEditing,
     setIsEditing,
-    isLiked,
-    likeCount,
-    setIsLiked,
-    setLikeCount,
+    toggleIsEditing,
   };
 };
 

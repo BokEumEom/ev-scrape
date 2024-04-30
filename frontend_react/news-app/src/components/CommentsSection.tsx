@@ -61,7 +61,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
       </div>
 
       {/* Fixed Comment Input */}
-      <form onSubmit={handleAddComment} className="fixed inset-x-0 bottom-12 p-3 bg-white z-10">
+      <form onSubmit={handleAddComment} className="fixed inset-x-0 bottom-0 p-3 bg-white z-50">
         <div className="relative">
           <input
             ref={commentInputRef} 

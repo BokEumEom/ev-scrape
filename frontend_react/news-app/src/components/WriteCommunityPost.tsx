@@ -1,5 +1,5 @@
 // src/components/WriteCommunityPost.tsx
-import React from 'react';
+import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useCreateCommunityPost } from '../hooks/useCreateCommunityPost';
@@ -13,6 +13,7 @@ const WriteCommunityPost: React.FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>();
   const { mutate: createPost, status } = useCreateCommunityPost();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Check if the mutation is currently loading
   const isLoading = status === 'pending';

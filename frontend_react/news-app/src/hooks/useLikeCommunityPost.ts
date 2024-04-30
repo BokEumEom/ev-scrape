@@ -2,47 +2,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { likeCommunityPost } from '../services/apiService';
 import { toast } from 'react-toastify';
-import { CommunityPost } from '../types'; // Assume you have correct type definitions
+import { CommunityPost } from '../types';
 
-export function useLikeCommunityPost(setIsLiked, setLikeCount) {
+export function useLikeCommunityPost(postId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation<number, any, number, { previousPost?: CommunityPost }>({
-    mutationKey: ['likePost'],
-    mutationFn: likeCommunityPost,
-    onMutate: async (postId) => {
-      await queryClient.cancelQueries({
-        queryKey: ['communityPost', postId],
-        exact: true
-      });
-      const previousPost = queryClient.getQueryData<CommunityPost>(['communityPost', postId]);
-      if (previousPost) {
-        const newIsLiked = !previousPost.isLikedByCurrentUser;
-        const newLikeCount = previousPost.isLikedByCurrentUser ? previousPost.likeCount - 1 : previousPost.likeCount + 1;
-
-        queryClient.setQueryData(['communityPost', postId], {
-          ...previousPost,
-          isLikedByCurrentUser: newIsLiked,
-          likeCount: newLikeCount,
-        });
-
-        setIsLiked(newIsLiked);
-        setLikeCount(newLikeCount);
-
-        return { previousPost };
-      }
-      return { previousPost: undefined };
+  const mutation = useMutation({
+    mutationFn: async () => {
+      return await likeCommunityPost(postId);
     },
-    onError: (error, postId, context) => {
-      if (context?.previousPost) {
-        queryClient.setQueryData(['communityPost', postId], context.previousPost);
-      }
+    onSuccess: (data) => {
+      queryClient.setQueryData(['communityPost', postId], data);
+    },
+    onError: (error) => {
       toast.error(`Error liking the post: ${error.message}`);
     },
-    onSettled: (data, error, postId) => {
-      queryClient.invalidateQueries({
-        queryKey: ['communityPost', postId]
-      });
-    }
   });
+
+  return mutation;
 }

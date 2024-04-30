@@ -3510,17 +3510,17 @@
   dependencies:
     mini-svg-data-uri "^1.2.3"
 
-"@tanstack/query-core@5.28.13":
-  version "5.28.13"
-  resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.28.13.tgz"
-  integrity sha512-C3+CCOcza+mrZ7LglQbjeYEOTEC3LV0VN0eYaIN6GvqAZ8Foegdgch7n6QYPtT4FuLae5ALy+m+ZMEKpD6tMCQ==
+"@tanstack/query-core@5.32.0":
+  version "5.32.0"
+  resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.32.0.tgz"
+  integrity sha512-Z3flEgCat55DRXU5UMwYU1U+DgFZKA3iufyOKs+II7iRAo0uXkeU7PH5e6sOH1CGEag0IpKmZxlUFpCg6roSKw==
 
-"@tanstack/react-query@^5.28.14":
-  version "5.28.14"
-  resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.28.14.tgz"
-  integrity sha512-cZqt03Igb3I9tM72qNX5TAAmeYl75Z+k4Mv92VkXIXc2hCrv0fIywd7GN3JV1BBJl4mr7Cc+OOKKOPy8sNVOkA==
+"@tanstack/react-query@^5.32.0":
+  version "5.32.0"
+  resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.32.0.tgz"
+  integrity sha512-+E3UudQtarnx9A6xhpgMZapyF+aJfNBGFMgI459FnduEZqT/9KhOWnMOneZahLRt52yzskSA0AuOyLkXHK0yBA==
   dependencies:
-    "@tanstack/query-core" "5.28.13"
+    "@tanstack/query-core" "5.32.0"
 
 "@teovilla/shadcn-ui-react-accordion@0.5.0":
   version "0.5.0"

@@ -11,7 +11,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@react-spring/web": "^9.7.3",
     "@tailwindcss/forms": "^0.5.7",
-    "@tanstack/react-query": "^5.28.14",
+    "@tanstack/react-query": "^5.32.0",
     "@teovilla/shadcn-ui-react": "^0.5.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
