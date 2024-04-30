@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { IoChevronBackOutline } from "react-icons/io5";
+import { IoChevronBackOutline, IoPencil, IoSave } from "react-icons/io5";
 import { UserProfile } from '../types'; // 사용자 프로필 타입을 import합니다.
 
 interface UserProfileFormProps {
@@ -22,6 +22,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user, onClose }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
 
   const onSubmit = (data) => {
     console.log(data);
@@ -39,11 +40,16 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user, onClose }) => {
     });
   };
 
+  const handleEditToggle = () => setIsEditing((prev) => !prev);
+
   return (
     <div className="p-4 pt-16 pb-20 bg-white max-w-md mx-auto">
       <div className="flex justify-between items-center mb-6">
         <button onClick={() => navigate(-1)} className="text-gray-500 text-lg p-3 rounded-full">
           <IoChevronBackOutline />
+        </button>
+        <button onClick={handleEditToggle} className="flex item-center text-gray-500 text-lg p-2 border rounded-full">
+          {isEditing ? <IoSave /> : <IoPencil />}
         </button>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -73,7 +79,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user, onClose }) => {
             {interests.map((interest, index) => (
               <button key={index} type="button" onClick={() => toggleInterest(interest)}
                 className={`m-1 text-xs px-4 py-2 border rounded-full cursor-pointer 
-                ${selectedInterests.includes(interest) ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+                ${selectedInterests.includes(interest) ? 'bg-neutral-700 text-white' : ''}`}>
                 {interest}
               </button>
             ))}

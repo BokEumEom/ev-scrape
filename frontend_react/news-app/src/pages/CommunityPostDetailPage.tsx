@@ -34,7 +34,7 @@ const CommunityPostDetailPage = () => {
         <button onClick={() => navigate(-1)} className="text-gray-500 text-lg p-3 rounded-full">
           <IoChevronBackOutline />
         </button>
-        <button onClick={handleEditToggle} className="text-gray-500 text-lg p-3 rounded-full">
+        <button onClick={handleEditToggle} className="flex item-center text-gray-500 text-lg p-2 border rounded-full">
           {isEditing ? <IoSave /> : <IoPencil />}
         </button>
       </div>

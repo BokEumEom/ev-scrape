@@ -19,22 +19,30 @@ const UserStats: React.FC<UserStatsProps> = ({
     <span className="text-sm font-bold">내 활동 내역</span>
     <div className="flex justify-around my-4 text-center">
       <div className="flex flex-col items-center justify-center">
-        <FaPencilAlt className="text-gray-700 text-2xl mb-2" />
+        <div className="w-16 h-16 border-2 border-gray-300 rounded-full flex items-center justify-center mb-2">
+          <FaPencilAlt className="text-gray-700 text-2xl" />
+        </div>
         <span className="text-sm font-semibold text-gray-500 py-2">글쓰기</span>
         <span className="text-xs block font-semibold text-gray-400">0/2{postsCount}</span>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <IoChatbubbleEllipses className="text-gray-700 text-2xl mb-2" />
+        <div className="w-16 h-16 border-2 border-gray-300 rounded-full flex items-center justify-center mb-2">
+          <IoChatbubbleEllipses className="text-gray-700 text-2xl" />
+        </div>
         <span className="text-sm font-semibold text-gray-500 py-2">댓글쓰기</span>
         <span className="text-xs block font-semibold text-gray-400">0/5{followersCount}</span>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <HiFire className="text-gray-700 text-2xl mb-2" />
+        <div className="w-16 h-16 border-2 border-gray-300 rounded-full flex items-center justify-center mb-2">
+          <HiFire className="text-gray-700 text-2xl" />
+        </div>
         <span className="text-sm font-semibold text-gray-500 py-2">인기글 조회</span>
         <span className="text-xs block font-semibold text-gray-400">0/5{followingCount}</span>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <IoHeartSharp className="text-gray-700 text-2xl mb-2" />
+        <div className="w-16 h-16 border-2 border-gray-300 rounded-full flex items-center justify-center mb-2">
+          <IoHeartSharp className="text-gray-700 text-2xl" />
+        </div>
         <span className="text-sm font-semibold text-gray-500 py-2">공감 보내기</span>
         <span className="text-xs block font-semibold text-gray-400">0/10</span>
       </div>
