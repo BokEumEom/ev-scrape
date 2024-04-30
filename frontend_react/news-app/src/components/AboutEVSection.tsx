@@ -14,7 +14,7 @@ const AboutEVSection: React.FC = () => {
         </p>
       </div>
 
-      <div className="max-w-4xl mx-auto grid gap-8 md:grid-cols-3 text-center">
+      <div className="max-w-4xl mx-auto grid gap-8 sm:grid-cols-1 md:grid-cols-3 text-center">
         <div>
           <img src={environmentIcon} alt="Environment Friendly" className="w-20 h-20 mx-auto"/>
           <h3 className="my-2 text-xl">Eco-Friendly</h3>

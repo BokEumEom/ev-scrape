@@ -44,7 +44,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user, onClose }) => {
 
   return (
     <div className="p-4 pt-16 pb-20 bg-white max-w-md mx-auto">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <button onClick={() => navigate(-1)} className="text-gray-500 text-lg p-3 rounded-full">
           <IoChevronBackOutline />
         </button>
