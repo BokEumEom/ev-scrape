@@ -7,7 +7,7 @@ import Announcements from '../components/Announcements';
 import { fetchAnnouncements } from '../services/apiService';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const initialRegions = ['incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan', 'goyang', 'sejong', 'wonju'];
+const initialRegions = ['evportal', 'incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan', 'goyang', 'sejong', 'wonju'];
 
 const AnnouncementsPage = () => {
   const [regions, setRegions] = useState(initialRegions);

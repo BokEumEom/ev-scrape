@@ -26,6 +26,7 @@ from .scrapers.wonju_scraper import WonjuScraper
 from .scrapers.goyang_scraper import GoyangScraper
 from .scrapers.gwangju_scraper import GwangjuScraper
 from .scrapers.incheon2_scraper import Incheon2Scraper
+from .scrapers.notice_scraper import EVPortalNoticeScraper
 
 SCRAPERS = {
     'gyeonggi': GyeonggiScraper().scrape,
@@ -39,6 +40,7 @@ SCRAPERS = {
     'seoul': SeoulScraper().scrape,
     'gwangju': GwangjuScraper().scrape,
     'incheon2': Incheon2Scraper().scrape,
+    'evportal': EVPortalNoticeScraper().scrape
     # 기타 지역 스크래퍼 추가...
 }
 

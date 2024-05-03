@@ -44,7 +44,7 @@ const EVReviewsSection = () => {
       id: 2,
       model: "Hyundai IONIQ 5",
       review: "아이오닉 5만의 특별한 외관 디자인은 날렵하고 세련된 룩을 완성해 주는 깔끔하고 예리한 라인이 특징입니다.",
-      imagUrl: "https://www.hyundai.com/contents/vr360/NE04/exterior/SAW/001.png",
+      imagUrl: "https://www.mad4wheels.com/img/free-car-images/mobile/18715/hyundai-ioniq-5-2022-654254.jpg",
       link: "https://www.hyundai.com/worldwide/ko/brand-journal/ioniq/ioniq5"
     },
     {
