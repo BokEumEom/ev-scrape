@@ -11,6 +11,7 @@ class BasePlaywrightScraper:
 
     async def fetch_page(self):
         page_content = ""
+        browser = None
         try:
             async with async_playwright() as p:
                 browser = await p.chromium.launch(headless=True)

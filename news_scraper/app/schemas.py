@@ -82,3 +82,30 @@ class Comment(CommentBase):
 
     class Config:
         orm_mode = True
+        
+# Vehicle
+class VehicleSpecCreate(BaseModel):
+    manufacturer: str
+    model: str
+    drive_type: str
+    battery_type: str
+    range_km: float
+    acceleration: float
+    weight_kg: float
+    storage_l: int
+    wheel_size: str
+    seating_capacity: int
+    display_inch: float
+    minimum_ground_clearance_mm: int
+    width_mm: int
+    height_mm: int
+    length_mm: int
+    track_mm_front: int
+    track_mm_rear: int
+
+# This model is for responses and includes the 'id'
+class VehicleSpec(VehicleSpecCreate):
+    id: int
+
+    class Config:
+        orm_mode = True

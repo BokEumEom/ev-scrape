@@ -1,20 +1,19 @@
 # app/main.py
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException, Query, Path, Body, Request
-from app.api.v1.endpoints import news, community
+from app.api.v1.endpoints import news, community, vehicle
 from contextlib import asynccontextmanager
 import asyncio
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from pydantic import ValidationError
-# from .news_routes import router as news_router
-# from .community_routes import router as community_router
 from .database import Base, engine  
 from .rss_scheduler import start_rss_feed_scheduler
 from .config import get_logger
 from fastapi.middleware.cors import CORSMiddleware
 from .announce_models import Announcement
+
 from .scrapers.seoul_scraper import SeoulScraper
 from .scrapers.incheon_scraper import IncheonScraper
 from .scrapers.gyeonggi_scraper import GyeonggiScraper
@@ -68,10 +67,9 @@ async def app_lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=app_lifespan)
 
-# app.include_router(news_router, prefix="/news", tags=["news"])
-# app.include_router(community_router, prefix="/community", tags=["community"])
 app.include_router(news.router, prefix="/api/v1/news", tags=["News"])
 app.include_router(community.router, prefix="/api/v1/community", tags=["Community"])
+app.include_router(vehicle.router, prefix="/api/v1/vehicle", tags=["Vehicle"])
 
 # Add CORS middleware to allow requests from any origin
 app.add_middleware(

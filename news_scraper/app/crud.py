@@ -308,3 +308,47 @@ async def get_comment_count(db: AsyncSession, post_id: int) -> int:
 # Announcements Regions
 def get_regions(db: AsyncSession):
     return db.query(models.Region).all()
+
+# Vehicle
+async def create_vehicle_spec(db: AsyncSession, vehicle_spec: schemas.VehicleSpecCreate):
+    new_vehicle = models.VehicleSpec(**vehicle_spec.dict())
+    db.add(new_vehicle)
+    await db.commit()
+    await db.refresh(new_vehicle)
+    return new_vehicle
+
+async def get_vehicle_specs(db: AsyncSession):
+    result = await db.execute(select(models.VehicleSpec))
+    return result.scalars().all()
+
+async def get_vehicle_specs_by_manufacturer(db: AsyncSession, manufacturer_name: str):
+    query = select(models.VehicleSpec).where(models.VehicleSpec.manufacturer == manufacturer_name)
+    result = await db.execute(query)
+    vehicles = result.scalars().all()  # This retrieves all matching records
+    return vehicles  # This is now a list, matching the expected response model
+
+async def get_vehicle_spec_by_model(db: AsyncSession, model_name: str):
+    query = select(models.VehicleSpec).where(models.VehicleSpec.model == model_name)
+    result = await db.execute(query)
+    vehicle = result.scalars().first()
+    if vehicle:
+        return vehicle
+    else:
+        raise HTTPException(status_code=404, detail="Vehicle not found")
+
+async def update_vehicle_spec(db: AsyncSession, vehicle_id: int, spec_update: schemas.VehicleSpecCreate):
+    vehicle = await db.get(schemas.VehicleSpec, vehicle_id)
+    if vehicle:
+        for key, value in spec_update.dict(exclude_unset=True).items():
+            setattr(vehicle, key, value)
+        await db.commit()
+        return vehicle
+    return None
+
+async def delete_vehicle_spec(db: AsyncSession, vehicle_id: int):
+    vehicle = await db.get(schemas.VehicleSpec, vehicle_id)
+    if vehicle:
+        await db.delete(vehicle)
+        await db.commit()
+        return vehicle
+    return None

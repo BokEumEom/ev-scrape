@@ -1,5 +1,5 @@
 # app/models.py
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
@@ -69,3 +69,27 @@ class Comment(Base):
 
     # Relationships
     post = relationship("CommunityPost", back_populates="comments")
+    
+# Vehicle Spec
+class VehicleSpec(Base):
+    __tablename__ = 'vehicle_specs'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    manufacturer = Column(String, nullable=False)  # 제조사 필드 추가
+    model = Column(String, nullable=False)
+    drive_type = Column(String)  # 드라이브 타입
+    battery_type = Column(String)  # 배터리 타입
+    range_km = Column(Float)  # 주행 가능 거리
+    acceleration = Column(Float)  # 도달 시간 (0-100 km/h)
+    weight_kg = Column(Float)  # 중량
+    storage_l = Column(Integer)  # 적재공간
+    wheel_size = Column(String)  # 휠 크기
+    seating_capacity = Column(Integer)  # 좌석수
+    display_inch = Column(Float)  # 디스플레이 크기
+    minimum_ground_clearance_mm = Column(Integer)  # 최저 지상고
+    width_mm = Column(Integer)  # 전폭
+    height_mm = Column(Integer)  # 전고
+    length_mm = Column(Integer)  # 전장
+    track_mm_front = Column(Integer)  # 트랙 전면
+    track_mm_rear = Column(Integer)  # 트랙 후면
+    created_at = Column(DateTime, default=func.now())  # 생성 일자
