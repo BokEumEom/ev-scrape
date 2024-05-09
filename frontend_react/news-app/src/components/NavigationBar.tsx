@@ -6,7 +6,7 @@ import { IoSearch, IoPeopleSharp } from "react-icons/io5";
 
 const NavigationBar: React.FC = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-indigo-500 text-white p-1 flex justify-between items-center z-10">
+    <nav className="fixed top-0 left-0 right-0 bg-indigo-600 text-white p-1 flex justify-between items-center z-10">
       <div className="flex items-center">
         <img src={logoIcon} alt="EV TREND LOGO" className="mr-3 h-[3rem]"/>
         <span className="font-bold text-xl hidden sm:block">EVTrend</span>

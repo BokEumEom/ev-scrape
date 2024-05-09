@@ -5,7 +5,8 @@ import {
   CommunityPost, 
   CommunityPostCreate, 
   CommunityPostsResponse,
-  VehicleSpec
+  VehicleSpec,
+  ApiError
 } from '../types';
 
 export const PAGE_SIZE = 10;
@@ -183,7 +184,18 @@ export const createVehicleSpec = async (vehicleSpec: VehicleSpec): Promise<Vehic
       const response = await axios.post<VehicleSpec>(url, vehicleSpec);
       return response.data;
   } catch (error) {
-      console.error('Failed to create vehicle specification:', error);
-      throw error;
+      if (axios.isAxiosError(error)) {
+          console.error('Failed to create vehicle specification:', error.response?.data || error.message);
+          // Assuming the API error response is in a specific format you can adjust the typing accordingly
+          throw new ApiError(
+              error.response?.status || 500,
+              error.response?.data.message || 'Unexpected error occurred',
+              error.response?.data.errors
+          );
+      } else {
+          // Handling unexpected errors that might not be AxiosError
+          console.error('An unexpected error occurred:', error);
+          throw new ApiError(500, 'Internal Server Error');
+      }
   }
 };

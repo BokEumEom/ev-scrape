@@ -1,95 +1,65 @@
 // src/components/VehicleForm.tsx
-import React, { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { createVehicleSpec } from '../../services/apiService';
+import React from 'react';
 import { VehicleSpec } from '../../types';
-import InputField from './InputField';  // Separate component for input fields
+import SelectField from '../SelectField';
 import FormContainer from './FormContainer';
 import FormHeader from './FormHeader';
 import SubmitButton from './SubmitButton';
+import ErrorDisplay from '../ErrorDisplay';
+import FormSection from './FormSection';
+import useVehicleForm from '../../hooks/useVehicleForm';
 
 const VehicleForm: React.FC = () => {
-    const [formData, setFormData] = useState<VehicleSpec>({
+    const initialFormData: VehicleSpec = {
         manufacturer: '',
         model: '',
         drive_type: '',
         battery_type: '',
-        battery_capacity: 0,
-        range_km: 0,
-        acceleration: 0,
-        weight_kg: 0,
-        storage_l: 0,
+        battery_capacity: null,
+        range_km: null,
+        acceleration: null,
+        weight_kg: null,
+        storage_l: null,
         wheel_size: '',
-        seating_capacity: 0,
-        display_inch: 0,
-        minimum_ground_clearance_mm: 0,
-        width_mm: 0,
-        height_mm: 0,
-        length_mm: 0
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type } = e.target;
-        const parsedValue = type === 'number' ? parseFloat(value) || 0 : value;
-        setFormData(prev => ({ ...prev, [name]: parsedValue }));
+        seating_capacity: null,
+        display_inch: null,
+        minimum_ground_clearance_mm: null,
+        width_mm: null,
+        height_mm: null,
+        length_mm: null
     };
 
-    const mutation = useMutation({
-        mutationFn: createVehicleSpec,
-        onSuccess: () => {
-            alert('Vehicle specification added successfully!');
-            setFormData({
-                manufacturer: '',
-                model: '',
-                drive_type: '',
-                battery_type: '',
-                battery_capacity: 0,
-                range_km: 0,
-                acceleration: 0,
-                weight_kg: 0,
-                storage_l: 0,
-                wheel_size: '',
-                seating_capacity: 0,
-                display_inch: 0,
-                minimum_ground_clearance_mm: 0,
-                width_mm: 0,
-                height_mm: 0,
-                length_mm: 0
-            });
-        },
-        onError: (error: any) => {
-            alert(`Failed to add vehicle specification: ${error.response?.data?.message || error.message}`);
-        }
-    });
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        mutation.mutate(formData);
-    };
+    const { handleChange, handleSubmit, formData, isLoading } = useVehicleForm(initialFormData);
+    const manufacturers = [
+        { label: "Tesla", value: "Tesla" },
+        { label: "Polestar", value: "Polestar" },
+        { label: "Hyundai", value: "Hyundai" },
+        { label: "KIA", value: "KIA" },
+        { label: "GM", value: "GM" },
+        { label: "VW", value: "VW" },
+        { label: "BMW", value: "BMW" },
+        { label: "Volvo", value: "Volvo" },
+        { label: "BYD", value: "BYD" },
+        // Add more manufacturers as needed
+    ];
 
     return (
-      <FormContainer>
-          <form onSubmit={handleSubmit}>
-              <FormHeader title="Add New Vehicle Specification" />
-              {Object.keys(formData).map(key => (
-                  <InputField
-                      key={key}
-                      label={key.replace('_', ' ')}
-                      name={key}
-                      type={typeof formData[key as keyof VehicleSpec] === 'number' ? 'number' : 'text'}
-                      value={formData[key as keyof VehicleSpec]}
-                      onChange={handleChange}
-                  />
-              ))}
-              <SubmitButton isLoading={mutation.isLoading} />
-              {mutation.isError && (
-                  <p className="text-red-500 text-center mt-2">
-                      Error: {mutation.error instanceof Error ? mutation.error.message : 'An unknown error occurred'}
-                  </p>
-              )}
-          </form>
-      </FormContainer>
-  );
+        <FormContainer>
+            <form onSubmit={handleSubmit}>
+                <FormHeader title="Add New Vehicle Specification" />
+                <SelectField
+                    label="Manufacturer"
+                    name="manufacturer"
+                    value={formData.manufacturer}
+                    onChange={handleChange}
+                    options={manufacturers}
+                />
+                <FormSection sectionData={formData} handleChange={handleChange} />
+                <SubmitButton isLoading={isLoading} />
+                <ErrorDisplay />
+            </form>
+        </FormContainer>
+    );
 }
 
 export default VehicleForm;

@@ -75,20 +75,38 @@ export interface LoadMoreButtonProps {
 }
 
 export interface VehicleSpec {
+  [key: string]: string | number | null;
   manufacturer: string;
   model: string;
   drive_type: string;
   battery_type: string;
-  battery_capacity: number;
-  range_km: number;
-  acceleration: number;
-  weight_kg: number;
-  storage_l: number;
+  battery_capacity: number | null;
+  range_km: number | null;
+  acceleration: number | null;
+  weight_kg: number | null;
+  storage_l: number | null;
   wheel_size: string;
-  seating_capacity: number;
-  display_inch: number;
-  minimum_ground_clearance_mm: number;
-  width_mm: number;
-  height_mm: number;
-  length_mm: number;
+  seating_capacity: number | null;
+  display_inch: number | null;
+  minimum_ground_clearance_mm: number | null;
+  width_mm: number | null;
+  height_mm: number | null;
+  length_mm: number | null;
+}
+
+export class ApiError extends Error {
+  statusCode: number;
+  errors?: any;
+
+  constructor(statusCode: number, message: string, errors?: any) {
+      super(message);
+      this.statusCode = statusCode;
+      this.errors = errors;
+      Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
+export interface ApiFieldError {
+  field: string; // The field related to the error
+  message: string; // A specific message about what is wrong with the field
 }
