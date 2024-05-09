@@ -1,8 +1,8 @@
 // src/components/AboutEVSection.tsx
 import React from 'react';
-import environmentIcon from '../assets/environment-friendly.webp';
-import costIcon from '../assets/cost-effective.webp';
-import techIcon from '../assets/technology.webp';
+import environmentIcon from '@/assets/environment-friendly.webp';
+import costIcon from '@/assets/cost-effective.webp';
+import techIcon from '@/assets/technology.webp';
 
 const AboutEVSection: React.FC = () => {
   return (

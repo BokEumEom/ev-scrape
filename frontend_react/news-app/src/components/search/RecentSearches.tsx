@@ -1,6 +1,6 @@
 // src/components/RecentSearches.tsx
 import React from 'react';
-import { RecentSearchesProps } from '../types';
+import { RecentSearchesProps } from '../../types';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 
 const RecentSearches: React.FC<RecentSearchesProps> = ({ recentSearches, setSearchQuery, setRecentSearches }) => {

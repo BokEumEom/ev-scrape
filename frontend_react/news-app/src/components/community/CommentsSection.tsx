@@ -1,6 +1,6 @@
 // src/components/CommentsSection.tsx
 import React, { useState, useRef } from 'react';
-import { useComments, useCreateComment } from '../hooks/useCommentsCommunityPost';
+import { useComments, useCreateComment } from '../../hooks/useCommentsCommunityPost';
 import { IoSendSharp } from "react-icons/io5";
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';

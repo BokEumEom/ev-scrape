@@ -1,7 +1,7 @@
 // src/pages/CommunityPostDetailPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import CommentsSection from '../components/CommentsSection';
+import CommentsSection from '../components/community/CommentsSection';
 import { useLikeCommunityPost } from '../hooks/useLikeCommunityPost';
 import { fetchCommunityPostDetails, updateCommunityPost } from '../services/apiService';
 import { useQuery, useMutation } from '@tanstack/react-query';

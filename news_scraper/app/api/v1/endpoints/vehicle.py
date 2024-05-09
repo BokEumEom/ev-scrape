@@ -1,5 +1,5 @@
 # app/api/v1/endpoints/vehicle.py
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.vehicle_scrapers.tesla_scraper import scrape_tesla_specs
 from typing import List, AsyncGenerator
@@ -16,8 +16,23 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with SessionLocal() as session:
         try:
             yield session
+            await session.commit()
+        except Exception as e:
+            await session.rollback()
+            raise e
         finally:
             await session.close()
+
+@router.post("", response_model=schemas.VehicleSpec, summary="Create a new vehicle specification", description="Creates a new entry in the database for a vehicle specification.")
+async def create_vehicle_spec(
+    vehicle_spec_data: schemas.VehicleSpecCreate = Body(...),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Endpoint to create a new vehicle specification. You need to provide details about the vehicle,
+    including its manufacturer, model, and specifications.
+    """
+    return await crud.create_vehicle_spec(db=db, vehicle_spec=vehicle_spec_data)
 
 @router.post("/scrape", response_model=schemas.VehicleSpec)
 async def scrape_vehicle_spec(model_url: str, db: AsyncSession = Depends(get_db)):

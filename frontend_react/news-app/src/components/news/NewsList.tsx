@@ -1,8 +1,8 @@
 // src/components/NewsList.tsx
 import React from 'react';
 import { useAtom } from 'jotai';
-import { viewCountAtom, incrementViewCountAtom } from '../atoms/viewCountAtom';
-import { NewsItem as NewsItemType } from '../types';
+import { viewCountAtom, incrementViewCountAtom } from '../../atoms/viewCountAtom';
+import { NewsItem as NewsItemType } from '../../types';
 import NewsItemVote from './NewsItemVote';
 import { IoBookmark, IoBookmarkOutline, IoShareOutline, IoChatbubbleOutline } from 'react-icons/io5';
 // import { ViewCountContext } from '../contexts/ViewCountContext';

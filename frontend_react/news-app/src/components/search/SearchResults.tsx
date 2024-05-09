@@ -1,6 +1,6 @@
 // src/components/SearchResults.tsx
 import React from 'react';
-import { NewsItem } from '../types';
+import { NewsItem } from '../../types';
 
 interface SearchResultsProps {
   newsItems: NewsItem[];

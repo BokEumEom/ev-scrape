@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { viewCountAtom, incrementViewCountAtom } from '../atoms/viewCountAtom';
-import { CommunityPost as CommunityPostType } from '../types';
+import { viewCountAtom, incrementViewCountAtom } from '../../atoms/viewCountAtom';
+import { CommunityPost as CommunityPostType } from '../../types';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { PiThumbsUpLight } from "react-icons/pi";

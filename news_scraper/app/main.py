@@ -69,7 +69,7 @@ app = FastAPI(lifespan=app_lifespan)
 
 app.include_router(news.router, prefix="/api/v1/news", tags=["News"])
 app.include_router(community.router, prefix="/api/v1/community", tags=["Community"])
-app.include_router(vehicle.router, prefix="/api/v1/vehicle", tags=["Vehicle"])
+app.include_router(vehicle.router, prefix="/api/v1/vehicles", tags=["Vehicles"])
 
 # Add CORS middleware to allow requests from any origin
 app.add_middleware(

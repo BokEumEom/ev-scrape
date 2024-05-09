@@ -1,7 +1,7 @@
 // src/components/PostDisplay.tsx
 import React, { useState } from 'react';
 import { IoHeartOutline, IoHeart } from 'react-icons/io5';
-import { CommunityPost } from '../types';
+import { CommunityPost } from '../../types';
 
 interface PostDisplayProps {
   post: CommunityPost;

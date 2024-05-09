@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IoChevronBackOutline, IoPencil, IoSave } from 'react-icons/io5';
 import usePostDetails from '../hooks/usePostDetails';
-import PostEditor from '../components/PostEditor';
-import PostDisplay from '../components/PostDisplay';
-import CommentsSection from '../components/CommentsSection';
+import PostEditor from '../components/community/PostEditor';
+import PostDisplay from '../components/community/PostDisplay';
+import CommentsSection from '../components/community/CommentsSection';
 import { useLikeCommunityPost } from '../hooks/useLikeCommunityPost';
 import { CommunityPost } from '../types';
 

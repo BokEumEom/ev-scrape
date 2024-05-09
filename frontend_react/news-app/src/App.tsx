@@ -12,9 +12,10 @@ import SearchPage from './pages/SearchPage';
 import MyPage from './pages/MyPage';
 import BookmarksPage from './pages/BookmarksPage';
 import CommunityPage from './pages/CommunityPage';
-import WriteCommunityPost from './components/WriteCommunityPost';
-import UserProfileForm from './components/UserProfileForm';
+import WriteCommunityPost from './components/community/WriteCommunityPost';
+import UserProfileForm from './components/mypage/UserProfileForm';
 import CommunityPostDetailPage from './pages/CommunityPostDetailPage';
+import AddVehiclePage from './pages/AddVehiclePage';
 
 const App: React.FC = () => {
     return (
@@ -50,6 +51,7 @@ const RoutesWrapper = () => {
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/community/write" element={<WriteCommunityPost />} />
                     <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
+                    <Route path="/add-vehicle" element={<AddVehiclePage />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>

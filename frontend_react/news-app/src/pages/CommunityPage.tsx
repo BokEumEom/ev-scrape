@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCommunityPosts } from '../hooks/useCommunityPosts';
-import CommunityPostComponent from '../components/CommunityPost';
+import CommunityPostComponent from '../components/community/CommunityPost';
 import LoadMoreButton from '../components/LoadMoreButton';
 import { motion } from 'framer-motion';
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CommunityPost } from '../types';
+import { CommunityPost } from '../../types';
 import { useForm } from 'react-hook-form';
 
 interface PostEditorProps {

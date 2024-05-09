@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSwipeable } from 'react-swipeable';
-import RegionButtons from '../components/RegionButtons';
-import Announcements from '../components/Announcements';
+import RegionButtons from '../components/announcements/RegionButtons';
+import Announcements from '../components/announcements/Announcements';
 import { fetchAnnouncements } from '../services/apiService';
 import { AnimatePresence, motion } from 'framer-motion';
 

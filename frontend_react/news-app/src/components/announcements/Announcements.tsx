@@ -1,7 +1,7 @@
 // src/components/Announcements.tsx
 import React from 'react';
 import AnnouncementList from './AnnouncementList';
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 
 interface AnnouncementsProps {
   isLoading: boolean;

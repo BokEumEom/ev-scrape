@@ -1,11 +1,11 @@
 // src/pages/HomePage.tsx
 import React from 'react';
-import HeroSection from '../components/HeroSection'; // You will need to create this component
-import AboutEVSection from '../components/AboutEVSection'; // You will need to create this component
-import CallToActionSection from '../components/CallToActionSection';
-import LatestEVNewsSection from '../components/LatestEVNewsSection';
-import EVReviewsSection from '../components/EVReviewsSection';
-import GuidesAndResourcesSection from '../components/GuidesAndResourcesSection';
+import HeroSection from '../components/home/HeroSection'; // You will need to create this component
+import AboutEVSection from '../components/home/AboutEVSection'; // You will need to create this component
+import CallToActionSection from '../components/home/CallToActionSection';
+import LatestEVNewsSection from '../components/home/LatestEVNewsSection';
+import EVReviewsSection from '../components/home/EVReviewsSection';
+import GuidesAndResourcesSection from '../components/home/GuidesAndResourcesSection';
 
 const HomePage: React.FC = () => {
     return (

@@ -1,6 +1,12 @@
 // src/services/apiService.ts
 import axios from 'axios';
-import { NewsItem, CommunityPost, CommunityPostCreate, CommunityPostsResponse } from '../types';
+import { 
+  NewsItem, 
+  CommunityPost, 
+  CommunityPostCreate, 
+  CommunityPostsResponse,
+  VehicleSpec
+} from '../types';
 
 export const PAGE_SIZE = 10;
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -168,5 +174,16 @@ export const submitVote = async (newsId: number, voteValue: number): Promise<New
   } catch (error) {
     console.error(`Error submitting vote to ${API_BASE_URL}/api/v1/news/${newsId}/vote:`, error);
     throw error;
+  }
+};
+
+export const createVehicleSpec = async (vehicleSpec: VehicleSpec): Promise<VehicleSpec> => {
+  const url = `${API_BASE_URL}/api/v1/vehicles`;
+  try {
+      const response = await axios.post<VehicleSpec>(url, vehicleSpec);
+      return response.data;
+  } catch (error) {
+      console.error('Failed to create vehicle specification:', error);
+      throw error;
   }
 };

@@ -1,7 +1,7 @@
 // src/pages/BookmarksPage.tsx
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import NewsList from '../components/NewsList';
+import NewsList from '../components/news/NewsList';
 import { fetchNewsItems } from '../services/apiService';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';

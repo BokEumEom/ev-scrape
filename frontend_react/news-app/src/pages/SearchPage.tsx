@@ -3,15 +3,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/search/SearchBar';
 import { searchNewsItems } from '../services/apiService';
-import NewsList from '../components/NewsList';
+import NewsList from '../components/news/NewsList';
 import Spinner from '../components/Spinner';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
 import { ViewCountProvider } from '../contexts/ViewCountContext';
 import LoadMoreButton from '../components/LoadMoreButton';
-import RecentSearches from '../components/RecentSearches';
+import RecentSearches from '../components/search/RecentSearches';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();

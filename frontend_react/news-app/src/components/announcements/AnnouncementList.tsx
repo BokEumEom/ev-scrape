@@ -1,6 +1,6 @@
 // src/components/AnnouncementList.tsx
 import React from 'react';
-import { Announcement } from '../types'; // Assuming the type is defined
+import { Announcement } from '../../types'; // Assuming the type is defined
 
 interface AnnouncementsListProps {
   announcements: Announcement[];

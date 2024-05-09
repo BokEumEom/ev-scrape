@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
-import UserProfile from '../components/UserProfile';
-import UserStats from '../components/UserStats';
-import TabNavigation from '../components/TabNavigation';
-import TabContent from '../components/TabContent';
+import UserProfile from '../components/mypage/UserProfile';
+import UserStats from '../components/mypage/UserStats';
+import TabNavigation from '../components/mypage/TabNavigation';
+import TabContent from '../components/mypage/TabContent';
 import useUserProfile from '../hooks/useUserProfile';
 import { motion } from 'framer-motion';
 

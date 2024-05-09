@@ -2,7 +2,7 @@
 import React from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { fetchNewsItems } from '../services/apiService';
-import NewsList from '../components/NewsList';
+import NewsList from '../components/news/NewsList';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
 import { ViewCountProvider } from '../contexts/ViewCountContext';

@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useCreateCommunityPost } from '../hooks/useCreateCommunityPost';
+import { useCreateCommunityPost } from '../../hooks/useCreateCommunityPost';
 
 interface FormValues {
   title: string;

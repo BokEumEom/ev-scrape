@@ -73,3 +73,22 @@ export interface LoadMoreButtonProps {
   isLoading: boolean;
   onClick: () => void;
 }
+
+export interface VehicleSpec {
+  manufacturer: string;
+  model: string;
+  drive_type: string;
+  battery_type: string;
+  battery_capacity: number;
+  range_km: number;
+  acceleration: number;
+  weight_kg: number;
+  storage_l: number;
+  wheel_size: string;
+  seating_capacity: number;
+  display_inch: number;
+  minimum_ground_clearance_mm: number;
+  width_mm: number;
+  height_mm: number;
+  length_mm: number;
+}

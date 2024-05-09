@@ -1,6 +1,6 @@
 // src/components/NewsItemVote.tsx
 import React from 'react';
-import { NewsItemVoteProps } from '../types';
+import { NewsItemVoteProps } from '../../types';
 import { motion } from 'framer-motion';
 import { PiThumbsUpLight } from "react-icons/pi";
 

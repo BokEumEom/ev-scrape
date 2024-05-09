@@ -311,11 +311,11 @@ def get_regions(db: AsyncSession):
 
 # Vehicle
 async def create_vehicle_spec(db: AsyncSession, vehicle_spec: schemas.VehicleSpecCreate):
-    new_vehicle = models.VehicleSpec(**vehicle_spec.dict())
-    db.add(new_vehicle)
+    vehicle = models.VehicleSpec(**vehicle_spec.dict())
+    db.add(vehicle)
     await db.commit()
-    await db.refresh(new_vehicle)
-    return new_vehicle
+    await db.refresh(vehicle)
+    return vehicle
 
 async def get_vehicle_specs(db: AsyncSession):
     result = await db.execute(select(models.VehicleSpec))
