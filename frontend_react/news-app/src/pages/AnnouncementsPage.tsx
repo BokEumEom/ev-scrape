@@ -40,9 +40,9 @@ const AnnouncementsPage = () => {
   });
 
   const pageTransitionVariants = {
-    hidden: { opacity: 0, x: -100 },
-    visible: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: 100 },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 },
   };
 
   return (
@@ -50,11 +50,11 @@ const AnnouncementsPage = () => {
       <AnimatePresence mode="wait">
         {selectedRegion === null ? (
           <motion.div
-            key="region-list"
-            variants={pageTransitionVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            initial={{ x: '100vh' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100vh' }}
+            transition={{ type: 'tween', stiffness: 260, damping: 20 }}
+            className="inset-0 bg-white p-4 z-50"
           >
             <RegionButtons regions={regions} selectedRegion={selectedRegion} onSelectRegion={handleSelectRegion} setRegions={setRegions} />
           </motion.div>

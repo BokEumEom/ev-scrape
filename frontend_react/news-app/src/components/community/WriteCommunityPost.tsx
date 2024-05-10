@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useCreateCommunityPost } from '../../hooks/useCreateCommunityPost';
+import { motion } from 'framer-motion';
 
 interface FormValues {
   title: string;
@@ -33,6 +34,13 @@ const WriteCommunityPost: React.FC = () => {
   };
 
   return (
+    <motion.div
+      initial={{ x: '100vh' }}
+      animate={{ x: 0 }}
+      exit={{ x: '100vh' }}
+      transition={{ type: 'tween', stiffness: 260, damping: 20 }}
+      className="inset-0 bg-white p-4 z-50"
+    >
     <div className="write-post-container">
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl mx-auto my-10 p-4 pt-12">
         <h2 className="text-center text-2xl font-bold mb-4">글쓰기</h2>
@@ -70,6 +78,7 @@ const WriteCommunityPost: React.FC = () => {
         </div>
       </form>
     </div>
+    </motion.div>
   );
 };
 

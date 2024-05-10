@@ -1,24 +1,23 @@
 // src/pages/CommunityPage.tsx
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCommunityPosts } from '../hooks/useCommunityPosts';
-import CommunityPostComponent from '../components/community/CommunityPost';
 import LoadMoreButton from '../components/LoadMoreButton';
 import { motion } from 'framer-motion';
 
+const CommunityPostComponent = lazy(() => import('../components/community/CommunityPost'));
+
 const CommunityPage: React.FC = () => {
   const {
-    data = { pages: [] }, // data에 기본값을 할당하여 초기 상태에서 undefined가 되지 않도록 함
+    data = { pages: [] },
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useCommunityPosts();
 
   const navigate = useNavigate();
-
   const handleWritePost = () => navigate('/community/write');
 
-  // data와 data.pages의 존재 여부를 확인하지 않고 직접 접근
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -37,18 +36,20 @@ const CommunityPage: React.FC = () => {
               + 글쓰기
             </button>
           </div>
-          {data.pages.flat().length ? (
-            <>
-              {data.pages.flatMap(page => page.data).map((post, index) => (
-                <CommunityPostComponent key={`${post.id}-${index}`} post={post} />
-              ))}
-              {hasNextPage && <LoadMoreButton isLoading={isFetchingNextPage} onClick={() => fetchNextPage()} />}
-            </>
-          ) : (
-            <div className="text-center mt-4">
-              <p>No posts yet. Be the first to start a discussion!</p>
-            </div>
-          )}
+          <Suspense fallback={<div>Loading posts...</div>}>
+            {data.pages.flat().length ? (
+              <>
+                {data.pages.flatMap(page => page.data).map((post, index) => (
+                  <CommunityPostComponent key={`${post.id}-${index}`} post={post} />
+                ))}
+                {hasNextPage && <LoadMoreButton isLoading={isFetchingNextPage} onClick={() => fetchNextPage()} />}
+              </>
+            ) : (
+              <div className="text-center mt-4">
+                <p>No posts yet. Be the first to start a discussion!</p>
+              </div>
+            )}
+          </Suspense>
         </div>
       </div>
     </motion.div>
