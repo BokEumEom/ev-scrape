@@ -1,4 +1,4 @@
-// src/components/SelectField.tsx
+// src/components/vehicle/SelectField.tsx
 import React, { ChangeEvent } from 'react';
 
 interface SelectFieldProps {
@@ -9,7 +9,7 @@ interface SelectFieldProps {
     options: { label: string; value: string }[];
 }
 
-const SelectField: React.FC<SelectFieldProps> = ({ label, name, value, onChange, options }) => {
+const SelectField: React.FC<SelectFieldProps> = React.memo(({ label, name, value, onChange, options }) => {
     return (
         <div className="flex flex-col mb-4">
             <label htmlFor={name} className="font-medium capitalize mb-2">{label}:</label>
@@ -18,7 +18,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ label, name, value, onChange,
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="border border-gray-300 rounded py-2 px-3"
+                className="border border-gray-300 rounded py-1 px-3"
                 required
             >
                 <option value="">Select {label}</option>
@@ -28,6 +28,6 @@ const SelectField: React.FC<SelectFieldProps> = ({ label, name, value, onChange,
             </select>
         </div>
     );
-};
+});
 
 export default SelectField;

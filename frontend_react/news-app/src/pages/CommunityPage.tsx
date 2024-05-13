@@ -36,20 +36,20 @@ const CommunityPage: React.FC = () => {
               + 글쓰기
             </button>
           </div>
-          <Suspense fallback={<div>Loading posts...</div>}>
-            {data.pages.flat().length ? (
-              <>
-                {data.pages.flatMap(page => page.data).map((post, index) => (
-                  <CommunityPostComponent key={`${post.id}-${index}`} post={post} />
-                ))}
-                {hasNextPage && <LoadMoreButton isLoading={isFetchingNextPage} onClick={() => fetchNextPage()} />}
-              </>
-            ) : (
-              <div className="text-center mt-4">
-                <p>No posts yet. Be the first to start a discussion!</p>
-              </div>
-            )}
-          </Suspense>
+          {data.pages.flat().length ? (
+            <>
+              {data.pages.flatMap(page => page.data).map((post, index) => (
+                <Suspense key={`${post.id}-${index}`} fallback={<div>Loading post...</div>}>
+                  <CommunityPostComponent post={post} />
+                </Suspense>
+              ))}
+              {hasNextPage && <LoadMoreButton isLoading={isFetchingNextPage} onClick={() => fetchNextPage()} />}
+            </>
+          ) : (
+            <div className="text-center mt-4">
+              <p>No posts yet. Be the first to start a discussion!</p>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

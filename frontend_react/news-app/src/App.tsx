@@ -16,6 +16,7 @@ import WriteCommunityPost from './components/community/WriteCommunityPost';
 import UserProfileForm from './components/mypage/UserProfileForm';
 import CommunityPostDetailPage from './pages/CommunityPostDetailPage';
 import AddVehiclePage from './pages/AddVehiclePage';
+import CarSpecPage from './pages/VehicleSpecPage';
 
 const App: React.FC = () => {
     return (
@@ -52,6 +53,7 @@ const RoutesWrapper = () => {
                     <Route path="/community/write" element={<WriteCommunityPost />} />
                     <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
                     <Route path="/add-vehicle" element={<AddVehiclePage />} />
+                    <Route path="/vehiclespec" element={<CarSpecPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>

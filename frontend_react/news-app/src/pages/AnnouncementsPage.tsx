@@ -50,11 +50,11 @@ const AnnouncementsPage = () => {
       <AnimatePresence mode="wait">
         {selectedRegion === null ? (
           <motion.div
-            initial={{ x: '100vh' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100vh' }}
-            transition={{ type: 'tween', stiffness: 260, damping: 20 }}
-            className="inset-0 bg-white p-4 z-50"
+            key="announcement-list"
+            variants={pageTransitionVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
             <RegionButtons regions={regions} selectedRegion={selectedRegion} onSelectRegion={handleSelectRegion} setRegions={setRegions} />
           </motion.div>

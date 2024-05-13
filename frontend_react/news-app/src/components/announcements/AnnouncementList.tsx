@@ -1,4 +1,4 @@
-// src/components/AnnouncementList.tsx
+// src/components/announcements/AnnouncementList.tsx
 import React from 'react';
 import { Announcement } from '../../types'; // Assuming the type is defined
 
