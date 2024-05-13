@@ -30,8 +30,8 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 border rounded-lg max-w-lg w-full">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-white p-8 max-w-lg w-full">
         <button type="button" onClick={handlePrevious} className="text-gray-500 text-lg p-3 rounded-full">
           <IoChevronBackOutline />
         </button>
