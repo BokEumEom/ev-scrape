@@ -78,12 +78,10 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        ptdR: ["Pretendard-Regular", "Inter", "system-ui", "sans-serif"],
-        ptdSB: ["Pretendard-SemiBold", "Inter","system-ui", "sans-serif"],
-        ptdB: ["Pretendard-Bold", "Inter", "system-ui", "sans-serif"],
-        gmsB: ["Gmarket-Sans-Bold", "Inter", "system-ui","sans-serif"],
-        gmsM: ["Gmarket-Sans-Medium", "Inter", "system-ui","sans-serif"],
-        gmsL: ["Gmarket-Sans-Light", "Inter", "system-ui","sans-serif"],
+        // Default English font
+        'sans': ["archivo", "Pretendard Variable", 'Inter', 'sans-serif'],
+        // Custom Korean fonts
+        ptdR: ["Pretendard Variable", "system-ui", "sans-serif"],
       },
     },
   },
