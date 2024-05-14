@@ -1,4 +1,4 @@
-// src/components/Announcements.tsx
+// src/components/announcements/Announcements.tsx
 import React from 'react';
 import AnnouncementList from './AnnouncementList';
 import Spinner from '../Spinner';

@@ -6,6 +6,7 @@ import RegionButtons from '../components/announcements/RegionButtons';
 import Announcements from '../components/announcements/Announcements';
 import { fetchAnnouncements } from '../services/apiService';
 import { AnimatePresence, motion } from 'framer-motion';
+import { IoChevronBackOutline } from "react-icons/io5";
 
 const initialRegions = ['evportal', 'incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan', 'goyang', 'sejong', 'wonju'];
 
@@ -50,11 +51,11 @@ const AnnouncementsPage = () => {
       <AnimatePresence mode="wait">
         {selectedRegion === null ? (
           <motion.div
-            initial={{ x: '100vh' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100vh' }}
-            transition={{ type: 'tween', stiffness: 260, damping: 20 }}
-            className="inset-0 bg-white p-4 z-50"
+            key="announcement-list"
+            variants={pageTransitionVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
             <RegionButtons regions={regions} selectedRegion={selectedRegion} onSelectRegion={handleSelectRegion} setRegions={setRegions} />
           </motion.div>
@@ -72,9 +73,9 @@ const AnnouncementsPage = () => {
       </AnimatePresence>
       
       {selectedRegion && (
-        <div className="fixed inset-x-0 bottom-16 px-5 text-center">
-          <button onClick={() => setSelectedRegion(null)} className="mt-4 bg-gray-100 hover:bg-gray-200 text-indigo-800 py-2 px-4 rounded-full transition-colors duration-300">
-            Back to regions
+        <div className="fixed pt-8 top-4 left-4 text-center">
+          <button onClick={() => setSelectedRegion(null)} className="text-gray-500 text-lg p-2 mt-4">
+            <IoChevronBackOutline />
           </button>
         </div>
       )}

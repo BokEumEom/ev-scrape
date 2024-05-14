@@ -1,7 +1,7 @@
-// src/components/VehicleForm.tsx
+// src/components/vehicle/VehicleForm.tsx
 import React from 'react';
 import { VehicleSpec } from '../../types';
-import SelectField from '../SelectField';
+import SelectField from './SelectField';
 import FormContainer from './FormContainer';
 import FormHeader from './FormHeader';
 import SubmitButton from './SubmitButton';

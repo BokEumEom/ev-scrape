@@ -7,7 +7,6 @@ import { UserProfile } from '../../types'; // 사용자 프로필 타입을 impo
 
 interface UserProfileFormProps {
   user?: UserProfile; // user가 선택적으로 있을 수 있음을 나타냅니다. 초기 로딩이나 에러 상황을 고려.
-  onClose: () => void; // 폼을 닫는 함수입니다.
 }
 
 const interests = [
@@ -18,7 +17,7 @@ const interests = [
   '봉사활동', '뷰티/미용', '식물', '인테리어'
 ];
 
-const UserProfileForm: React.FC<UserProfileFormProps> = ({ user, onClose }) => {
+const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const navigate = useNavigate();
@@ -45,7 +44,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user, onClose }) => {
   return (
     <div className="p-4 pt-16 pb-20 bg-white max-w-md mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={() => navigate(-1)} className="text-gray-500 text-lg p-3 rounded-full">
+        <button onClick={() => navigate(-1)} className="text-gray-500 text-lg p-3">
           <IoChevronBackOutline />
         </button>
         <button onClick={handleEditToggle} className="flex item-center text-gray-500 text-lg p-2 border rounded-full">
