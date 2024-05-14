@@ -12,7 +12,7 @@ interface RegionItemProps {
 const RegionItem: React.FC<RegionItemProps> = ({ region, onSelect, isSelected }) => (
   <button
     onClick={onSelect}
-    className={`w-full mb-1 border py-3 px-4 rounded-md cursor-pointer transition ease-in-out duration-300 ${
+    className={`w-full mb-1 border text-sm font-semibold py-3 px-4 rounded-md cursor-pointer transition ease-in-out duration-300 ${
       isSelected ? 'bg-blue-500' : ''
     } flex items-center justify-between`}
     aria-label={`Select ${region}`}

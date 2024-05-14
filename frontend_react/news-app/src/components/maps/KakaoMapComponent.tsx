@@ -17,9 +17,14 @@ const KakaoMapComponent: React.FC<KakaoMapProps> = ({ markers }) => {
   useEffect(() => {
     if (scriptLoaded && !isLoaded) {
       setIsLoaded(true);
+    }
+  }, [scriptLoaded, isLoaded, setIsLoaded]);
+
+  useEffect(() => {
+    if (isLoaded) {
       initializeMap();
     }
-  }, [scriptLoaded, isLoaded, setIsLoaded, markers]);
+  }, [isLoaded, markers]);
 
   const initializeMap = () => {
     if (!window.kakao) {
