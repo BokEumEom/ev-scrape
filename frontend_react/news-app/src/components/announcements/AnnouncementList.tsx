@@ -1,5 +1,6 @@
 // src/components/announcements/AnnouncementList.tsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Announcement } from '../../types'; // Assuming the type is defined
 
 interface AnnouncementsListProps {
@@ -7,8 +8,10 @@ interface AnnouncementsListProps {
 }
 
 const AnnouncementsList: React.FC<AnnouncementsListProps> = ({ announcements }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="mx-auto px-4">
+    <div className="mx-auto px-4 py-12">
       {announcements.length > 0 ? (
         announcements.map((announcement, index) => (
           // Assuming 'id' is unique; use it as a key. If not, use index, but prefer unique IDs.

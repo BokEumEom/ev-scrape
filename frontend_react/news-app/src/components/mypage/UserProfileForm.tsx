@@ -44,7 +44,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
   return (
     <div className="p-4 pt-16 pb-20 bg-white max-w-md mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={() => navigate(-1)} className="text-gray-500 text-lg p-3 rounded-full">
+        <button onClick={() => navigate(-1)} className="text-gray-500 text-lg p-3">
           <IoChevronBackOutline />
         </button>
         <button onClick={handleEditToggle} className="flex item-center text-gray-500 text-lg p-2 border rounded-full">

@@ -1,6 +1,7 @@
 // src/components/announcements/RegionItem.tsx
 import React from 'react';
 import { IoCheckmarkDoneSharp, IoLocationSharp } from 'react-icons/io5';
+import { regionMapping } from '../../utils/regionMapping';
 
 interface RegionItemProps {
   region: string;
@@ -17,7 +18,7 @@ const RegionItem: React.FC<RegionItemProps> = ({ region, onSelect, isSelected })
     aria-label={`Select ${region}`}
   >
     <IoLocationSharp size={20} />
-    <span className="flex-1 text-left ml-2">{region.charAt(0).toUpperCase() + region.slice(1)}</span>
+    <span className="flex-1 text-left ml-2">{regionMapping[region]}</span>
     {isSelected && <IoCheckmarkDoneSharp size={24} />}
   </button>
 );
