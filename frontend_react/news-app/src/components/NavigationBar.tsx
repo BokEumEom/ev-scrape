@@ -3,6 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import logoIcon from '../assets/ev_logo.png';
 import { IoSearch, IoPeopleSharp, IoCarSportSharp } from "react-icons/io5";
+import { FaChargingStation } from "react-icons/fa6";
 
 const NavigationBar: React.FC = () => {
   return (
@@ -25,6 +26,11 @@ const NavigationBar: React.FC = () => {
         <li className="mr-4">
           <NavLink to="/vehiclespec" className={({ isActive }) => isActive ? 'text-gray-700' : 'text-white'}>
             <IoCarSportSharp className="text-2xl" aria-label="차량제원"/>
+          </NavLink>
+        </li>
+        <li className="mr-4">
+          <NavLink to="/map" className={({ isActive }) => isActive ? 'text-gray-700' : 'text-white'}>
+            <FaChargingStation className="text-2xl" aria-label="차량제원"/>
           </NavLink>
         </li>
       </ul>

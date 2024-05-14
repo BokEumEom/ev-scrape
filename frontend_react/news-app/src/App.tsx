@@ -16,21 +16,33 @@ import WriteCommunityPost from './components/community/WriteCommunityPost';
 import UserProfileForm from './components/mypage/UserProfileForm';
 import CommunityPostDetailPage from './pages/CommunityPostDetailPage';
 import AddVehiclePage from './pages/AddVehiclePage';
-import CarSpecPage from './pages/VehicleSpecPage';
+import VehicleSpecPage from './pages/VehicleSpecPage';
 import SignUpPage from './components/users/SignUpPage';
 import SignInPage from './components/users/SignInPage';
+import KakaoMapPage from './pages/KakakoMapPage';
 
 const App: React.FC = () => {
     return (
         <Router>
-            <NavigationBar />
-                <AnimatePresence>
-                    <RoutesWrapper />
-                </AnimatePresence>
-            <FooterBar />
+            <NavigationAndFooter />
         </Router>
     );
 };
+
+const NavigationAndFooter = () => {
+    const location = useLocation();  // Now used within the context of <Router>
+    const isMapPage = location.pathname === '/map';
+
+    return (
+        <>
+            {!isMapPage && <NavigationBar />}
+            <AnimatePresence>
+                <RoutesWrapper />
+            </AnimatePresence>
+            {!isMapPage && <FooterBar />}
+        </>
+    );
+}
 
 const RoutesWrapper = () => {
     const location = useLocation();
@@ -41,8 +53,7 @@ const RoutesWrapper = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.75 }}
         >
-            {/* Add top padding equivalent to the height of the NavigationBar */}
-            <div> {/* Example height, adjust as needed */}
+            <div className="relative w-full h-screen">
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/search" element={<SearchPage />} />
@@ -55,7 +66,8 @@ const RoutesWrapper = () => {
                     <Route path="/community/write" element={<WriteCommunityPost />} />
                     <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
                     <Route path="/add-vehicle" element={<AddVehiclePage />} />
-                    <Route path="/vehiclespec" element={<CarSpecPage />} />
+                    <Route path="/vehiclespec" element={<VehicleSpecPage />} />
+                    <Route path="/map" element={<KakaoMapPage />} />
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/signin" element={<SignInPage />} />
                     <Route path="*" element={<NotFoundPage />} />
@@ -66,4 +78,6 @@ const RoutesWrapper = () => {
 }
 
 export default App;
+
+
 

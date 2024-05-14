@@ -110,3 +110,15 @@ export interface ApiFieldError {
   field: string; // The field related to the error
   message: string; // A specific message about what is wrong with the field
 }
+
+// Kakao Map
+export interface LatLng {
+  lat: number;
+  lng: number;
+}
+
+export interface MarkerInfo {
+  id: number;
+  name: string;
+  position: LatLng;
+}
