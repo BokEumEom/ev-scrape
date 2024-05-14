@@ -1,6 +1,15 @@
 // src/components/maps/SearchFilters.tsx
 import React from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // Adjust this path as necessary
 
 const SearchFilters: React.FC<{ onSearch: () => void }> = ({ onSearch }) => {
   return (
@@ -24,28 +33,60 @@ const SearchFilters: React.FC<{ onSearch: () => void }> = ({ onSearch }) => {
       <hr className="my-2 border-gray-300" />
       <div className="flex items-center gap-2">
         <div className="flex-1">
-          <select className="w-full text-gray-500 text-xs p-2">
-            <option>충전소 전체</option>
-            {/* Add more options as needed */}
-          </select>
+          <Select>
+            <SelectTrigger className="w-full text-xs">
+              <SelectValue placeholder="충전소 전체" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>충전소</SelectLabel>
+                <SelectItem value="all">전체</SelectItem>
+                {/* Add more options as needed */}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex-1">
-          <select className="w-full text-gray-500 text-xs p-2">
-            <option>결제방법 전체</option>
-            {/* Add more options as needed */}
-          </select>
+          <Select>
+            <SelectTrigger className="w-full text-xs">
+              <SelectValue placeholder="결제방법 전체" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>결제방법</SelectLabel>
+                <SelectItem value="all">전체</SelectItem>
+                {/* Add more options as needed */}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex-1">
-          <select className="w-full text-gray-500 text-xs p-2">
-            <option>커넥터 전체</option>
-            {/* Add more options as needed */}
-          </select>
+          <Select>
+            <SelectTrigger className="w-full text-xs">
+              <SelectValue placeholder="커넥터 전체" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>커넥터</SelectLabel>
+                <SelectItem value="all">전체</SelectItem>
+                {/* Add more options as needed */}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex-1">
-          <select className="w-full text-gray-500 text-xs p-2">
-            <option>운영기관 전체</option>
-            {/* Add more options as needed */}
-          </select>
+          <Select>
+            <SelectTrigger className="w-full text-xs">
+              <SelectValue placeholder="운영기관 전체" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>운영기관</SelectLabel>
+                <SelectItem value="all">전체</SelectItem>
+                {/* Add more options as needed */}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>
