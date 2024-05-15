@@ -124,7 +124,7 @@ export interface MarkerInfo {
 }
 
 // VehicleSpec
-export interface CarDetails {
+export interface VehicleDetails {
   id: number;
   manufacturer: string;
   model: string;
@@ -142,4 +142,19 @@ export interface CarDetails {
   width_mm: number;                // Vehicle width in millimeters
   height_mm: number;               // Vehicle height in millimeters
   length_mm: number;               // Vehicle length in millimeters
+}
+
+// DropdownProps 추가
+export interface DropdownProps {
+  options: string[];
+  selected: string;
+  onSelect: (value: string) => void;
+}
+
+// SpecItemProps 추가
+export interface SpecItemProps {
+  label: string;
+  value: string | number | null;
+  additionalLabel?: string;
+  additionalValue?: string | number | null;
 }

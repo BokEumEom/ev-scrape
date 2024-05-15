@@ -1,3 +1,4 @@
+// src/components/announcements/RegionButtons.tsx
 import React, { useState } from 'react';
 import { Reorder } from 'framer-motion';
 import { IoEllipsisVertical, IoArrowDown, IoLocationSharp } from 'react-icons/io5';
@@ -49,7 +50,7 @@ const RegionButtons: React.FC<RegionButtonsProps> = ({
       </div>
       {isEditMode ? (
         <Reorder.Group axis="y" values={regions} onReorder={setRegions} className="flex flex-col items-center w-full">
-            {regions.map((region) => (
+            {regions.map((region:string) => (
             <Reorder.Item key={region} value={region} className="w-full mb-1">
                 <div className="flex justify-start items-center text-white font-bold py-3 px-4 rounded-md cursor-pointer bg-gray-500">
                 <IoLocationSharp className="text-xl" />

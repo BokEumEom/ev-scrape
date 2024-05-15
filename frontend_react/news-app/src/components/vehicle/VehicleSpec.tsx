@@ -1,7 +1,22 @@
-// src/components/CarSpecCard.tsx
+// src/components/VehicleSpec.tsx
 import React from 'react';
+import { SpecItemProps } from '../../types';
+import { VehicleDetails } from '../../types';
 
-const CarSpecCard: React.FC<{ specs: CarSpecs }> = ({ specs }) => {
+const SpecItem: React.FC<SpecItemProps> = ({ label, value, additionalLabel, additionalValue }) => (
+  <li className="flex flex-row items-center">
+    <span className="basis-1/4 break-keep text-xs font-bold">{label}</span>
+    <span className="basis-1/4 text-right text-xs break-keep">{value}</span>
+    {additionalLabel && additionalValue !== undefined && (
+      <>
+        <span className="basis-1/4 break-keep text-xs pl-2 font-bold">{additionalLabel}</span>
+        <span className="basis-1/4 text-right text-xs break-keep">{additionalValue}</span>
+      </>
+    )}
+  </li>
+);
+
+const VehicleSpec: React.FC<{ specs: VehicleDetails }> = ({ specs }) => {
   return (
     <div className="bg-white p-4 rounded-lg border-solid border border-indigo-600 tracking-tighter mb-4 mt-2 relative">
       <h3 className="text-xl pb-4 font-bold">{specs.manufacturer} {specs.model}</h3>
@@ -12,45 +27,15 @@ const CarSpecCard: React.FC<{ specs: CarSpecs }> = ({ specs }) => {
         </svg>
       </a>
       <ul className="space-y-1 divide-y divide-solid">
-      <li className="flex flex-row items-center">
-          <span className="basis-1/4 break-keep text-xs font-bold">Drive Type</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.drive_type}</span>
-          <span className="basis-1/4 break-keep text-xs pl-2 font-bold">Battery Type</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.battery_type}</span>
-        </li>
-        <li className="flex flex-row items-center">
-          <span className="basis-1/4 break-keep text-xs font-bold">Battery Capacity</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.battery_capacity} kWh</span>
-          <span className="basis-1/4 break-keep text-xs pl-2 font-bold">Range</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.range_km} km</span>
-        </li>
-        <li className="flex flex-row items-center">
-          <span className="basis-1/4 break-keep text-xs font-bold">Acceleration</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.acceleration} s to 100 km/h</span>
-          <span className="basis-1/4 break-keep text-xs pl-2 font-bold">Weight</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.weight_kg} kg</span>
-        </li>
-        <li className="flex flex-row items-center">
-          <span className="basis-1/4 break-keep text-xs font-bold">Storage</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.storage_l} L</span>
-          <span className="basis-1/4 break-keep text-xs pl-2 font-bold">Wheel Size</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.wheel_size}</span>
-        </li>
-        <li className="flex flex-row items-center">
-          <span className="basis-1/4 break-keep text-xs font-bold">Seating Capacity</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.seating_capacity}</span>
-          <span className="basis-1/4 break-keep text-xs pl-2 font-bold">Display</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.display_inch} inch</span>
-        </li>
-        <li className="flex flex-row items-center">
-          <span className="basis-1/4 break-keep text-xs font-bold">Ground Clearance</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.minimum_ground_clearance_mm} mm</span>
-          <span className="basis-1/4 break-keep text-xs pl-2 font-bold">Dimensions</span>
-          <span className="basis-1/4 text-right text-xs break-keep">{specs.width_mm}mm W x {specs.height_mm}mm H x {specs.length_mm}mm L</span>
-        </li>
+        <SpecItem label="Drive Type" value={specs.drive_type} additionalLabel="Battery Type" additionalValue={specs.battery_type} />
+        <SpecItem label="Battery Capacity" value={`${specs.battery_capacity} kWh`} additionalLabel="Range" additionalValue={`${specs.range_km} km`} />
+        <SpecItem label="Acceleration" value={`${specs.acceleration} s to 100 km/h`} additionalLabel="Weight" additionalValue={`${specs.weight_kg} kg`} />
+        <SpecItem label="Storage" value={`${specs.storage_l} L`} additionalLabel="Wheel Size" additionalValue={specs.wheel_size} />
+        <SpecItem label="Seating Capacity" value={specs.seating_capacity} additionalLabel="Display" additionalValue={`${specs.display_inch} inch`} />
+        <SpecItem label="Ground Clearance" value={`${specs.minimum_ground_clearance_mm} mm`} additionalLabel="Dimensions" additionalValue={`${specs.width_mm}mm W x ${specs.height_mm}mm H x ${specs.length_mm}mm L`} />
       </ul>
     </div>
   );
 };
 
-export default CarSpecCard;
+export default VehicleSpec;
