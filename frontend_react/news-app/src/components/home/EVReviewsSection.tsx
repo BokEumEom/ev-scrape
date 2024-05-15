@@ -71,7 +71,7 @@ const EVReviewsSection = () => {
   ];  
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 text-center">
         <h2 className="text-3xl font-bold mb-8">EV Reviews</h2>
         <Slider {...settings}>

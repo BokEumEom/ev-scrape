@@ -122,3 +122,39 @@ export interface MarkerInfo {
   name: string;
   position: LatLng;
 }
+
+// VehicleSpec
+export interface VehicleDetails {
+  id: number;
+  manufacturer: string;
+  model: string;
+  drive_type: string;              // e.g., "4WD", "FWD"
+  battery_type: string;            // e.g., "Lithium-ion"
+  battery_capacity: number;        // in kWh
+  range_km: number;                // Maximum range in kilometers
+  acceleration: number;            // 0 to 100 km/h in seconds
+  weight_kg: number;               // Total weight in kilograms
+  storage_l: number;               // Storage space in liters
+  wheel_size: string;              // e.g., "18 inches"
+  seating_capacity: number;        // Number of seats
+  display_inch: number;            // Screen size in inches
+  minimum_ground_clearance_mm: number; // Minimum ground clearance in millimeters
+  width_mm: number;                // Vehicle width in millimeters
+  height_mm: number;               // Vehicle height in millimeters
+  length_mm: number;               // Vehicle length in millimeters
+}
+
+// DropdownProps 추가
+export interface DropdownProps {
+  options: string[];
+  selected: string;
+  onSelect: (value: string) => void;
+}
+
+// SpecItemProps 추가
+export interface SpecItemProps {
+  label: string;
+  value: string | number | null;
+  additionalLabel?: string;
+  additionalValue?: string | number | null;
+}

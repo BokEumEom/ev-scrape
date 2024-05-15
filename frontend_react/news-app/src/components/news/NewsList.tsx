@@ -50,6 +50,7 @@ const NewsList: React.FC<Props> = ({ newsItems, onBookmarkToggle, onVote }) => {
             <a
               href={newsItem.link}
               target="_blank"
+              title="새창열기"
               rel="noopener noreferrer"
               onClick={(event) => handleTitleClick(newsItem.id, event)}
               className="hover:underline"

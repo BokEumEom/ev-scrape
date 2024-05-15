@@ -57,7 +57,7 @@ const NewsPage: React.FC = () => {
         animate="animate"
         exit="exit"
         variants={pageTransition}
-        className="flex flex-col min-h-screen pt-16 pb-20"
+        className="flex flex-col pb-2"
       >
       <div>
         <NewsList
