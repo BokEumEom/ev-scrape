@@ -1,8 +1,7 @@
-// src/components/announcements/RegionButtons.tsx
 import React, { useState } from 'react';
 import { Reorder } from 'framer-motion';
 import { IoEllipsisVertical, IoArrowDown, IoLocationSharp } from 'react-icons/io5';
-import RegionItem from './RegionItem'; // Import the RegionItem component
+import RegionItem from './RegionItem';
 
 interface RegionButtonsProps {
   regions: string[];
@@ -10,6 +9,19 @@ interface RegionButtonsProps {
   onSelectRegion: (region: string) => void;
   setRegions: (regions: string[]) => void;
 }
+
+const sortIcon = (
+  <svg className="fill-current text-blue-600 w-6 h-6" viewBox="0 0 24 24">
+    <path d="M12 5l6 6H6l6-6zm0 14l-6-6h12l-6 6z" />
+  </svg>
+);
+
+const completeIcon = (
+  <svg className="fill-current text-green-500 w-6 h-6" viewBox="0 0 20 20">
+    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.707-4.707a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+  </svg>
+);
+
 
 const RegionButtons: React.FC<RegionButtonsProps> = ({
   regions,
@@ -29,15 +41,15 @@ const RegionButtons: React.FC<RegionButtonsProps> = ({
         <span className="text-sm font-semibold"></span>
         <button
           onClick={() => setIsEditMode(!isEditMode)}
-          className="text-gray-800 bg-gray-300 hover:bg-gray-200 font-bold py-2 px-4 rounded inline-flex items-center"
+          className="bg-gray-300 hover:bg-gray-200 rounded-full p-2 transition-colors"
           aria-label={isEditMode ? "Finish editing" : "Edit list"}
         >
-          {isEditMode ? "완료" : "리스트 정렬"}
+          {isEditMode ? completeIcon : sortIcon}
         </button>
       </div>
       {isEditMode ? (
         <Reorder.Group axis="y" values={regions} onReorder={setRegions} className="flex flex-col items-center w-full">
-            {regions.map((region: string) => (
+            {regions.map((region) => (
             <Reorder.Item key={region} value={region} className="w-full mb-1">
                 <div className="flex justify-start items-center text-white font-bold py-3 px-4 rounded-md cursor-pointer bg-gray-500">
                 <IoLocationSharp className="text-xl" />
@@ -57,9 +69,9 @@ const RegionButtons: React.FC<RegionButtonsProps> = ({
           />
         ))
       )}
-      <div className="text-center py-2">
-        <IoArrowDown size={24} className="animate-bounce mx-auto" />
+      <div className="text-center pt-6">
         <span className="text-sm">Scroll for more</span>
+        <IoArrowDown size={12} className="animate-bounce mx-auto mt-4" />
       </div>
     </div>
   );

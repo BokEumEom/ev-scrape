@@ -11,7 +11,7 @@ const AnnouncementsList: React.FC<AnnouncementsListProps> = ({ announcements }) 
   const navigate = useNavigate();
 
   return (
-    <div className="mx-auto px-4 py-12">
+    <div className="pt-12">
       {announcements.length > 0 ? (
         announcements.map((announcement, index) => (
           // Assuming 'id' is unique; use it as a key. If not, use index, but prefer unique IDs.

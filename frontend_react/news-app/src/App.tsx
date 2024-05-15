@@ -53,7 +53,7 @@ const RoutesWrapper = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.75 }}
         >
-            <div className="relative w-full h-screen">
+            <div className="relative h-full pt-14 pb-14 overflow-auto">
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/search" element={<SearchPage />} />

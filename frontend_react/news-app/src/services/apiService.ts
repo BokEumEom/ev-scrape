@@ -6,7 +6,8 @@ import {
   CommunityPostCreate, 
   CommunityPostsResponse,
   VehicleSpec,
-  ApiError
+  ApiError,
+  CarDetails
 } from '../types';
 
 export const PAGE_SIZE = 10;
@@ -196,6 +197,22 @@ export const createVehicleSpec = async (vehicleSpec: VehicleSpec): Promise<Vehic
           // Handling unexpected errors that might not be AxiosError
           console.error('An unexpected error occurred:', error);
           throw new ApiError(500, 'Internal Server Error');
+      }
+  }
+};
+
+// VehicleSpec
+export const fetchVehicleSpecifications = async (): Promise<CarDetails[]> => {
+  try {
+      const response = await axios.get<CarDetails[]>(`${API_BASE_URL}/api/v1/vehicles/`);
+      return response.data;
+  } catch (error) {
+      if (axios.isAxiosError(error)) {
+          console.error('Failed to fetch vehicle specifications:', error.response?.data || error.message);
+          throw new Error(error.response?.data.message || 'Failed to fetch data');
+      } else {
+          console.error('An unexpected error occurred:', error);
+          throw new Error('An unexpected error occurred');
       }
   }
 };

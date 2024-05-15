@@ -42,7 +42,7 @@ const WriteCommunityPost: React.FC = () => {
       className="inset-0 bg-white p-4 z-50"
     >
     <div className="write-post-container">
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl mx-auto my-10 p-4 pt-12">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <h2 className="text-center text-2xl font-bold mb-4">글쓰기</h2>
         
         <input 

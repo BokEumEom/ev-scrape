@@ -1,26 +1,9 @@
+// src/pages/VehicleSpecPage.tsx
 import React, { useState, useEffect } from 'react';
 import debounce from 'lodash.debounce';
+import { fetchVehicleSpecifications } from '../services/apiService';
 import CarSpecCard from '../components/vehicle/VehicleSpec';
-
-interface CarDetails {
-  id: number;
-  manufacturer: string;
-  model: string;
-  drive_type: string;
-  battery_type: string;
-  battery_capacity: number;
-  range_km: number;
-  acceleration: number;
-  weight_kg: number;
-  storage_l: number;
-  wheel_size: string;
-  seating_capacity: number;
-  display_inch: number;
-  minimum_ground_clearance_mm: number;
-  width_mm: number;
-  height_mm: number;
-  length_mm: number;
-}
+import { CarDetails } from '../types';
 
 const CarSpecPage: React.FC = () => {
     const [carData, setCarData] = useState<CarDetails[]>([]);
@@ -30,19 +13,12 @@ const CarSpecPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch('https://fastapi.watercharging.com/api/v1/vehicles/')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
+        setIsLoading(true);
+        fetchVehicleSpecifications().then(data => {
             setCarData(data);
             setIsLoading(false);
-        })
-        .catch(err => {
-            console.error('Fetch error:', err);
+        }).catch(err => {
+            console.error('Fetch error:', err.message);
             setError(err.message);
             setIsLoading(false);
         });
@@ -73,8 +49,8 @@ const CarSpecPage: React.FC = () => {
     };
 
     return (
-        <div className="container mx-auto p-4 tracking-tighter bg-slate-50 h-screen">
-            <h1 className="mt-16 text-xl my-4 font-bold">궁금했던 전기차의<br/>제원을 검색해볼까요?</h1>
+        <div className="container mx-auto p-4 tracking-tighter">
+            <h1 className="mt-6 text-xl my-4 font-bold">궁금했던 전기차의<br/>제원을 검색해볼까요?</h1>
             <input 
                 type="text" 
                 value={searchTerm}
