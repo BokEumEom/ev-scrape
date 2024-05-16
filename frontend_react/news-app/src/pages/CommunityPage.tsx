@@ -1,11 +1,11 @@
 // src/pages/CommunityPage.tsx
 import React, { lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCommunityPosts } from '../hooks/useCommunityPosts';
-import LoadMoreButton from '../components/LoadMoreButton';
+import { useCommunityPosts } from '@/hooks/useCommunityPosts';
+import LoadMoreButton from '@/components/LoadMoreButton';
 import { motion } from 'framer-motion';
 
-const CommunityPostComponent = lazy(() => import('../components/community/CommunityPost'));
+const CommunityPostComponent = lazy(() => import('@/components/community/CommunityPost'));
 
 const CommunityPage: React.FC = () => {
   const {
