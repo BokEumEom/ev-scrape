@@ -1,9 +1,9 @@
 // src/pages/VehicleSpecPage.tsx
-import React, { useState, useEffect } from 'react';
-import { fetchVehicleSpecifications } from '../services/apiService';
-import VehicleSpec from '../components/vehicle/VehicleSpec';
-import { VehicleDetails } from '../types';
+import React, { useEffect, useState } from 'react';
 import Dropdown from '../components/ui/Dropdown';
+import VehicleSpec from '../components/vehicle/VehicleSpec';
+import { fetchVehicleSpecifications } from '../services/apiService';
+import { VehicleDetails } from '../types';
 
 const VehicleSpecPage: React.FC = () => {
     const [carData, setCarData] = useState<VehicleDetails[]>([]);
@@ -38,7 +38,7 @@ const VehicleSpecPage: React.FC = () => {
     const uniqueManufacturers = Array.from(new Set(carData.map(car => car.manufacturer)));
 
     return (
-        <div className="container mx-auto p-4 tracking-tighter">
+        <div className="container mx-auto p-4 py-16 tracking-tighter">
             <h1 className="mt-6 text-xl my-4 font-bold">궁금했던 전기차의<br />제원을 확인해볼까요?</h1>
             <Dropdown
                 options={uniqueManufacturers}

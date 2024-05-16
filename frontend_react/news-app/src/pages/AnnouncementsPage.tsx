@@ -1,12 +1,12 @@
 // src/pages/AnnouncementsPage.tsx
-import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useSwipeable } from 'react-swipeable';
-import RegionButtons from '../components/announcements/RegionButtons';
-import Announcements from '../components/announcements/Announcements';
-import { fetchAnnouncements } from '../services/apiService';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
 import { IoChevronBackOutline } from "react-icons/io5";
+import { useSwipeable } from 'react-swipeable';
+import Announcements from '../components/announcements/Announcements';
+import RegionButtons from '../components/announcements/RegionButtons';
+import { fetchAnnouncements } from '../services/apiService';
 
 const initialRegions = ['evportal', 'incheon', 'incheon2', 'gyeonggi', 'seoul', 'koroad', 'gwangju', 'bucheon', 'ulsan', 'goyang', 'sejong', 'wonju'];
 
@@ -47,7 +47,7 @@ const AnnouncementsPage = () => {
   };
 
   return (
-    <div {...swipeHandlers} className="flex flex-col items-stretchbg-white transition-all md:flex-row m-4">
+    <div {...swipeHandlers} className="flex flex-col items-stretchbg-white transition-all md:flex-row m-4 py-16">
       <AnimatePresence mode="wait">
         {selectedRegion === null ? (
           <motion.div
