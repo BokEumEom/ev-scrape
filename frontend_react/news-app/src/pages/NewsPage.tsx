@@ -1,15 +1,15 @@
 // src/pages/NewsPage.tsx
-import React from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { fetchNewsItems } from '../services/apiService';
-import NewsList from '../components/news/NewsList';
-import useBookmarks from '../hooks/useBookmarks';
-import useVotes from '../hooks/useVotes';
-import { ViewCountProvider } from '../contexts/ViewCountContext';
+import { motion } from 'framer-motion';
+import React from 'react';
 import LoadMoreButton from '../components/LoadMoreButton';
 import ScrollToTopButton from '../components/ScrollToTopButton';
 import Spinner from '../components/Spinner';
-import { motion } from 'framer-motion';
+import NewsList from '../components/news/NewsList';
+import { ViewCountProvider } from '../contexts/ViewCountContext';
+import useBookmarks from '../hooks/useBookmarks';
+import useVotes from '../hooks/useVotes';
+import { fetchNewsItems } from '../services/apiService';
 
 const NewsPage: React.FC = () => {
   const { bookmarks, toggleBookmark } = useBookmarks();
@@ -57,7 +57,7 @@ const NewsPage: React.FC = () => {
         animate="animate"
         exit="exit"
         variants={pageTransition}
-        className="flex flex-col pb-2"
+        className="flex flex-col pt-16 pb-20"
       >
       <div>
         <NewsList

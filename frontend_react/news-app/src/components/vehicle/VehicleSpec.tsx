@@ -1,7 +1,6 @@
 // src/components/VehicleSpec.tsx
 import React from 'react';
-import { SpecItemProps } from '../../types';
-import { VehicleDetails } from '../../types';
+import { SpecItemProps, VehicleDetails } from '../../types';
 
 const SpecItem: React.FC<SpecItemProps> = ({ label, value, additionalLabel, additionalValue }) => (
   <li className="flex flex-row items-center">

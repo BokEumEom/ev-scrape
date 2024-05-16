@@ -1,13 +1,12 @@
 // src/pages/BookmarksPage.tsx
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import Spinner from '../components/Spinner'; // Assuming a Spinner component exists
 import NewsList from '../components/news/NewsList';
-import { fetchNewsItems } from '../services/apiService';
+import { ViewCountProvider } from '../contexts/ViewCountContext';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
-import { ViewCountProvider } from '../contexts/ViewCountContext';
-import Spinner from '../components/Spinner'; // Assuming a Spinner component exists
-import { motion } from 'framer-motion';
+import { fetchNewsItems } from '../services/apiService';
 
 const BookmarksPage = () => {
   const { bookmarks, toggleBookmark } = useBookmarks();
@@ -38,7 +37,7 @@ const BookmarksPage = () => {
         animate="animate"
         exit="exit"
         variants={pageTransition}
-        className="flex flex-col"
+        className="flex flex-col py-16"
       >
       <div>
         <NewsList
