@@ -18,11 +18,11 @@ const CommunityPost: React.FC<CommunityPostProps> = ({ post }) => {
   const navigate = useNavigate();
   const [viewCounts] = useAtom(viewCountAtom);
   const [, incrementViewCount] = useAtom(incrementViewCountAtom);
-  const [showFullContent, setShowFullContent] = useState(false);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
   const [isLiked, setIsLiked] = useState(post.isLikedByCurrentUser);
-  const createCommentMutation = useCreateComment(post.id);
   const [commentText, setCommentText] = useState('');
   const commentInputRef = useRef<HTMLInputElement>(null);
+  const createCommentMutation = useCreateComment(post.id);
 
   const handleViewPost = () => {
     incrementViewCount(post.id);
@@ -30,7 +30,7 @@ const CommunityPost: React.FC<CommunityPostProps> = ({ post }) => {
   };
 
   const handleLike = () => {
-    setIsLiked(!isLiked);
+    setIsLiked(prevIsLiked => !prevIsLiked);
   };
 
   const handleShare = () => {
@@ -39,35 +39,27 @@ const CommunityPost: React.FC<CommunityPostProps> = ({ post }) => {
         title: post.title,
         url: window.location.href,
       })
-        .then(() => {
-          console.log('Thanks for sharing!');
-        })
+        .then(() => console.log('Thanks for sharing!'))
         .catch(console.error);
     } else {
       console.log('Web Share API not supported.');
     }
   };
 
-  const handleAddComment = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent the default form submission
+  const handleAddComment = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!commentText.trim()) return;
 
     createCommentMutation.mutate(
       { content: commentText },
       {
-        onSuccess: () => {
-          // Handle success, clear input
-          setCommentText('');
-        },
-        onError: (error) => {
-          // Handle error
-          console.error('Error posting comment:', error);
-        },
+        onSuccess: () => setCommentText(''),
+        onError: (error) => console.error('Error posting comment:', error),
       }
     );
   };
 
-  const truncatedContent = showFullContent ? post.content : `${post.content.substr(0, 100)}...`;
+  const truncatedContent = isContentExpanded ? post.content : `${post.content.substr(0, 100)}...`;
 
   return (
     <div className="bg-white border-b border-gray-200 p-4">
@@ -77,18 +69,11 @@ const CommunityPost: React.FC<CommunityPostProps> = ({ post }) => {
       <h2 className="text-sm font-semibold mb-2 cursor-pointer" onClick={handleViewPost}>
         {post.title}
       </h2>
-      <p
-        className="text-xs text-gray-600 mb-3"
-        style={{ whiteSpace: 'pre-wrap' }}
-        onClick={showFullContent ? undefined : () => setShowFullContent(true)}
-      >
+      <p className="text-xs text-gray-600 mb-3" style={{ whiteSpace: 'pre-wrap' }} onClick={() => setIsContentExpanded(!isContentExpanded)}>
         {truncatedContent}
       </p>
-      {!showFullContent && (
-        <button
-          className="text-xs text-blue-500 hover:underline"
-          onClick={() => setShowFullContent(true)}
-        >
+      {!isContentExpanded && (
+        <button className="text-xs text-blue-500 hover:underline" onClick={() => setIsContentExpanded(true)}>
           더보기
         </button>
       )}
@@ -97,13 +82,9 @@ const CommunityPost: React.FC<CommunityPostProps> = ({ post }) => {
           조회 {viewCounts[post.id] || 0}
         </span>
         <div className="flex items-center space-x-2">
-          <IoHeartOutline className="text-gray-500 text-lg" size={18} />
+          <IoHeartOutline className="text-gray-500 text-lg" size={18} onClick={handleLike} />
           <span className="p-0">{post.likeCount || 0}</span>
-          <IoChatbubbleOutline
-            className="text-gray-500 text-lg cursor-pointer"
-            size={18}
-            onClick={handleViewPost}
-          />
+          <IoChatbubbleOutline className="text-gray-500 text-lg cursor-pointer" size={18} onClick={handleViewPost} />
           <span className="p-0">{post.commentCount || 0}</span>
         </div>
       </div>
