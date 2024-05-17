@@ -1,16 +1,16 @@
 // src/components/Spinner.tsx
 import React from 'react';
-import { HashLoader } from 'react-spinners';
+import { PulseLoader } from 'react-spinners';
 
 interface SpinnerProps {
   size?: number;
   color?: string;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ size = 50, color = '#36D7B7' }) => {
+const Spinner: React.FC<SpinnerProps> = ({ size = 20, color = '#36D7B7' }) => {
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <HashLoader size={size} color={color} />
+      <PulseLoader size={size} color={color} />
     </div>
   );
 };
