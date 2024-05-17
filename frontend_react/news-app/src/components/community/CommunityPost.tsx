@@ -57,7 +57,7 @@ const CommunityPost: React.FC<CommunityPostProps> = ({ post }) => {
   };
 
   return (
-    <div className="bg-white border-b border-gray-200 p-4">
+    <div className="bg-white border-b border-gray-200 p-2">
       <PostDate date={post.created_at} />
       <h2 className="text-sm font-semibold mb-2 cursor-pointer" onClick={handleViewPost}>
         {post.title}
