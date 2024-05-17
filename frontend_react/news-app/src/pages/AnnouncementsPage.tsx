@@ -47,7 +47,7 @@ const AnnouncementsPage = () => {
   };
 
   return (
-    <div {...swipeHandlers} className="flex flex-col items-stretchbg-white transition-all md:flex-row m-4 py-16">
+    <div {...swipeHandlers} className="flex flex-col items-stretchbg-white transition-all md:flex-row m-4 py-12">
       <AnimatePresence mode="wait">
         {selectedRegion === null ? (
           <motion.div
