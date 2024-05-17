@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Reorder } from 'framer-motion';
 import { IoEllipsisVertical, IoArrowDown, IoLocationSharp } from 'react-icons/io5';
 import RegionItem from './RegionItem';
+import { regionMapping } from '../../utils/regionMapping';
 
 interface RegionButtonsProps {
   regions: string[];
@@ -54,7 +55,7 @@ const RegionButtons: React.FC<RegionButtonsProps> = ({
             <Reorder.Item key={region} value={region} className="w-full mb-1">
                 <div className="flex justify-start items-center text-white font-bold py-3 px-4 rounded-md cursor-pointer bg-gray-500">
                 <IoLocationSharp className="text-xl" />
-                <span className="ml-2">{region.charAt(0).toUpperCase() + region.slice(1)}</span>
+                <span className="flex-1 text-left ml-2">{regionMapping[region]}</span>
                 <IoEllipsisVertical className="ml-auto text-2xl" />
                 </div>
             </Reorder.Item>
