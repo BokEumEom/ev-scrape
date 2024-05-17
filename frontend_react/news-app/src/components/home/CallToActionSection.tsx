@@ -8,7 +8,7 @@ const CallToActionSection: React.FC = () => {
   const handleSignInClick = () => navigate('/signin');
 
   return (
-    <div className="bg-blue-600 text-white text-center p-16 relative z-10">
+    <div className="bg-white text-gray-800 text-center p-16 relative z-10">
       <h2 className="text-3xl font-bold mb-4">Join the EV Revolution</h2>
       <p className="mb-8">Sign up to get the latest news and updates or sign in to your account.</p>
       <div className="space-x-4">
