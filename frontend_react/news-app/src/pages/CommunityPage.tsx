@@ -2,11 +2,9 @@
 import { motion } from 'framer-motion';
 import React, { lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-=======
 import LoadMoreButton from '../components/LoadMoreButton';
 import { useCommunityPosts } from '../hooks/useCommunityPosts';
->>>>>>> 607f9decd45d63031253c5cb7244aabe115fdfaa
+
 
 const CommunityPostComponent = lazy(() => import('@/components/community/CommunityPost'));
 
