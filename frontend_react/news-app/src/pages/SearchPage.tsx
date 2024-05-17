@@ -1,17 +1,17 @@
 // src/pages/SearchPage.tsx
-import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import SearchBar from '../components/search/SearchBar';
-import { searchNewsItems } from '../services/apiService';
-import NewsList from '../components/news/NewsList';
+import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import LoadMoreButton from '../components/LoadMoreButton';
 import Spinner from '../components/Spinner';
+import NewsList from '../components/news/NewsList';
+import RecentSearches from '../components/search/RecentSearches';
+import SearchBar from '../components/search/SearchBar';
+import { ViewCountProvider } from '../contexts/ViewCountContext';
 import useBookmarks from '../hooks/useBookmarks';
 import useVotes from '../hooks/useVotes';
-import { ViewCountProvider } from '../contexts/ViewCountContext';
-import LoadMoreButton from '../components/LoadMoreButton';
-import RecentSearches from '../components/search/RecentSearches';
+import { searchNewsItems } from '../services/apiService';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -82,7 +82,7 @@ const SearchPage = () => {
         animate="animate"
         exit="exit"
         variants={pageTransition}
-        className="flex flex-col"
+        className="flex flex-col py-16"
       >
         <SearchBar searchQuery={query} setSearchQuery={handleSearch} ref={inputRef} />
         <span 
