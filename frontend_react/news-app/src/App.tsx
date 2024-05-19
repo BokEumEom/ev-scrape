@@ -17,6 +17,7 @@ import UserProfileForm from './components/mypage/UserProfileForm';
 import CommunityPostDetailPage from './pages/CommunityPostDetailPage';
 import AddVehiclePage from './pages/AddVehiclePage';
 import VehicleSpecPage from './pages/VehicleSpecPage';
+import VehicleSpecDetail from './components/vehicle/VehicleSpecDetail';
 import SignUpPage from './components/users/SignUpPage';
 import SignInPage from './components/users/SignInPage';
 import KakaoMapPage from './pages/KakakoMapPage';
@@ -67,6 +68,7 @@ const RoutesWrapper = () => {
                     <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
                     <Route path="/add-vehicle" element={<AddVehiclePage />} />
                     <Route path="/vehiclespec" element={<VehicleSpecPage />} />
+                    <Route path="/vehicle-spec-detail/:id" element={<VehicleSpecDetail />} />
                     <Route path="/map" element={<KakaoMapPage />} />
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/signin" element={<SignInPage />} />
