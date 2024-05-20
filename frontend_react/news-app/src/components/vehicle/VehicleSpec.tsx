@@ -31,10 +31,10 @@ const VehicleSpec: React.FC<{ specs: VehicleDetails }> = ({ specs }) => {
         </svg>
       </button>
       <ul className="space-y-1 divide-y divide-solid">
-      <SpecItem label="구동 방식" value={specs.drive_type} additionalLabel="배터리 유형" additionalValue={specs.battery_type} />
-      <SpecItem label="배터리 용량" value={`${specs.battery_capacity} kWh`} additionalLabel="주행 거리" additionalValue={`${specs.range_km} km`} />
-      <SpecItem label="가속력" value={`${specs.acceleration} s to 100 km/h`} additionalLabel="무게" additionalValue={`${specs.weight_kg} kg`} />
-      {/* <SpecItem label="저장 용량" value={`${specs.storage_l} L`} additionalLabel="휠 크기" additionalValue={specs.wheel_size} />
+        <SpecItem label="구동 방식" value={specs.drive_type} additionalLabel="배터리유형" additionalValue={specs.battery_type} />
+        <SpecItem label="배터리용량" value={`${specs.battery_capacity} kWh`} additionalLabel="주행 거리" additionalValue={`${specs.range_km} km`} />
+        <SpecItem label="가속력" value={`${specs.acceleration} s to 100 km/h`} additionalLabel="무게" additionalValue={`${specs.weight_kg} kg`} />
+        {/* <SpecItem label="저장 용량" value={`${specs.storage_l} L`} additionalLabel="휠 크기" additionalValue={specs.wheel_size} />
       <SpecItem label="좌석 수" value={specs.seating_capacity} additionalLabel="디스플레이" additionalValue={`${specs.display_inch} inch`} />
       <SpecItem label="최소 지상고" value={`${specs.minimum_ground_clearance_mm} mm`} additionalLabel="치수" additionalValue={`${specs.width_mm}mm W x ${specs.height_mm}mm H x ${specs.length_mm}mm L`} /> */}
       </ul>
