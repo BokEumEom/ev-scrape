@@ -7,7 +7,6 @@ import {
   IoRocketSharp, 
   IoCalendarNumberSharp, 
   IoMegaphone, 
-  IoBookmark, 
   IoPeopleSharp, 
   IoCarSport, 
   IoSearch, 
@@ -28,24 +27,24 @@ const HomePage: React.FC = () => {
         {/* Top Cards */}
         <div className="grid grid-cols-2 gap-4">
           <Link to="/news" className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-4 rounded-lg shadow-md flex flex-col items-start space-y-2 transition transform hover:scale-105">
-            <IoNewspaper className="text-3xl" />
-            <h2 className="text-lg font-semibold">Latest News</h2>
+            <h2 className="text-lg font-semibold">뉴스</h2>
             <p className="text-sm">Stay updated with the latest EV news</p>
+            <IoNewspaper className="text-3xl" />
           </Link>
-          <Link to="/announcements" className="bg-gradient-to-r from-green-500 to-teal-500 text-white p-4 rounded-lg shadow-md flex flex-col items-start space-y-2 transition transform hover:scale-105">
-            <IoMegaphone className="text-3xl" />
-            <h2 className="text-lg font-semibold">Announcements</h2>
+          <Link to="/announcements" className="bg-gradient-to-r from-green-500 to-teal-500 text-white p-4 rounded-lg shadow-md flex flex-col items-start space-y-2 transition transform hover:scale-105">         
+            <h2 className="text-lg font-semibold">공고</h2>
             <p className="text-sm">Important updates and announcements</p>
+            <IoMegaphone className="text-3xl" />
           </Link>
           <Link to="/community" className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-4 rounded-lg shadow-md flex flex-col items-start space-y-2 transition transform hover:scale-105">
-            <IoPeopleSharp className="text-3xl" />
-            <h2 className="text-lg font-semibold">Community</h2>
+            <h2 className="text-lg font-semibold">커뮤니티</h2>
             <p className="text-sm">Join the discussion with other EV enthusiasts</p>
+            <IoPeopleSharp className="text-3xl" />
           </Link>
-          <Link to="/vehicle-specs" className="bg-gradient-to-r from-red-500 to-pink-500 text-white p-4 rounded-lg shadow-md flex flex-col items-start space-y-2 transition transform hover:scale-105">
-            <IoCarSport className="text-3xl" />
-            <h2 className="text-lg font-semibold">Vehicle Specifications</h2>
+          <Link to="/vehicle-specs" className="bg-gradient-to-r from-red-500 to-pink-500 text-white p-4 rounded-lg shadow-md flex flex-col items-start space-y-2 transition transform hover:scale-105">        
+            <h2 className="text-lg font-semibold">전기차 제원</h2>
             <p className="text-sm">Detailed specs of various EVs</p>
+            <IoCarSport className="text-3xl" />
           </Link>
         </div>
         

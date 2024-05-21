@@ -20,6 +20,7 @@ import VehicleSpecPage from './pages/VehicleSpecPage';
 import SignUpPage from './components/users/SignUpPage';
 import SignInPage from './components/users/SignInPage';
 import KakaoMapPage from './pages/KakakoMapPage';
+import Game from './pages/GamePage';
 
 const App: React.FC = () => {
     return (
@@ -70,6 +71,7 @@ const RoutesWrapper = () => {
                     <Route path="/map" element={<KakaoMapPage />} />
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/signin" element={<SignInPage />} />
+                    <Route path="/game" element={<Game />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>
