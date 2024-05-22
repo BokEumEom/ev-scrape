@@ -22,6 +22,7 @@ import SignUpPage from './components/users/SignUpPage';
 import SignInPage from './components/users/SignInPage';
 import KakaoMapPage from './pages/KakakoMapPage';
 import Game from './pages/GamePage';
+import WindowPage from './pages/WindowPage'; // 추가된 부분
 
 const App: React.FC = () => {
     return (
@@ -74,6 +75,7 @@ const RoutesWrapper = () => {
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/signin" element={<SignInPage />} />
                     <Route path="/game" element={<Game />} />
+                    <Route path="/window" element={<WindowPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>
