@@ -27,7 +27,7 @@ const GameArea: React.FC<Props> = ({ setScore, gameOver }) => {
     }
 
     const playerImage = new Image();
-    playerImage.src = '/src/assets/images/player.png'; // Adjust the path as necessary
+    playerImage.src = 'https://raw.githubusercontent.com/BokEumEom/ev-scrape/main/frontend_react/news-app/src/assets/images/player.png'; // Adjust the path as necessary
     playerImage.onload = () => {
       playerImageRef.current = playerImage;
     };
@@ -35,7 +35,7 @@ const GameArea: React.FC<Props> = ({ setScore, gameOver }) => {
     if (!initializedRef.current) { // Check if enemies are already initialized
       const enemyImages = Array.from({ length: 7 }, (_, index) => {
         const img = new Image();
-        img.src = `/src/assets/images/enemy${index + 1}.png`;
+        img.src = `https://raw.githubusercontent.com/BokEumEom/ev-scrape/main/frontend_react/news-app/src/assets/images/enemy${index + 1}.png`;
         return img;
       });
 
@@ -61,7 +61,7 @@ const GameArea: React.FC<Props> = ({ setScore, gameOver }) => {
       initializedRef.current = true; // Mark as initialized to prevent duplication
     }
 
-    const audio = new Audio('/src/assets/audio/bensound-happyrock.mp3');
+    const audio = new Audio('https://raw.githubusercontent.com/BokEumEom/ev-scrape/main/frontend_react/news-app/src/assets/audio/bensound-happyrock.mp3');
     audio.loop = true;
     audio.volume = 0.05;
     audio.addEventListener('canplaythrough', () => {
