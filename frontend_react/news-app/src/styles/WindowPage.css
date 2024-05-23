@@ -1,19 +1,64 @@
+/* '../styles/WindowPage.css'; */
 /* nav {display:none !important}
-.fixed.inset-x-0.bottom-0.bg-white.border-t.border-gray-300.py-2.flex.justify-around.items-center.z-10.text-xs {display:none !important} */
+.fixed.inset-x-0.bottom-0.bg-white.border-t.border-gray-300.py-2.flex.justify-around.items-center.z-10.text-xs {display:none !important}
 .wrap,.cover_area {background:#FF1493;}
+.wrap * {box-sizing:border-box}
 .wrap {position:relative; width:100%; height:100vh}
-/* 사용자정의는 언더스코어로 작성 */
+사용자정의는 언더스코어로 작성
 .head_area {position:absolute; top:0; background:#3232FF; height:60px; width:100%}
 .cover_area {position:absolute; top:60px; overflow:auto; background:#FF1493; height:calc(100vh - 120px); width:100%; box-sizing:border-box; padding:20px 10px;}
 .foot_area {position:absolute; bottom:0; background:#1E90FF; height:60px;width:100%}
 .modal_area.active {z-index:3}
 .modal_area.active .dim {position:absolute; left:0; top:0; width:100%; z-index:2; height:100%; content:""; background:#000; opacity:0.5}
 .modal_area {position:absolute; height:100vh; width:100%;}
-.modal_area.active .modal_area_continer {position:absolute; left:calc(50% - 45% ); top:calc(50% - 250px); z-index:3; background:#fff; width:90%; height:500px;}
-.modal_area.active .modal_area_continer.sm {position:absolute; left:calc(50% - 45% ); top:calc(50% - 100px); z-index:3; background:#fff; width:90%; height:200px;}
-.modal_area.active .modal_area_continer.full {position:absolute; left:0; top:0; z-index:3; background:#fff; width:100%; height:100vh;}
+.modal_area.active .modal_area_continer {background:#fff;}
+.modal_area.active .modal_area_continer.md {position:absolute; z-index:3; left:calc(50% - 45% ); top:calc(50% - 250px); background:#fff; width:90%; height:500px;}
+.modal_area.active .modal_area_continer.sm {position:absolute; z-index:3; left:calc(50% - 45% ); top:calc(50% - 100px); background:#fff; width:90%; height:200px;}
+.modal_area.active .modal_area_continer.full {position:absolute; z-index:3; left:0; top:0; background:#fff; width:100%; height:100vh;}
 .head_area_controler {display:flex; justify-content:space-between; text-align:center}
-.head_area_controler h2 { width:calc(100% - 100px); line-height:60px}
+.head_area_controler h2 {width:calc(100% - 100px); line-height:60px}
 .head_area_controler button {width:100px; line-height:60px}
 .head_area_gnb {position:fixed; right:-100%; z-index:1; height:100vh; width:100%}
 .head_area_gnb.active {right:0;}
+[class^="btn_"] {height:50px; line-height:50px; font-size:18px; background:#0099FF; border-radius:18px; padding:0 20px; color:#fff} */
+
+/* nav {display:none !important}
+.fixed.inset-x-0.bottom-0.bg-white.border-t.border-gray-300.py-2.flex.justify-around.items-center.z-10.text-xs {display:none !important} */
+.wrap, .cover_area {/* background:#FF1493; */}
+.wrap * {box-sizing:border-box}
+.wrap {position:relative; width:100%; height:100vh}
+.head_area {position:absolute; top:0;  height:60px; width:100%; z-index:10}
+.cover_area.stage {margin:-60px 0; height:100vh}
+.cover_area {position:absolute; top:60px; overflow:auto; /*background:#FF1493;*/ height:calc(100vh - 120px); width:100%; box-sizing:border-box; padding:20px 10px; z-index:5}
+.foot_area {position:absolute; bottom:0; border-radius:15px 15px 0 0; background:#1E90FF; height:60px; width:100%; z-index:2}
+.modal_area {position:fixed; top:0; left:0; height:100vh; width:100%; z-index:20; display:none}
+.modal_area.active {display:block}
+.modal_area .dim {position:absolute; left:0; top:0; width:100%; height:100%; background:#000; opacity:0.5; z-index:1}
+.modal_area .modal_area_container {display:none; position:absolute; background:#fff; z-index:2; animation:scaleUp 0.3s ease-in-out}
+.modal_area .modal_area_container.active {display:block;}
+.modal_area_container.md {left:calc(50% - 45%); top:calc(50% - 250px); width:90%; height:500px; border-radius:20px}
+.modal_area_container.sm {left:calc(50% - 45%); top:calc(50% - 100px); width:90%; height:200px; border-radius:20px}
+.modal_area_container.full {left:0; top:0; width:100%; height:100vh}
+.head_area_controler {}
+.head_area_controler .logo {width:100%; line-height:60px; text-align:center}
+.logo img {display:inline-block; width:130px; line-height:60px;}
+.head_area_controler button[data-openGnb] {position:absolute; right:0; top:calc(50% - 30px); width:100px; line-height:60px}
+.head_area_gnb {z-index:15; top:0;  position:fixed; right:-100%; height:100vh; width:100%; background:#fff; transition:right 0.3s ease-in-out;  }
+.head_area_gnb.active {z-index:15; top:0; right:0; background:#fff;  transition:right 0.3s ease-in-out;}
+[class^="btn_"] {height:50px; line-height:50px; font-size:18px; background:#0099FF; border-radius:18px; padding:0 20px; color:#fff; cursor:pointer}
+.btn_open_modal.sparkling {animation:sparkle 1s ease-in-out}
+@keyframes scaleUp {
+  from {transform:scale(0.99); opacity:0}
+  to {transform:scale(1); opacity:1}
+}
+@keyframes sparkle {
+    0%, 100% {
+      transform:scale(1);
+    }
+    50% {
+      transform:scale(1.01);
+    }
+  } 
+
+  /* header */
+  .logo img {width:130px; line-height:60px; margin:0 auto}
