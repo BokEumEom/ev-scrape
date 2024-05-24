@@ -1,10 +1,10 @@
-// TabNavigation.tsx
+// src/components/mypage/TabNavigation.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 
 interface TabProps {
   name: string;
-  tabKey: string; // Renamed from `key` to `tabKey`
+  tabKey: string;
   isActive: boolean;
   onClick: () => void;
 }
@@ -13,13 +13,21 @@ const Tab: React.FC<TabProps> = ({ name, tabKey, isActive, onClick }) => (
   <motion.button
     onClick={onClick}
     className={`flex-1 py-4 text-sm font-medium text-center relative ${
-      isActive ? 'text-gray-800 font-semibold border-b-2 border-gray-500' : 'text-gray-500 hover:text-gray-700'
+      isActive ? 'text-gray-800 font-semibold' : 'text-gray-500 hover:text-gray-700'
     }`}
-    whileHover={{ scale: 1.1 }}
-    whileTap={{ scale: 0.9 }}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
   >
     {name}
-    {isActive && <motion.div layoutId="underline" />}
+    {isActive && (
+      <motion.div
+        layoutId="underline"
+        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-500"
+        initial={false}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      />
+    )}
   </motion.button>
 );
 
@@ -37,8 +45,8 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   <nav className="flex space-x-1 justify-around">
     {tabs.map((tab) => (
       <Tab
-        key={tab.key} // Continue using `key` here as it is used by React internally
-        tabKey={tab.key} // Now passing `tabKey` to the `Tab` component
+        key={tab.key}
+        tabKey={tab.key}
         name={tab.name}
         isActive={activeTab === tab.key}
         onClick={() => onTabChange(tab.key)}

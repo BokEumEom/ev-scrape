@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Reorder } from 'framer-motion';
 import { IoEllipsisVertical, IoArrowDown, IoLocationSharp } from 'react-icons/io5';
 import RegionItem from './RegionItem';
-import { regionMapping } from '../../utils/regionMapping';
+import { regionMapping } from '@/utils/regionMapping';
 
 interface RegionButtonsProps {
   regions: string[];
