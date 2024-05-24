@@ -1,7 +1,7 @@
 // src/components/announcements/RegionItem.tsx
 import React from 'react';
 import { IoCheckmarkDoneSharp, IoLocationSharp } from 'react-icons/io5';
-import { regionMapping } from '../../utils/regionMapping';
+import { regionMapping } from '@/utils/regionMapping';
 
 interface RegionItemProps {
   region: string;

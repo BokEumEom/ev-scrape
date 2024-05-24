@@ -8,6 +8,10 @@ import DropdownMenu from './DropdownMenu';
 const NavigationBar = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleCloseMenu = () => {
+    setIsOpen(false);
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white text-gray-800 p-1 flex justify-between items-center z-10">
       <div className="flex items-center">
@@ -21,7 +25,7 @@ const NavigationBar = memo(() => {
         </li>
         <li className="relative">
           <Hamburger toggled={isOpen} toggle={setIsOpen} color="#4B5563" size={24} aria-label="Toggle Menu" />
-          <DropdownMenu isOpen={isOpen} />
+          <DropdownMenu isOpen={isOpen} onClose={handleCloseMenu} />
         </li>
       </ul>
     </nav>

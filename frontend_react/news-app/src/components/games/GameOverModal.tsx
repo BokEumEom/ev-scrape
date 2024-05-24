@@ -24,3 +24,4 @@ const GameOverModal: React.FC<GameOverModalProps> = ({ score, onClose }) => {
 };
 
 export default GameOverModal;
+

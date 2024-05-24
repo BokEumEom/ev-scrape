@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { IoChevronBackOutline, IoPencil, IoSave } from "react-icons/io5";
-import { UserProfile } from '../../types'; // 사용자 프로필 타입을 import합니다.
+import { UserProfile } from '@/types'; // 사용자 프로필 타입을 import합니다.
 
 interface UserProfileFormProps {
   user?: UserProfile; // user가 선택적으로 있을 수 있음을 나타냅니다. 초기 로딩이나 에러 상황을 고려.

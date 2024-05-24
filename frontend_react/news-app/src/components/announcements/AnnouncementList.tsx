@@ -1,7 +1,7 @@
 // src/components/announcements/AnnouncementList.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Announcement } from '../../types'; // Assuming the type is defined
+import { Announcement } from '@/types'; // Assuming the type is defined
 
 interface AnnouncementsListProps {
   announcements: Announcement[];

@@ -1,10 +1,10 @@
 // src/components/maps/KakaoMapComponent.tsx
 import React, { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { kakaoScriptLoadedAtom } from '../../atoms/kakaomap';
-import { MarkerInfo } from '../../types';
-import { useKakaoScript } from '../../hooks/useKakaoScript';
-import { initializeKakaoMap } from '../../utils/kakaoMapUtils';
+import { kakaoScriptLoadedAtom } from '@/atoms/kakaomap';
+import { MarkerInfo } from '@/types';
+import { useKakaoScript } from '@/hooks/useKakaoScript';
+import { initializeKakaoMap } from '@/utils/kakaoMapUtils';
 
 interface KakaoMapProps {
   markers: MarkerInfo[];

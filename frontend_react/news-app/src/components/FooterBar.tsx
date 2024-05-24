@@ -19,7 +19,7 @@ const FooterBar: React.FC = () => {
     if (pathname.includes('news')) return 'news';
     if (pathname.includes('announcements')) return 'announcements';
     if (pathname.includes('bookmarks')) return 'bookmarks';
-    if (pathname.includes('my-page')) return 'my-page';
+    if (pathname.includes('mypage')) return 'my-page';
     return '';
   };
 
@@ -82,7 +82,7 @@ const FooterBar: React.FC = () => {
       <button
         aria-label="Profile"
         className="flex-1"
-        onClick={() => handleIconClick('my-page', '/my-page')}
+        onClick={() => handleIconClick('my-page', '/mypage')}
       >
         <div className="flex flex-col items-center justify-center">
           {activeIcon === 'my-page' ? <IoPersonSharp className="text-indigo-500 text-xl" /> : <IoPersonOutline className="text-gray-800 text-xl" />}
