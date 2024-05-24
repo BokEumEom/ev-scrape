@@ -22,15 +22,15 @@
 .head_area_gnb.active {right:0;}
 [class^="btn_"] {height:50px; line-height:50px; font-size:18px; background:#0099FF; border-radius:18px; padding:0 20px; color:#fff} */
 
-/* nav {display:none !important}
-.fixed.inset-x-0.bottom-0.bg-white.border-t.border-gray-300.py-2.flex.justify-around.items-center.z-10.text-xs {display:none !important} */
-.wrap, .cover_area {/* background:#FF1493; */}
+/*nav {display:none !important}
+.fixed.inset-x-0.bottom-0.bg-white.border-t.border-gray-300.py-2.flex.justify-around.items-center.z-10.text-xs {display:none !important}*/
+/*.wrap, .cover_area {background:#FF1493;}*/
 .wrap * {box-sizing:border-box}
 .wrap {position:relative; width:100%; height:100vh}
 .head_area {position:absolute; top:0;  height:60px; width:100%; z-index:10}
 .cover_area.stage {margin:-60px 0; height:100vh}
 .cover_area {position:absolute; top:60px; overflow:auto; /*background:#FF1493;*/ height:calc(100vh - 120px); width:100%; box-sizing:border-box; padding:20px 10px; z-index:5}
-.foot_area {position:absolute; bottom:0; border-radius:15px 15px 0 0; background:#1E90FF; height:60px; width:100%; z-index:2}
+.foot_area {position:absolute; bottom:0; width:100%; display:flex; border-radius:15px 15px 0 0; background:/*#1E90FF*/#000; height:60px; width:100%; z-index:/*2*/10}
 .modal_area {position:fixed; top:0; left:0; height:100vh; width:100%; z-index:20; display:none}
 .modal_area.active {display:block}
 .modal_area .dim {position:absolute; left:0; top:0; width:100%; height:100%; background:#000; opacity:0.5; z-index:1}
@@ -39,10 +39,13 @@
 .modal_area_container.md {left:calc(50% - 45%); top:calc(50% - 250px); width:90%; height:500px; border-radius:20px}
 .modal_area_container.sm {left:calc(50% - 45%); top:calc(50% - 100px); width:90%; height:200px; border-radius:20px}
 .modal_area_container.full {left:0; top:0; width:100%; height:100vh}
-.head_area_controler {}
+.head_area_controler {background-color:#fff;-webkit-backdrop-filter: blur(15px) contrast(150%) brightness(80%);backdrop-filter: blur(15px) contrast(150%) brightness(80%); opacity:1}
 .head_area_controler .logo {width:100%; line-height:60px; text-align:center}
 .logo img {display:inline-block; width:130px; line-height:60px;}
-.head_area_controler button[data-openGnb] {position:absolute; right:0; top:calc(50% - 30px); width:100px; line-height:60px}
+.head_area_controler [data-srch] {position:absolute; right:56px; top:calc(50% - 20px); height:48px; width:48px; line-height:48px}
+.head_area_controler [data-srch] a {position:relative; display:block; width:100%; height:100%}
+.head_area_controler [data-srch] a svg {position:absolute; left:calc(50% - 12px); top:calc(50% - 12px)}
+.head_area_controler button[data-openGnb] {position:absolute; right:0; top:calc(50% - 20px); width:60px; line-height:60px}
 .head_area_gnb {z-index:15; top:0;  position:fixed; right:-100%; height:100vh; width:100%; background:#fff; transition:right 0.3s ease-in-out;  }
 .head_area_gnb.active {z-index:15; top:0; right:0; background:#fff;  transition:right 0.3s ease-in-out;}
 [class^="btn_"] {height:50px; line-height:50px; font-size:18px; background:#0099FF; border-radius:18px; padding:0 20px; color:#fff; cursor:pointer}
