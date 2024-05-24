@@ -9,20 +9,21 @@ const GamePage: React.FC = () => {
   const [gameActive, setGameActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const startGame = (level: number) => {
+  const startGame = useCallback((mode: 'easy' | 'medium' | 'hard') => {
     setScore(0); // Reset score at the start of each game
     setGameActive(true);
     setShowModal(false);
-  };
+  }, []);
 
   const gameOver = useCallback(() => {
     setGameActive(false);
     setShowModal(true);
   }, []);
 
-  const closeGameOverModal = () => {
+  const closeGameOverModal = useCallback(() => {
     setShowModal(false);
-  };
+    setScore(0); // Reset score when closing the Game Over modal
+  }, []);
 
   return (
     <div className="flex flex-col h-screen p-4 bg-gray-800 text-white">

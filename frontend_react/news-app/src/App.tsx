@@ -2,26 +2,26 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import HomePage from './pages/HomePage';
-import NewsPage from './pages/NewsPage';
-import AnnouncementsPage from './pages/AnnouncementsPage';
-import NotFoundPage from './pages/NotFoundPage';
-import NavigationBar from './components/NavigationBar';
-import FooterBar from './components/FooterBar';
-import SearchPage from './pages/SearchPage';
-import MyPage from './pages/MyPage';
-import BookmarksPage from './pages/BookmarksPage';
-import CommunityPage from './pages/CommunityPage';
-import WriteCommunityPost from './components/community/WriteCommunityPost';
-import UserProfileForm from './components/mypage/UserProfileForm';
-import CommunityPostDetailPage from './pages/CommunityPostDetailPage';
-import AddVehiclePage from './pages/AddVehiclePage';
-import VehicleSpecPage from './pages/VehicleSpecPage';
-import VehicleSpecDetail from './components/vehicle/VehicleSpecDetail';
-import SignUpPage from './components/users/SignUpPage';
-import SignInPage from './components/users/SignInPage';
-import KakaoMapPage from './pages/KakakoMapPage';
-import Game from './pages/GamePage';
+import HomePage from '@/pages/HomePage';
+import NewsPage from '@/pages/NewsPage';
+import AnnouncementsPage from '@/pages/AnnouncementsPage';
+import NotFoundPage from '@/pages/NotFoundPage';
+import NavigationBar from '@/components/NavigationBar';
+import FooterBar from '@/components/FooterBar';
+import SearchPage from '@/pages/SearchPage';
+import MyPage from '@/pages/MyPage';
+import BookmarksPage from '@/pages/BookmarksPage';
+import CommunityPage from '@/pages/CommunityPage';
+import WriteCommunityPost from '@/components/community/WriteCommunityPost';
+import UserProfileForm from '@/components/mypage/UserProfileForm';
+import CommunityPostDetailPage from '@/pages/CommunityPostDetailPage';
+import AddVehiclePage from '@/pages/AddVehiclePage';
+import VehicleSpecPage from '@/pages/VehicleSpecPage';
+import VehicleSpecDetail from '@/components/vehicle/VehicleSpecDetail';
+import SignUpPage from '@/components/users/SignUpPage';
+import SignInPage from '@/components/users/SignInPage';
+import KakaoMapPage from '@/pages/KakakoMapPage';
+import Game from '@/pages/GamePage';
 
 const App: React.FC = () => {
     return (
@@ -61,7 +61,9 @@ const RoutesWrapper = () => {
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/news" element={<NewsPage />} />
                     <Route path="/announcements" element={<AnnouncementsPage />} />
-                    <Route path="/my-page" element={<MyPage />} />
+                    <Route path="/mypage" element={<MyPage />} />
+                    <Route path="/signup" element={<SignUpPage />} />
+                    <Route path="/signin" element={<SignInPage />} />
                     <Route path="/userprofileform" element={<UserProfileForm />} />
                     <Route path="/bookmarks" element={<BookmarksPage />} />
                     <Route path="/community" element={<CommunityPage />} />
@@ -70,9 +72,7 @@ const RoutesWrapper = () => {
                     <Route path="/add-vehicle" element={<AddVehiclePage />} />
                     <Route path="/vehiclespec" element={<VehicleSpecPage />} />
                     <Route path="/vehicle-spec-detail/:id" element={<VehicleSpecDetail />} />
-                    <Route path="/map" element={<KakaoMapPage />} />
-                    <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/signin" element={<SignInPage />} />
+                    <Route path="/map" element={<KakaoMapPage />} />                
                     <Route path="/game" element={<Game />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
@@ -82,6 +82,3 @@ const RoutesWrapper = () => {
 }
 
 export default App;
-
-
-
