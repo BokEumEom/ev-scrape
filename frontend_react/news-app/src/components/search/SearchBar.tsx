@@ -1,7 +1,7 @@
 // src/components/SearchBar.tsx
 import React, { useState, forwardRef } from 'react';
 import { IoSearch } from 'react-icons/io5';
-import { SearchBarProps } from '../../types';
+import { SearchBarProps } from '@/types';
 
 const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
   ({ searchQuery, setSearchQuery }, ref) => {
