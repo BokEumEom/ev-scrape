@@ -18,4 +18,4 @@ aiohttp
 python-jose
 fastapi-login
 pyjwt
-bcrypt
+passlib[bcrypt]
