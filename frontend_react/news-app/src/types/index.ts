@@ -22,11 +22,37 @@ export interface NewsItemVoteProps {
   voteCount: number;
 }
 
+
 export interface UserProfile {
+  avatarUrl: string;
   name: string;
+  joinDate: string;
+  postsCount: number;
+  followersCount: number;
+  followingCount: number;
+}
+
+export interface User {
+  id: number;
+  username: string;
   email: string;
   avatarUrl: string;
-  // Additional fields as necessary
+  joinDate: string;
+  postsCount: number;
+  followersCount: number;
+  followingCount: number;
+}
+
+// SignIn and SignUp
+export interface SignInParams {
+  email: string;
+  password: string;
+}
+
+export interface SignUpParams {
+  email: string;
+  password: string;
+  username: string;
 }
 
 export interface CommunityPost {
@@ -95,14 +121,13 @@ export interface VehicleSpec {
 }
 
 export class ApiError extends Error {
-  statusCode: number;
-  errors?: any;
+  status: number;
+  errors?: string[];
 
-  constructor(statusCode: number, message: string, errors?: any) {
-      super(message);
-      this.statusCode = statusCode;
-      this.errors = errors;
-      Object.setPrototypeOf(this, ApiError.prototype);
+  constructor(status: number, message: string, errors?: string[]) {
+    super(message);
+    this.status = status;
+    this.errors = errors;
   }
 }
 

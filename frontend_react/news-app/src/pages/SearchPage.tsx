@@ -1,17 +1,18 @@
 // src/pages/SearchPage.tsx
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { pageTransitionEffects } from '@/constants/constants';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import LoadMoreButton from '../components/LoadMoreButton';
-import Spinner from '../components/Spinner';
-import NewsList from '../components/news/NewsList';
-import RecentSearches from '../components/search/RecentSearches';
-import SearchBar from '../components/search/SearchBar';
-import { ViewCountProvider } from '../contexts/ViewCountContext';
-import useBookmarks from '../hooks/useBookmarks';
-import useVotes from '../hooks/useVotes';
-import { searchNewsItems } from '../services/apiService';
+import LoadMoreButton from '@/components/LoadMoreButton';
+import Spinner from '@/components/Spinner';
+import NewsList from '@/components/news/NewsList';
+import RecentSearches from '@/components/search/RecentSearches';
+import SearchBar from '@/components/search/SearchBar';
+import { ViewCountProvider } from '@/contexts/ViewCountContext';
+import useBookmarks from '@/hooks/useBookmarks';
+import useVotes from '@/hooks/useVotes';
+import { searchNewsItems } from '@/services/newsService';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -68,20 +69,13 @@ const SearchPage = () => {
     inputRef.current?.focus();
   }, []);
 
-  // Page load transition effect
-  const pageTransition = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 0.5 } },
-    exit: { opacity: 0, transition: { duration: 0.5 } },
-  };
-
   return (
     <ViewCountProvider>
       <motion.div
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={pageTransition}
+        variants={pageTransitionEffects}
         className="flex flex-col py-16"
       >
         <SearchBar searchQuery={query} setSearchQuery={handleSearch} ref={inputRef} />

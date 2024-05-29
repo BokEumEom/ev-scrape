@@ -1,11 +1,13 @@
 // src/utils/handleApiError.ts
-import { ApiError } from '../types';
-
-export const handleApiError = (error: ApiError) => {
-    console.error(`Error ${error.statusCode}: ${error.message}`);
-    if (error.errors) {
-        error.errors.forEach(err => {
-            console.error(`Field: ${err.field}, Message: ${err.message}`);
-        });
-    }
+export const handleApiError = (error: any) => {
+  if (error.response) {
+    // Server responded with a status other than 200 range
+    console.error('API error response:', error.response.data);
+  } else if (error.request) {
+    // Request was made but no response received
+    console.error('API error request:', error.request);
+  } else {
+    // Something else happened while setting up the request
+    console.error('API error message:', error.message);
+  }
 };
