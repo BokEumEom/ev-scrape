@@ -18,7 +18,7 @@ const KakaoMapPage: React.FC = () => {
     handleCloseFilters
   } = useKakaoMarkers();
 
-  // Use the custom hook to hide the navigation bar and footer
+  // 커스텀 훅을 사용하여 네비게이션 바와 푸터를 숨김
   useUIVisibility('.navigation-bar, .footer-bar', false);
 
   return (
@@ -27,7 +27,7 @@ const KakaoMapPage: React.FC = () => {
       <div className="absolute inset-0">
         <KakaoMapComponent markers={markers} />
       </div>
-      <ChargingStationList markers={markers} open={showList} onClose={handleCloseList} />
+      <ChargingStationList markers={markers} isOpen={showList} onClose={handleCloseList} />
       <FilterBottomSheet isOpen={showFilters} onClose={handleCloseFilters} />
     </div>
   );

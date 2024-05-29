@@ -1,13 +1,13 @@
 # app/api/v1/endpoints/community.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import RequestValidationError
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, AsyncGenerator
-from app import crud, schemas
+from app import schemas
+from app.crud import community as crud
 from app.config import get_logger
 from app.database import SessionLocal
+from app.core.security import get_current_user
 
 logger = get_logger()
 
@@ -26,6 +26,12 @@ async def read_community_posts(skip: int = 0, limit: int = 10, db: AsyncSession 
     posts_with_counts, total_count = await crud.get_community_posts_with_count(db, skip=skip, limit=limit)
     return {'items': posts_with_counts, 'total': total_count}
 
+@router.get("/user/posts", response_model=List[schemas.CommunityPost])
+async def read_user_posts(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+    user_id = current_user.id
+    posts = await crud.get_user_posts(db, user_id=user_id, skip=skip, limit=limit)
+    return posts
+
 @router.get("/{post_id}", response_model=schemas.CommunityPost)
 async def read_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
     post = await crud.get_community_post(db, post_id)
@@ -42,8 +48,12 @@ async def read_community_post(post_id: int, db: AsyncSession = Depends(get_db)):
     return schemas.CommunityPost.parse_obj(post_data)
 
 @router.post("", response_model=schemas.CommunityPost)
-async def create_community_post(post: schemas.CommunityPostCreate, db: AsyncSession = Depends(get_db)):
-    created_post = await crud.create_community_post(db, post)
+async def create_community_post(
+    post: schemas.CommunityPostCreate, 
+    db: AsyncSession = Depends(get_db), 
+    current_user: schemas.User = Depends(get_current_user)
+):
+    created_post = await crud.create_community_post(db, post, user_id=current_user.id)
     return created_post
 
 @router.put("/{post_id}", response_model=schemas.CommunityPost)

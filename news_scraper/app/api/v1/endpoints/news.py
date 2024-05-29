@@ -3,7 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List, AsyncGenerator
-from .... import crud, schemas, models
+from app import schemas, models
+from app.crud import news as crud
 from app.database import SessionLocal
 
 router = APIRouter()

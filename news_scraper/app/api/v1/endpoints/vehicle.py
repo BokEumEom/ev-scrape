@@ -3,7 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.vehicle_scrapers.tesla_scraper import scrape_tesla_specs
 from typing import List, AsyncGenerator
-from app import crud, schemas
+from app import schemas
+from app.crud import vehicle as crud
 from app.config import get_logger
 from app.database import SessionLocal
 
@@ -54,6 +55,6 @@ async def read_vehicle_spec_by_model(model_name: str, db: AsyncSession = Depends
         raise HTTPException(status_code=404, detail="Vehicle specification not found")
     return vehicle
 
-@router.get("/", response_model=List[schemas.VehicleSpec])
+@router.get("", response_model=List[schemas.VehicleSpec])
 async def read_all_vehicle_specs(db: AsyncSession = Depends(get_db)):
     return await crud.get_vehicle_specs(db=db)

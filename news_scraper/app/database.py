@@ -8,6 +8,6 @@ engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}, echo=True
 )
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
+SessionLocal = sessionmaker(expire_on_commit=False, autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 
 Base = declarative_base()

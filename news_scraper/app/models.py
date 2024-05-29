@@ -2,9 +2,10 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from .database import Base
+from app.database import Base
 import datetime
 import pytz
+from app.core.security import hash_password, verify_password
 
 # Get the KST timezone
 kst = pytz.timezone('Asia/Seoul')
@@ -46,8 +47,10 @@ class CommunityPost(Base):
     created_at = Column(DateTime, default=get_kst_now)
     updated_at = Column(DateTime, default=get_kst_now, onupdate=get_kst_now)
     likeCount = Column(Integer, default=0)
+    user_id = Column(Integer, ForeignKey('users.id'))  # 외래 키 추가
 
     # Relationships correctly defined once
+    user = relationship("User")
     likes = relationship("CommunityPostLike", back_populates="post", cascade="all, delete-orphan")
     comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan", order_by="Comment.created_at")
     
@@ -92,3 +95,21 @@ class VehicleSpec(Base):
     height_mm = Column(Integer)  # 전고
     length_mm = Column(Integer)  # 전장
     created_at = Column(DateTime, default=func.now())  # 생성 일자
+    
+# Users
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+
+    def verify_password(self, password: str) -> bool:
+        return verify_password(password, self.hashed_password)
+
+    def set_password(self, password: str):
+        self.hashed_password = hash_password(password)
+        
+    # Relationship to CommunityPost
+    posts = relationship("CommunityPost", back_populates="user")

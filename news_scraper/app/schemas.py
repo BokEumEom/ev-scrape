@@ -21,7 +21,7 @@ class News(NewsBase):
     voteCount: Optional[int] = None  # Assuming this is dynamically calculated
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class NewsResponse(GenericModel, Generic[DataT]):
     items: List[DataT]
@@ -32,15 +32,16 @@ class VoteCreate(BaseModel):
     vote_value: int  # Can be 1 for upvote and -1 for downvote
 
     class Config:
-        orm_mode = True  # To allow ORM models to be used with these schemas
+        from_attributes = True  # To allow ORM models to be used with these schemas
         
 # Community
 class CommunityPostBase(BaseModel):
     title: str
     content: str
 
-class CommunityPostCreate(CommunityPostBase):
-    pass
+class CommunityPostCreate(BaseModel):
+    title: str
+    content: str
 
 class CommunityPost(BaseModel):
     id: int
@@ -52,7 +53,7 @@ class CommunityPost(BaseModel):
     commentCount: int = 0
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CommunityPostsResponse(BaseModel):
     items: List[CommunityPost]
@@ -66,7 +67,7 @@ class CommunityPostUpdate(BaseModel):
     # Optional: 다른 필드가 필요하다면 여기에 추가하세요.
 
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 class CommentBase(BaseModel):
     content: str
@@ -81,7 +82,7 @@ class Comment(CommentBase):
     updated_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 # Vehicle
 class VehicleSpecBase(BaseModel):
@@ -105,11 +106,25 @@ class VehicleSpecCreate(VehicleSpecBase):
     length_mm: Optional[PositiveInt] = Field(None, description="Length of the vehicle in millimeters", example=4970)
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # This model is for responses and includes the 'id'
 class VehicleSpec(VehicleSpecCreate):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+# Users
+class UserBase(BaseModel):
+    username: str
+    email: str
+
+class UserCreate(UserBase):
+    password: str
+
+class User(UserBase):
+    id: int
+
+    class Config:
+        from_attributes = True

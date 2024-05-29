@@ -1,6 +1,6 @@
 // src/hooks/useCreateCommunityPost.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createCommunityPost } from '../services/apiService';
+import { createCommunityPost } from '@/services/communityService';
 
 export const useCreateCommunityPost = () => {
   const queryClient = useQueryClient();

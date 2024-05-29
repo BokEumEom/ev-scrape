@@ -3,6 +3,8 @@ from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from typing import List
+from sqlalchemy.orm import joinedload
 from sqlalchemy import select, func
 from app import models, schemas
 from datetime import datetime
@@ -157,10 +159,9 @@ async def get_community_posts_with_count(db: AsyncSession, skip: int = 0, limit:
 
     return formatted_posts, total_count
 
-async def create_community_post(db: AsyncSession, post_data: schemas.CommunityPostCreate):
+async def create_community_post(db: AsyncSession, post_data: schemas.CommunityPostCreate, user_id: int):
     try:
-        # Here, ensure that db.commit() is called after db.add() without prematurely closing the transaction
-        new_post = models.CommunityPost(**post_data.model_dump())
+        new_post = models.CommunityPost(**post_data.dict(), user_id=user_id)
         db.add(new_post)
         await db.commit()
         await db.refresh(new_post)
@@ -352,3 +353,38 @@ async def delete_vehicle_spec(db: AsyncSession, vehicle_id: int):
         await db.commit()
         return vehicle
     return None
+
+# Users
+async def get_user(db: AsyncSession, user_id: int):
+    result = await db.execute(select(models.User).where(models.User.id == user_id))
+    return result.scalars().first()
+
+async def get_user_by_email(db: AsyncSession, email: str):
+    result = await db.execute(select(models.User).where(models.User.email == email))
+    return result.scalars().first()
+
+async def create_user(db: AsyncSession, user: schemas.UserCreate):
+    db_user = models.User(
+        username=user.username,
+        email=user.email,
+    )
+    db_user.set_password(user.password)
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
+    return db_user
+
+async def get_users(db: AsyncSession, skip: int = 0, limit: int = 10):
+    result = await db.execute(select(models.User).offset(skip).limit(limit))
+    return result.scalars().all()
+
+async def get_user_posts(db: AsyncSession, user_id: int, skip: int = 0, limit: int = 10) -> List[schemas.CommunityPost]:
+    result = await db.execute(
+        select(models.CommunityPost)
+        .where(models.CommunityPost.user_id == user_id)
+        .order_by(models.CommunityPost.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .options(joinedload(models.CommunityPost.user))
+    )
+    return result.scalars().all()

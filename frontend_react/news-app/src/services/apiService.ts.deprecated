@@ -1,0 +1,346 @@
+import axios from 'axios';
+import { 
+  NewsItem, 
+  CommunityPost, 
+  CommunityPostCreate, 
+  CommunityPostsResponse,
+  VehicleSpec,
+  ApiError,
+  VehicleDetails
+} from '@/types';
+
+export const PAGE_SIZE = 10;
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+let accessToken: string | null = null;
+
+const handleApiError = (error: any) => {
+  console.error('API error:', error.response?.data || error.message);
+  throw error;
+};
+
+export const fetchNewsItems = async (page = 1, limit = 10) => {
+  page = Math.max(Number(page), 1);
+  limit = Math.max(Number(limit), 1);
+  const skip = (page - 1) * limit;
+  const url = `${API_BASE_URL}/api/v1/news?skip=${skip}&limit=${limit}`;
+
+  try {
+    const { data } = await axios.get(url);
+    console.log(url);
+    console.log(data);
+    return data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const fetchAnnouncements = async (endpoint: string) => {
+  const url = `${API_BASE_URL}/api/v1/announcements/${endpoint}`;
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const searchNewsItems = async (query: string, page: number): Promise<NewsItem[]> => {
+  const effectiveQuery = query || "default_search_query";
+  const limit = 10;
+  const skip = (page - 1) * limit;
+  const url = `${API_BASE_URL}/api/v1/news/search?query=${encodeURIComponent(effectiveQuery)}&skip=${skip}&limit=${limit}`;
+  console.log("Requesting URL:", url);
+
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const fetchCommunityPosts = async (page: number): Promise<CommunityPostsResponse> => {
+  const skip = (page - 1) * PAGE_SIZE;
+  const url = `${API_BASE_URL}/api/v1/community?skip=${skip}&limit=${PAGE_SIZE}`;
+  console.log("Requesting URL:", url);
+  try {
+    const response = await axios.get<{items: CommunityPost[], total: number}>(url);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const createCommunityPost = async (post: CommunityPostCreate): Promise<void> => {
+  const url = `${API_BASE_URL}/api/v1/community`;
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    throw new Error('No access token available');
+  }
+
+  try {
+    await axios.post(url, post, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    console.log("Requesting URL:", url);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const fetchCommunityPostDetails = async (postId: number) => {
+  const url = `${API_BASE_URL}/api/v1/community/${postId}`;
+  try {
+    const response = await axios.get(url);
+    console.log("Requesting URL:", url);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const updateCommunityPost = async ({ postId, postData }: { postId: number; postData: Partial<CommunityPost> }) => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    throw new Error('No access token available');
+  }
+
+  if (typeof postId !== 'number' || isNaN(postId)) {
+    console.error('Invalid postId:', postId);
+    throw new Error('Invalid post ID: must be a valid number.');
+  }
+  if (!postData || typeof postData !== 'object' || Object.keys(postData).length === 0) {
+    console.error('Invalid postData:', postData);
+    throw new Error('Invalid post data: must be a non-empty object.');
+  }
+
+  try {
+    console.log('Updating post with ID:', postId);
+    console.log('Post Data:', postData);
+    const url = `${API_BASE_URL}/api/v1/community/${postId}`;
+    console.log('Making PUT request to:', url);
+    const response = await axios.put(url, postData, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const likeCommunityPost = async (postId: number) => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    throw new Error('No access token available');
+  }
+
+  try {
+    console.log('Liking post with ID:', postId);
+    const url = `${API_BASE_URL}/api/v1/community/${postId}/like`;
+    const response = await axios.post(url, {}, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const fetchCommentsByPostId = async (postId: number) => {
+  const url = `${API_BASE_URL}/api/v1/community/${postId}/comments`;
+  try {
+    const response = await axios.get(url);
+    console.log("Requesting URL:", url);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const createComment = async (postId: number, content: string) => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    throw new Error('No access token available');
+  }
+
+  const url = `${API_BASE_URL}/api/v1/community/${postId}/comments`;
+  try {
+    const response = await axios.post(url, { content }, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    console.log("Requesting URL:", url);
+    console.log("Post ID:", postId, "Content:", content);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const submitVote = async (newsId: number, voteValue: number): Promise<NewsItem> => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    throw new Error('No access token available');
+  }
+
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/v1/news/${newsId}/vote`, {
+      vote_value: voteValue,
+    }, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const createVehicleSpec = async (vehicleSpec: VehicleSpec): Promise<VehicleSpec> => {
+  const url = `${API_BASE_URL}/api/v1/vehicles`;
+  try {
+    const response = await axios.post<VehicleSpec>(url, vehicleSpec);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Failed to create vehicle specification:', error.response?.data || error.message);
+      throw new ApiError(
+        error.response?.status || 500,
+        error.response?.data.message || 'Unexpected error occurred',
+        error.response?.data.errors
+      );
+    } else {
+      console.error('An unexpected error occurred:', error);
+      throw new ApiError(500, 'Internal Server Error');
+    }
+  }
+};
+
+export const fetchVehicleSpecifications = async (): Promise<VehicleDetails[]> => {
+  try {
+    const response = await axios.get<VehicleDetails[]>(`${API_BASE_URL}/api/v1/vehicles/`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Failed to fetch vehicle specifications:', error.response?.data || error.message);
+      throw new Error(error.response?.data.message || 'Failed to fetch data');
+    } else {
+      console.error('An unexpected error occurred:', error);
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getGitHubLoginUrl = (): string => {
+  return `${API_BASE_URL}/api/v1/users/auth/github`;
+};
+
+export const handleGitHubCallback = async (code: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/v1/users/auth/github/callback?code=${code}`);
+  if (!response.ok) {
+    throw new Error('GitHub authentication failed');
+  }
+  return await response.json();
+};
+
+export const signUpUser = async (email: string, password: string, username: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/v1/users/signup`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password, username }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Failed to sign up');
+  }
+  return await response.json();
+};
+
+export const signInUser = async (email: string, password: string) => {
+  const formData = new URLSearchParams();
+  formData.append('username', email);
+  formData.append('password', password);
+
+  const response = await fetch(`${API_BASE_URL}/api/v1/users/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: formData.toString(),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Failed to sign in');
+  }
+
+  const data = await response.json();
+  localStorage.setItem('accessToken', data.access_token); // Store the access token in localStorage
+  return data;
+};
+
+export const signOutUser = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/v1/users/logout`, {
+    method: 'POST',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to sign out');
+  }
+  localStorage.removeItem('accessToken'); // Remove the access token from localStorage
+  return await response.json();
+};
+
+export const getUserProfile = async () => {
+  const accessToken = localStorage.getItem('accessToken'); // Retrieve the access token from localStorage
+  if (!accessToken) {
+    throw new Error('No access token available');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/v1/users/profile`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`, // Include the access token in the Authorization header
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch user profile');
+  }
+  return await response.json();
+};
+
+export const fetchUserPosts = async (page = 1): Promise<CommunityPostsResponse> => {
+  const skip = (page - 1) * PAGE_SIZE;
+  const url = `${API_BASE_URL}/api/v1/community/user/posts?skip=${skip}&limit=${PAGE_SIZE}`;
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    throw new Error('No access token available');
+  }
+
+  try {
+    const response = await axios.get<{items: CommunityPost[], total: number}>(url, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};

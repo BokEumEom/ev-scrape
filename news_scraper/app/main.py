@@ -1,7 +1,7 @@
 # app/main.py
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException, Query, Path, Body, Request
-from app.api.v1.endpoints import news, community, vehicle
+from app.api.v1.endpoints import news, community, vehicle, users
 from contextlib import asynccontextmanager
 import asyncio
 from fastapi.responses import JSONResponse
@@ -13,7 +13,6 @@ from .rss_scheduler import start_rss_feed_scheduler
 from .config import get_logger
 from fastapi.middleware.cors import CORSMiddleware
 from .announce_models import Announcement
-
 from .scrapers.seoul_scraper import SeoulScraper
 from .scrapers.incheon_scraper import IncheonScraper
 from .scrapers.gyeonggi_scraper import GyeonggiScraper
@@ -70,6 +69,7 @@ app = FastAPI(lifespan=app_lifespan)
 app.include_router(news.router, prefix="/api/v1/news", tags=["News"])
 app.include_router(community.router, prefix="/api/v1/community", tags=["Community"])
 app.include_router(vehicle.router, prefix="/api/v1/vehicles", tags=["Vehicles"])
+app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 
 # Add CORS middleware to allow requests from any origin
 app.add_middleware(
@@ -130,3 +130,7 @@ async def general_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={"success": False, "message": "An unexpected error occurred"}
     )
+    
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

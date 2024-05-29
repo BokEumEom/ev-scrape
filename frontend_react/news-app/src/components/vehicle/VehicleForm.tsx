@@ -5,9 +5,9 @@ import SelectField from './SelectField';
 import FormContainer from './FormContainer';
 import FormHeader from './FormHeader';
 import SubmitButton from './SubmitButton';
-import ErrorDisplay from '../ErrorDisplay';
+import ErrorDisplay from '@/components/ErrorDisplay';
 import FormSection from './FormSection';
-import useVehicleForm from '../../hooks/useVehicleForm';
+import useVehicleForm from '@/hooks/useVehicleForm';
 
 const VehicleForm: React.FC = () => {
     const initialFormData: VehicleSpec = {

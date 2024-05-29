@@ -3,10 +3,13 @@ import { useCallback } from 'react';
 import { useAtom } from 'jotai';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchCommunityPostDetails, updateCommunityPost } from '../services/apiService';
-import { isEditingAtom } from '../atoms/postAtoms';
+import { fetchCommunityPostDetails, updateCommunityPost } from '@/services/communityService';
+import { isEditingAtom } from '@/atoms/postAtoms';
 import { toast } from 'react-toastify';
-import { CommunityPost } from '../types';
+import { CommunityPost } from '@/types';
+
+// 쿼리 키 상수 정의
+const COMMUNITY_POST_QUERY_KEY = (postId: number) => ['communityPost', postId] as const;
 
 const usePostDetails = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -15,44 +18,47 @@ const usePostDetails = () => {
 
   const [isEditing, setIsEditing] = useAtom(isEditingAtom);
 
-  // useCallback으로 setIsEditing 래핑
+  // 편집 모드 토글 핸들러를 useCallback으로 래핑
   const toggleIsEditing = useCallback(() => {
-    setIsEditing(!isEditing);
-  }, [isEditing, setIsEditing]);
+    setIsEditing((prev) => !prev);
+  }, [setIsEditing]);
 
-  // Fetch post details and initialize like state when post data is available
+  // 게시글 상세 정보를 가져오는 쿼리
   const { data: post, isLoading, isError, error } = useQuery<CommunityPost>({
-    queryKey: ['communityPost', numericPostId],
+    queryKey: COMMUNITY_POST_QUERY_KEY(numericPostId),
     queryFn: () => fetchCommunityPostDetails(numericPostId),
     enabled: !!numericPostId
   });
 
-  // Define mutation for updating a post
+  // 게시글 업데이트를 위한 뮤테이션 정의
   const updateMutation = useMutation({
     mutationFn: (updatedPostData: Partial<CommunityPost>) => {
-      if (!numericPostId) {
-        console.error('Invalid postId:', numericPostId);
-        return Promise.reject(new Error('Invalid post ID'));
-      }
-      return updateCommunityPost({ postId: numericPostId, postData: updatedPostData });
+      return updateCommunityPost(numericPostId, updatedPostData);
     },
     onMutate: async (updatedPostData) => {
-      await queryClient.cancelQueries(['communityPost', numericPostId]);
-      const previousPostData = queryClient.getQueryData(['communityPost', numericPostId]);
+      await queryClient.cancelQueries(COMMUNITY_POST_QUERY_KEY(numericPostId)); // 기존 쿼리 취소
+      const previousPostData = queryClient.getQueryData<CommunityPost>(COMMUNITY_POST_QUERY_KEY(numericPostId));
 
-      queryClient.setQueryData(['communityPost', numericPostId], (oldPostData) => ({
-        ...oldPostData,
-        ...updatedPostData,
-      }));
+      // 낙관적 업데이트: 새로운 게시글 데이터를 기존 데이터에 병합
+      if (previousPostData) {
+        queryClient.setQueryData(COMMUNITY_POST_QUERY_KEY(numericPostId), {
+          ...previousPostData,
+          ...updatedPostData,
+        });
+      }
 
       return { previousPostData };
     },
     onError: (error, variables, context) => {
-      queryClient.setQueryData(['communityPost', numericPostId], context.previousPostData);
-      toast.error('Failed to update the post. Please try again later.');
+      // 에러 발생 시 이전 게시글 데이터로 복원
+      if (context?.previousPostData) {
+        queryClient.setQueryData(COMMUNITY_POST_QUERY_KEY(numericPostId), context.previousPostData);
+      }
+      toast.error('Failed to update the post. Please try again later.'); // 에러 메시지 표시
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['communityPost', numericPostId]);
+      // 성공 또는 실패 시 쿼리 무효화
+      queryClient.invalidateQueries(COMMUNITY_POST_QUERY_KEY(numericPostId));
       setIsEditing(false); // 편집 모드 종료
     },
   });

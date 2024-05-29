@@ -1,7 +1,12 @@
 // src/components/users/SignInPage.tsx
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { signInUser, getGitHubLoginUrl } from '@/services/userService';
+import InputField from './InputField';
+import Button from './Button';
+import OAuthButton from './OAuthButton';
 
 interface SignInFormData {
   email: string;
@@ -9,56 +14,87 @@ interface SignInFormData {
 }
 
 const SignInPage: React.FC = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<SignInFormData>();
+  const { register, handleSubmit, formState: { errors } } = useForm<SignInFormData>();
+  const navigate = useNavigate();
 
-    const onSubmit = (data: SignInFormData) => {
-      console.log('Form Data Submitted:', data);
-      // Add logic here for authentication
-    };
+  const mutation = useMutation({
+    mutationFn: signInUser,
+    onSuccess: () => {
+      navigate('/mypage');
+    },
+    onError: (error: any) => {
+      setSignInError(error.message || 'Failed to sign in. Please try again.');
+    }
+  });
 
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="bg-white p-4 sm:p-6 lg:p-8 max-w-md w-full space-y-8">
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">Sign In</h2>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="sr-only">Email address</label>
-              <input
-                {...register("email", { required: true })}
-                type="text"
-                placeholder="Email or phone number"
-                className="w-full border px-3 py-3 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-base"
-                autoComplete="email"
-              />
-              {errors.email && <span className="text-red-500 text-xs">Email is required</span>}
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input
-                {...register("password", { required: true })}
-                type="password"
-                placeholder="Password"
-                className="w-full border px-3 py-3 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-base"
-                autoComplete="current-password"
-              />
-              {errors.password && <span className="text-red-500 text-xs">Password is required</span>}
-            </div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Sign In
-            </button>
-            <p className="mt-2 text-center text-sm text-gray-600">
-              New to EV Trends?{' '}
-              <NavLink to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
-                Sign up now
-              </NavLink>
-            </p>
-          </form>
-        </div>
-      </div>
-    );
+  const [signInError, setSignInError] = React.useState<string | null>(null);
+
+  const onSubmit = (data: SignInFormData) => {
+    mutation.mutate({ email: data.email, password: data.password });
   };
+
+  const handleGitHubLogin = () => {
+    window.location.href = getGitHubLoginUrl();
+  };
+
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gray-100">
+      <div className="bg-white p-6 sm:p-8 lg:p-10 max-w-md w-full space-y-8 rounded-lg shadow-lg">
+        <h2 className="text-center text-3xl font-extrabold text-gray-900">Sign In</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" aria-label="Sign in form">
+          <InputField
+            label="Email address"
+            type="email"
+            id="email"
+            placeholder="Email"
+            register={register("email", { 
+              required: "Email is required", 
+              pattern: { value: /^\S+@\S+$/i, message: "Invalid email address" } 
+            })}
+            error={errors.email?.message}
+            autoComplete="email"
+          />
+          <InputField
+            label="Password"
+            type="password"
+            id="password"
+            placeholder="Password"
+            register={register("password", { required: "Password is required" })}
+            error={errors.password?.message}
+            autoComplete="current-password"
+          />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                type="checkbox"
+                {...register("rememberMe")}
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                Remember me
+              </label>
+            </div>
+            <div className="text-sm">
+              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+          {signInError && <div className="text-red-500 text-xs">{signInError}</div>}
+          <Button isLoading={mutation.isLoading} text="Sign In" />
+          <div className="flex space-x-3">
+            <OAuthButton onClick={handleGitHubLogin} text="Sign In with GitHub" />
+            <OAuthButton onClick={handleSignUp} text="Sign Up Now" />
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default SignInPage;

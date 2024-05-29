@@ -10,9 +10,11 @@ interface CommentsSectionProps {
 }
 
 const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
+  // 댓글 데이터를 가져오는 커스텀 훅 사용
   const { data: comments, isLoading, error } = useComments(postId);
   const createCommentMutation = useCreateComment(postId);
 
+  // 댓글 추가 핸들러
   const handleAddComment = (content: string) => {
     createCommentMutation.mutate(
       { content },
@@ -25,28 +27,30 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
 
   return (
     <>
-      {/* Comment List */}
-      <div className="space-y-2 mb-16 overflow-auto">
+      {/* 댓글 목록 */}
+      <div className="comments-section space-y-2 mb-16 overflow-auto">
         {isLoading && <div className="text-center py-4">Loading comments...</div>}
         {error && <div className="text-center text-red-500 py-4">Error loading comments: {error.message}</div>}
         {!isLoading && !error && comments && comments.length > 0 ? (
           comments.map(comment => (
-            <div key={comment.id} className="bg-gray-100 p-3 text-sm rounded-lg">
-              <p className="text-xs text-gray-500">
+            <div key={comment.id} className="comment bg-gray-100 p-3 text-sm rounded-lg">
+              <p className="comment-date text-xs text-gray-500">
                 {comment.created_at && formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: ko })}
               </p>
-              <p>{comment.content}</p>
+              <p className="comment-content">{comment.content}</p>
             </div>
           ))
         ) : (
-          <div className="text-gray-600 text-sm text-center py-4">No comments yet.</div>
+          !isLoading && !error && (
+            <div className="no-comments text-gray-600 text-sm text-center py-4">No comments yet.</div>
+          )
         )}
       </div>
 
-      {/* Fixed Comment Input */}
+      {/* 댓글 입력 폼 */}
       <CommentForm 
         onSubmit={handleAddComment} 
-        className="fixed inset-x-0 bottom-0 p-3 bg-white z-50"
+        className="comment-form fixed inset-x-0 bottom-0 p-3 bg-white z-50"
       />
     </>
   );

@@ -15,3 +15,7 @@ pydantic-settings
 gunicorn
 pytz
 aiohttp
+python-jose
+fastapi-login
+pyjwt
+bcrypt

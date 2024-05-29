@@ -1,6 +1,6 @@
 // src/pages/AddVehiclePage.tsx
 import React from 'react';
-import VehicleForm from '../components/vehicle/VehicleForm';
+import VehicleForm from '@/components/vehicle/VehicleForm';
 
 const AddVehiclePage: React.FC = () => {
     return (

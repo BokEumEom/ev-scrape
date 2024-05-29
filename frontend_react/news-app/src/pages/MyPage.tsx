@@ -1,13 +1,12 @@
-// In src/pages/MyPage.tsx
-import React, { useState } from 'react';
+// src/pages/MyPage.tsx
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Spinner from '../components/Spinner';
-import UserProfile from '../components/mypage/UserProfile';
-import UserStats from '../components/mypage/UserStats';
-import TabNavigation from '../components/mypage/TabNavigation';
-import TabContent from '../components/mypage/TabContent';
-import useUserProfile from '../hooks/useUserProfile';
-import { motion } from 'framer-motion';
+import TabNavigation from '@/components/mypage/TabNavigation';
+import TabContent from '@/components/mypage/TabContent';
+import UserProfileSection from '@/components/mypage/UserProfileSection';
+import UserActions from '@/components/mypage/UserActions';
+import UserProfileSkeleton from '@/components/mypage/UserProfileSkeleton';
+import { useUserProfileQuery, useHandleSignOut } from '@/hooks/useUserProfileQuery';
 
 const tabs = [
   { name: '작성한 글', key: 'posts', content: <div>Posts content...</div> },
@@ -18,71 +17,89 @@ const tabs = [
 const MyPage: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(tabs[0].key);
+  const { data: user, isLoading, error } = useUserProfileQuery();
+  const handleSignOut = useHandleSignOut();
 
-  // Fetch user profile with React Query (updated to match v5 requirements)
-  const { user, isLoading, error, handleSignOut } = useUserProfile();
+  // 에러 발생 시 인증 상태를 체크
+  useEffect(() => {
+    if (error) {
+      if (error?.response?.status === 401 || error?.message === 'No access token available') {
+        localStorage.removeItem('accessToken'); // Clear any invalid token
+        navigate('/signin');
+      }
+    }
+  }, [error, navigate]);
 
+  // 글쓰기 페이지로 이동
   const handleWritePost = () => navigate('/community/write');
+  // 프로필 수정 페이지로 이동
+  const handleProfileButtonClick = () => navigate('/userprofileform');
 
-  const handleProfileButtonClick = () => {
-    navigate('/userprofileform'); // ProfileForm으로 라우팅
-  };
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-0 bg-gray-100">
+        <UserProfileSkeleton />
+      </div>
+    );
+  }
 
-  if (isLoading) return <Spinner />;
-  if (error instanceof Error) return <div>Error: {error.message}</div>;
-
-  // Page load transition effect
-  const pageTransition = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 0.5 } },
-    exit: { opacity: 0, transition: { duration: 0.5 } },
-  };
+  if (error) {
+    return (
+      <div className="text-center p-2 py-16 mt-auto">
+        <p className="text-gray-500 text-sm font-medium mb-6">Error: {error.message}</p>
+        <button
+          onClick={() => navigate('/signin')}
+          className="text-gray-800 bg-gray-200 hover:bg-red-700 font-semibold rounded-lg text-xs w-full py-2.5 text-center"
+        >
+          로그인 페이지로 이동
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <motion.div
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageTransition}
-        className="flex flex-col min-h-screen pt-16 pb-20"
-      >
     <div className="container mx-auto px-0 bg-gray-100">
-      <UserProfile
+      {user ? (
+        <>
+          <UserProfileSection
             user={{
               avatarUrl: user.avatarUrl,
               name: user.name,
               joinDate: user.joinDate,
+              postsCount: user.postsCount,
+              followersCount: user.followersCount,
+              followingCount: user.followingCount,
             }}
             onProfileButtonClick={handleProfileButtonClick}
             onWritePostClick={handleWritePost}
           />
-      <UserStats
-        postsCount={user.postsCount}
-        followersCount={user.followersCount}
-        followingCount={user.followingCount}
-      />
-      <div className="bg-white mb-0 flex flex-col justify-between h-full">
-        <div className="border-b border-gray-200 mb-12">
-        <TabNavigation
-          tabs={tabs}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-      </div>
-      <TabContent activeTab={activeTab} tabs={tabs} />
-
+          <div className="bg-white mb-0 flex flex-col justify-between h-full">
+            <div className="border-b border-gray-200 mb-12">
+              <TabNavigation tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+            </div>
+            <TabContent activeTab={activeTab} tabs={tabs} />
+            <UserActions
+              onWritePostClick={handleWritePost}
+              onSignOutClick={() => {
+                handleSignOut();
+                navigate('/signin');
+              }}
+              isLoading={isLoading}
+            />
+          </div>
+        </>
+      ) : (
         <div className="text-center p-2 py-16 mt-auto">
-          <span className="text-gray-500 text-sm font-medium block mb-6">전기차 오너 이야기를 이곳에서 들려주세요.</span>
+          <p className="text-gray-500 text-sm font-medium mb-6">로그인이 필요합니다.</p>
           <button
-            onClick={handleWritePost} // Update this onClick event to handle the actual action you want
+            onClick={() => navigate('/signin')}
             className="text-gray-800 bg-gray-200 hover:bg-red-700 font-semibold rounded-lg text-xs w-full py-2.5 text-center"
           >
-            커뮤니티 글쓰기
+            로그인 페이지로 이동
           </button>
         </div>
-      </div>
+      )}
     </div>
-    </motion.div>
   );
 };
 

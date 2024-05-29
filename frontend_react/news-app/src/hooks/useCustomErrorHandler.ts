@@ -1,6 +1,6 @@
 // src/hooks/useCustomErrorHandler.ts
 import { toast } from 'react-toastify';
-import { ApiError } from '../types';
+import { ApiError } from '@/types';
 
 const useCustomErrorHandler = () => {
     const handleError = (error: ApiError) => {
