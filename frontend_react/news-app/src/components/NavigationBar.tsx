@@ -1,5 +1,5 @@
 // src/components/NavigationBar.tsx
-import React, { useState, memo, useCallback } from 'react';
+import React, { useState, memo, useCallback, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { IoSearch } from 'react-icons/io5';
 import { Divide as Hamburger } from 'hamburger-react';
@@ -11,11 +11,25 @@ const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
 
 const NavigationBar: React.FC = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLLIElement>(null);
 
   // 메뉴를 닫는 함수
   const handleCloseMenu = useCallback(() => {
     setIsOpen(false);
   }, []);
+
+  // 외부 클릭으로 메뉴를 닫는 효과
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        handleCloseMenu();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [handleCloseMenu]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white text-gray-800 p-1 flex justify-between items-center z-10">
@@ -28,7 +42,7 @@ const NavigationBar: React.FC = memo(() => {
             <IoSearch className="text-gray-700 text-2xl" aria-label="Search" />
           </NavLink>
         </li>
-        <li className="relative">
+        <li className="relative" ref={menuRef}>
           <Hamburger
             toggled={isOpen}
             toggle={setIsOpen}
@@ -44,4 +58,3 @@ const NavigationBar: React.FC = memo(() => {
 });
 
 export default NavigationBar;
-
