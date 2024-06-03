@@ -51,7 +51,7 @@ const FooterBar: React.FC = () => {
   }, [navigate]);
 
   return (
-    <div className="fixed inset-x-0 bottom-0 bg-white border-t border-gray-300 py-2 flex justify-around items-center z-10 text-xs">
+    <div className="fixed inset-x-0 bottom-0 bg-white border-t border-gray-300 py-2 flex justify-around items-center z-10 text-xs h-[56px]"> {/* [J] 0604  h-[56px] 추가 */}
       {Object.entries(ICONS).map(([key, { active, inactive, label }]) => (
         <button
           key={key}

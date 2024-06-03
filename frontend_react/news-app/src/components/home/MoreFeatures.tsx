@@ -3,13 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   IoRocketSharp, IoCalendarNumberSharp, IoBatteryChargingSharp,
-  IoFlashSharp, IoPerson, IoSearch, IoGiftSharp, IoRibbonSharp,
+  IoFlashSharp, IoPerson, IoBarChartSharp, IoGiftSharp, IoRibbonSharp,
   IoSettings, IoQrCodeOutline
 } from 'react-icons/io5';
 import { FaChargingStation, FaMap } from 'react-icons/fa6';
 
 const MoreFeatures: React.FC = () => (
-  <div className="bg-white p-6 rounded-lg shadow-md">
+  <div className="bg-white mt-4 p-6 rounded-lg shadow-md"> {/* [J] 0604 mt-4 추가 */}
     <h2 className="text-lg font-semibold mb-4">More Features</h2>
     <div className="grid grid-cols-4 gap-6">
       <Link to="/map" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="Charging Stations">
@@ -28,9 +28,9 @@ const MoreFeatures: React.FC = () => (
         <IoPerson className="text-4xl text-green-500" />
         <p className="text-sm">마이페이지</p>
       </Link>
-      <Link to="/search" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="Search">
-        <IoSearch className="text-4xl text-yellow-500" />
-        <p className="text-sm">검색</p>
+      <Link to="/ev-registration" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="Search">
+        <IoBarChartSharp className="text-4xl text-yellow-500" />
+        <p className="text-sm">전기차등록현황</p>
       </Link>
       <Link to="/gift" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="Gift">
         <IoGiftSharp className="text-4xl text-gray-500" />

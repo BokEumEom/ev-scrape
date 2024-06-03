@@ -45,7 +45,7 @@ const VehicleSpecPage: React.FC = () => {
         animate="animate" // 이 상태로 애니메이션
         exit="exit" // 종료 애니메이션 상태
         variants={pageTransitionEffects} // 전환 변형
-        className="flex flex-col pt-16 pb-20" // 주요 컨테이너 스타일링
+        // className="flex flex-col pt-16 pb-20" // 주요 컨테이너 스타일링 [J]0602 간격 변경
         >
             <div className="container mx-auto p-4 py-16 tracking-tighter">
                 <h1 className="mt-6 text-xl my-4 font-bold">궁금했던 전기차의<br />제원을 확인해볼까요?</h1>

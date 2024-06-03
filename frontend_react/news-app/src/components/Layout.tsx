@@ -11,7 +11,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
       <NavigationBar />
-      <main className="flex-grow pt-16 pb-16"> {/* Adjusted padding to accommodate fixed NavigationBar and FooterBar */}
+      <main className="h-screen box-border">   {/* [J]0602 공통간격삭제 */}
         {children}
       </main>
       <FooterBar />

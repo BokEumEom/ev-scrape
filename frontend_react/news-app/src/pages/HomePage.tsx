@@ -1,6 +1,5 @@
 // src/pages/HomePage.tsx
 import React, { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
 import TopCards from '@/components/home/TopCards';
 import MoreFeatures from '@/components/home/MoreFeatures';
 import TopCardsSkeleton from '@/components/home/TopCardsSkeleton';
@@ -17,12 +16,10 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <Layout>
-      <div className="p-4 space-y-6 bg-gray-100">
+      <div className="py-[70px] px-4 bg-gray-100">
         {loading ? <TopCardsSkeleton /> : <TopCards />}
         {loading ? <MoreFeaturesSkeleton /> : <MoreFeatures />}
       </div>
-    </Layout>
   );
 };
 

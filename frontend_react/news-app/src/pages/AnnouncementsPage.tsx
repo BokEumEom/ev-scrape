@@ -51,7 +51,7 @@ const AnnouncementsPage = () => {
   };
 
   return (
-    <div {...swipeHandlers} className="flex flex-col items-stretch bg-white transition-all md:flex-row m-4 py-12">
+    <div {...swipeHandlers} className="flex flex-col items-stretch bg-white transition-all md:flex-row m-4 py-[70px]">
       <AnimatePresence mode="wait">
         {selectedRegion === null ? (
           // 지역 버튼 목록 표시

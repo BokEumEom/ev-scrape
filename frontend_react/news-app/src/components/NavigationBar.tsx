@@ -32,7 +32,7 @@ const NavigationBar: React.FC = memo(() => {
   }, [handleCloseMenu]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white text-gray-800 p-1 flex justify-between items-center z-10">
+    <nav className="fixed top-0 left-0 right-0 bg-white text-gray-800 p-1 flex justify-between items-center z-10 h-[56px]"> {/* [J]0602 디바이스 스타일 최적화를 위한 고정 높이값 부여 */}
       <div className="flex items-center">
         <span className="font-bold text-xl p-2 mr-3 h-[3rem]">EVTrend</span>
       </div>
