@@ -19,3 +19,4 @@ python-jose
 fastapi-login
 pyjwt
 passlib[bcrypt]
+pandas
