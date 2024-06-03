@@ -4,7 +4,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy import select
 from app.models.users import User
 from app.models.community import CommunityPost
-from app.schemas import UserCreate
+from app.schemas.users import UserCreate
 from typing import List
 
 async def get_user(db: AsyncSession, user_id: int) -> User:

@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
-from app.schemas import CommunityPostUpdate, CommunityPostCreate, Comment, CommentCreate
+from app.schemas.community import CommunityPostUpdate, CommunityPostCreate, Comment, CommentCreate
 from sqlalchemy import select, func
 from app.models.community import CommunityPost, CommunityPostLike, Comment
 from app.models.news import Like

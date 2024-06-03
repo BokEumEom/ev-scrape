@@ -1,4 +1,4 @@
-# app/schemas.py
+# app/schemas/vehicle.py
 from pydantic import BaseModel, Field, PositiveInt, PositiveFloat
 from datetime import datetime
 from typing import List, Generic, TypeVar, Generic, Optional
@@ -6,85 +6,6 @@ from pydantic.generics import GenericModel
 
 DataT = TypeVar('DataT')
 
-# News
-class NewsBase(BaseModel):
-    title: str
-    source: str
-    link: str
-
-class NewsCreate(NewsBase):
-    pass
-
-class News(NewsBase):
-    id: int
-    published_at: datetime
-    voteCount: Optional[int] = None  # Assuming this is dynamically calculated
-
-    class Config:
-        from_attributes = True
-
-class NewsResponse(GenericModel, Generic[DataT]):
-    items: List[DataT]
-    total: int
-
-# Vote
-class VoteCreate(BaseModel):
-    vote_value: int  # Can be 1 for upvote and -1 for downvote
-
-    class Config:
-        from_attributes = True  # To allow ORM models to be used with these schemas
-        
-# Community
-class CommunityPostBase(BaseModel):
-    title: str
-    content: str
-
-class CommunityPostCreate(BaseModel):
-    title: str
-    content: str
-
-class CommunityPost(BaseModel):
-    id: int
-    title: str
-    content: str
-    created_at: datetime
-    updated_at: Optional[datetime]
-    likeCount: int = 0
-    commentCount: int = 0
-
-    class Config:
-        from_attributes = True
-
-class CommunityPostsResponse(BaseModel):
-    items: List[CommunityPost]
-    total: int
-    
-class CommunityPostUpdate(BaseModel):
-    title: Optional[str] = Field(None, title="The title of the post")
-    content: Optional[str] = Field(None, title="The content of the post")
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now, title="The time of the update")
-    
-    # Optional: 다른 필드가 필요하다면 여기에 추가하세요.
-
-    class Config:
-        from_attributes = True
-    
-class CommentBase(BaseModel):
-    content: str
-
-class CommentCreate(BaseModel):
-    content: str
-
-class Comment(CommentBase):
-    id: int
-    post_id: int
-    created_at: datetime
-    updated_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-        
-# Vehicle
 class VehicleSpecBase(BaseModel):
     manufacturer: str = Field(..., min_length=1, max_length=50, description="The manufacturer of the vehicle", example="Tesla")
     model: str = Field(..., min_length=1, max_length=50, description="The model of the vehicle", example="Model S")
@@ -110,40 +31,6 @@ class VehicleSpecCreate(VehicleSpecBase):
 
 # This model is for responses and includes the 'id'
 class VehicleSpec(VehicleSpecCreate):
-    id: int
-
-    class Config:
-        from_attributes = True
-
-# Users
-class UserBase(BaseModel):
-    username: str
-    email: str
-
-class UserCreate(UserBase):
-    password: str
-
-class User(UserBase):
-    id: int
-
-    class Config:
-        from_attributes = True
-        
-# EV Registrations
-class EVRegistrationBase(BaseModel):
-    region: str
-    year: int
-    month: int
-    vehicle_type: str
-    count: int
-
-class EVRegistrationCreate(EVRegistrationBase):
-    pass
-
-class EVRegistrationUpdate(EVRegistrationBase):
-    pass
-
-class EVRegistration(EVRegistrationBase):
     id: int
 
     class Config:

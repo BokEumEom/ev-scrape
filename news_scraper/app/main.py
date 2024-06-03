@@ -1,7 +1,7 @@
 # app/main.py
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException, Query, Path, Body, Request
-from app.api.v1.endpoints import news, community, vehicle, users
+from app.api.v1.endpoints import news, community, vehicle, users, ev_registration
 from contextlib import asynccontextmanager
 import asyncio
 from fastapi.responses import JSONResponse
@@ -70,6 +70,7 @@ app.include_router(news.router, prefix="/api/v1/news", tags=["News"])
 app.include_router(community.router, prefix="/api/v1/community", tags=["Community"])
 app.include_router(vehicle.router, prefix="/api/v1/vehicles", tags=["Vehicles"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
+app.include_router(ev_registration.router, prefix="/api/v1/ev-registration", tags=["EV Registration"])
 
 # Add CORS middleware to allow requests from any origin
 app.add_middleware(

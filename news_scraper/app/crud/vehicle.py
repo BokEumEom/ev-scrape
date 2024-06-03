@@ -2,7 +2,7 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from app.schemas import VehicleSpec, VehicleSpecCreate
+from app.schemas.vehicle import VehicleSpec, VehicleSpecCreate
 from app.models.vehicle import VehicleSpec
 from typing import List
 

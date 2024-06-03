@@ -1,8 +1,7 @@
 # app/crud/news.py
-from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from app.schemas import NewsCreate
+from app.schemas.news import NewsCreate
 from app.models.news import News, Vote
 from datetime import datetime
 from typing import List
