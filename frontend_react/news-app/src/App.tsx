@@ -68,29 +68,29 @@ const RoutesWrapper = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.75 }}
             >
-                <div className="relative w-full h-screen">
-                    <Routes location={location} key={location.pathname}>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/search" element={<SearchPage />} />
-                        <Route path="/news" element={<NewsPage />} />
-                        <Route path="/announcements" element={<AnnouncementsPage />} />
-                        <Route path="/mypage" element={<MyPage />} />
-                        <Route path="/signup" element={<SignUpPage />} />
-                        <Route path="/signin" element={<SignInPage />} />
-                        <Route path="/userprofileform" element={<UserProfileForm />} />
-                        <Route path="/bookmarks" element={<BookmarksPage />} />
-                        <Route path="/community" element={<CommunityPage />} />
-                        <Route path="/community/write" element={<WriteCommunityPost />} />
-                        <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
-                        <Route path="/add-vehicle" element={<AddVehiclePage />} />
-                        <Route path="/vehiclespec" element={<VehicleSpecPage />} />
-                        <Route path="/vehicle-spec-detail/:id" element={<VehicleSpecDetail />} />
-                        <Route path="/map" element={<KakaoMapPage />} />                
-                        <Route path="/game" element={<Game />} />
-                        <Route path="/ev-registration" element={<EVRegistrationPage />} />
-                        <Route path="*" element={<NotFoundPage />} />
-                    </Routes>
-                </div>
+            <>
+                <Routes location={location} key={location.pathname}>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/news" element={<NewsPage />} />
+                    <Route path="/announcements" element={<AnnouncementsPage />} />
+                    <Route path="/mypage" element={<MyPage />} />
+                    <Route path="/signup" element={<SignUpPage />} />
+                    <Route path="/signin" element={<SignInPage />} />
+                    <Route path="/userprofileform" element={<UserProfileForm />} />
+                    <Route path="/bookmarks" element={<BookmarksPage />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/community/write" element={<WriteCommunityPost />} />
+                    <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
+                    <Route path="/add-vehicle" element={<AddVehiclePage />} />
+                    <Route path="/vehiclespec" element={<VehicleSpecPage />} />
+                    <Route path="/vehicle-spec-detail/:id" element={<VehicleSpecDetail />} />
+                    <Route path="/map" element={<KakaoMapPage />} />                
+                    <Route path="/game" element={<Game />} />
+                    <Route path="/ev-registration" element={<EVRegistrationPage />} />
+                    <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+            </>
             </motion.div>
         </AnimatePresence>
     );
