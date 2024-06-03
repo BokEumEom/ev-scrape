@@ -183,3 +183,20 @@ export interface SpecItemProps {
   additionalLabel?: string;
   additionalValue?: string | number | null;
 }
+
+// EV Registration
+export interface EVRegistration {
+  id: number;
+  date: string;
+  region: string;
+  year: number;
+  month: number;
+  count: number;
+}
+
+export interface MarkerInfo {
+  lat: number;
+  lng: number;
+  region: string;
+  count: number;
+}
