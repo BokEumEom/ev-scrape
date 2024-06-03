@@ -35,7 +35,7 @@ async def upload_excel(file: UploadFile = File(...), db: AsyncSession = Depends(
     return {"success": True, "filename": file.filename}
 
 @router.get("", response_model=List[schemas.EVRegistration])
-async def get_registrations(year: Optional[int] = None, month: Optional[int] = None, region: Optional[str] = None, skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
+async def get_registrations(year: Optional[int] = None, month: Optional[int] = None, region: Optional[str] = None, skip: int = 0, limit: Optional[int] = None, db: AsyncSession = Depends(get_db)):
     return await crud.get_ev_registrations_by_date(db, year=year, month=month, region=region, skip=skip, limit=limit)
 
 @router.post("", response_model=schemas.EVRegistration)

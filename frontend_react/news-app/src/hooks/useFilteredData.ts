@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { EVRegistration } from '@/types';
 
-const useFilteredData = (data: EVRegistration[], selectedRegion: string, selectedDate: Date) => {
+const useFilteredData = (data: EVRegistration[], selectedRegion: string | null, selectedDate: Date) => {
   const year = selectedDate.getFullYear();
   const month = selectedDate.getMonth() + 1;
 
@@ -12,9 +12,9 @@ const useFilteredData = (data: EVRegistration[], selectedRegion: string, selecte
 
   const filteredData = useMemo(() => {
     return selectedRegion && selectedRegion !== 'All Regions'
-      ? data.filter((item) => item.region === selectedRegion)
-      : data;
-  }, [data, selectedRegion]);
+      ? data.filter((item) => item.region === selectedRegion && item.year === year && item.month === month)
+      : data.filter((item) => item.year === year && item.month === month);
+  }, [data, selectedRegion, year, month]);
 
   const dataForChart = useMemo(() => {
     return regions.map((region) => {

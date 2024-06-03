@@ -12,7 +12,7 @@ async def get_ev_registrations(db: AsyncSession, skip: int = 0, limit: int = 100
     result = await db.execute(select(EVRegistration).offset(skip).limit(limit))
     return result.scalars().all()
 
-async def get_ev_registrations_by_date(db: AsyncSession, year: Optional[int] = None, month: Optional[int] = None, region: Optional[str] = None, skip: int = 0, limit: int = 100) -> List[EVRegistration]:
+async def get_ev_registrations_by_date(db: AsyncSession, year: Optional[int] = None, month: Optional[int] = None, region: Optional[str] = None, skip: int = 0, limit: Optional[int] = None) -> List[EVRegistration]:
     query = select(EVRegistration)
     if year is not None:
         query = query.where(EVRegistration.year == year)
@@ -20,7 +20,9 @@ async def get_ev_registrations_by_date(db: AsyncSession, year: Optional[int] = N
         query = query.where(EVRegistration.month == month)
     if region is not None:
         query = query.where(EVRegistration.region == region)
-    result = await db.execute(query.offset(skip).limit(limit))
+    if limit is not None:
+        query = query.offset(skip).limit(limit)
+    result = await db.execute(query)
     return result.scalars().all()
 
 async def create_ev_registration(db: AsyncSession, registration: EVRegistrationCreate):

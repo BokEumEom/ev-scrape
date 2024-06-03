@@ -30,7 +30,7 @@ export const fetchEVRegistrations = async (year: number, month: number, region?:
 
 export const fetchAllEVRegistrations = async (): Promise<EVRegistration[]> => {
   try {
-    const { data } = await axiosInstance.get<EVRegistration[]>(EV_REGISTRATION_BASE_URL);
+    const { data } = await axiosInstance.get<EVRegistration[]>(`${EV_REGISTRATION_BASE_URL}?limit=0`);
     return data;
   } catch (error) {
     handleApiError(error);
