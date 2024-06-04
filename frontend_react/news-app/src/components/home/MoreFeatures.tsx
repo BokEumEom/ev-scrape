@@ -2,8 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  IoRocketSharp, IoCalendarNumberSharp, IoBatteryChargingSharp,
-  IoFlashSharp, IoPerson, IoBarChartSharp, IoGiftSharp, IoRibbonSharp,
+  IoRocketSharp, IoCalendarNumberSharp, IoCalculator,
+  IoFlashSharp, IoPerson, IoBarChartSharp, IoBulbOutline , IoRibbonSharp,
   IoSettings, IoQrCodeOutline
 } from 'react-icons/io5';
 import { FaChargingStation, FaMap } from 'react-icons/fa6';
@@ -32,9 +32,9 @@ const MoreFeatures: React.FC = () => (
         <IoBarChartSharp className="text-4xl text-yellow-500" />
         <p className="text-sm">전기차등록현황</p>
       </Link>
-      <Link to="/gift" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="Gift">
-        <IoGiftSharp className="text-4xl text-gray-500" />
-        <p className="text-sm">선물하기</p>
+      <Link to="/vehicle-management" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="Gift">
+        <IoBulbOutline  className="text-4xl text-gray-500" />
+        <p className="text-sm">전기차보조금</p>
       </Link>
       <Link to="/events" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="Events">
         <IoRibbonSharp className="text-4xl text-red-500" />
@@ -45,8 +45,8 @@ const MoreFeatures: React.FC = () => (
         <p className="text-sm">출석체크</p>
       </Link>
       <Link to="/rates" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="Rates">
-        <IoBatteryChargingSharp className="text-4xl text-rose-500" />
-        <p className="text-sm">요금정보</p>
+        <IoCalculator className="text-4xl text-rose-500" />
+        <p className="text-sm">충전요금정보</p>
       </Link>
       <Link to="/qr" className="flex flex-col items-center text-center space-y-2 transition transform hover:scale-105" aria-label="QR">
         <IoQrCodeOutline className="text-4xl text-lime-500" />

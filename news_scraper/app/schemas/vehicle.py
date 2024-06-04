@@ -25,6 +25,11 @@ class VehicleSpecCreate(VehicleSpecBase):
     width_mm: Optional[PositiveInt] = Field(None, description="Width of the vehicle in millimeters", example=1963)
     height_mm: Optional[PositiveInt] = Field(None, description="Height of the vehicle in millimeters", example=1445)
     length_mm: Optional[PositiveInt] = Field(None, description="Length of the vehicle in millimeters", example=4970)
+    # New fields for EV subsidy information
+    vehicle_price: Optional[int] = None
+    national_subsidy: Optional[int] = None
+    local_subsidy: Optional[int] = None
+    final_price: Optional[int] = None
 
     class Config:
         from_attributes = True

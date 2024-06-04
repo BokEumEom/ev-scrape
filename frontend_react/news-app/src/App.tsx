@@ -6,8 +6,8 @@ import HomePage from '@/pages/HomePage';
 import NewsPage from '@/pages/NewsPage';
 import AnnouncementsPage from '@/pages/AnnouncementsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-// import NavigationBar from '@/components/NavigationBar';
-// import FooterBar from '@/components/FooterBar';
+import VehicleSelectionPage from '@/pages/VehicleSelectionPage';
+import VehicleManagementPage from '@/pages/VehicleManagementPage';
 import SearchPage from '@/pages/SearchPage';
 import MyPage from '@/pages/MyPage';
 import BookmarksPage from '@/pages/BookmarksPage';
@@ -88,6 +88,8 @@ const RoutesWrapper = () => {
                     <Route path="/map" element={<KakaoMapPage />} />                
                     <Route path="/game" element={<Game />} />
                     <Route path="/ev-registration" element={<EVRegistrationPage />} />
+                    <Route path="/vehicle-select" element={<VehicleSelectionPage />} />
+                    <Route path="/vehicle-management" element={<VehicleManagementPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </>

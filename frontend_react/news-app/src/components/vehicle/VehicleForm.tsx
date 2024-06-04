@@ -1,6 +1,6 @@
 // src/components/vehicle/VehicleForm.tsx
 import React from 'react';
-import { VehicleSpec } from '../../types';
+import { VehicleSpec } from '@/types';
 import SelectField from './SelectField';
 import FormContainer from './FormContainer';
 import FormHeader from './FormHeader';
@@ -26,7 +26,11 @@ const VehicleForm: React.FC = () => {
         minimum_ground_clearance_mm: null,
         width_mm: null,
         height_mm: null,
-        length_mm: null
+        length_mm: null,
+        vehicle_price: null,
+        national_subsidy: null,
+        local_subsidy: null,
+        final_price: null
     };
 
     const { handleChange, handleSubmit, formData, isLoading } = useVehicleForm(initialFormData);

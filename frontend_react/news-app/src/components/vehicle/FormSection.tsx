@@ -2,7 +2,7 @@
 // src/components/vehicle/FormSection.tsx
 import React, { ChangeEvent } from 'react';
 import InputField from './InputField';
-import { VehicleSpec } from '../../types';
+import { VehicleSpec } from '@/types';
 
 interface FormSectionProps {
     sectionData: VehicleSpec;

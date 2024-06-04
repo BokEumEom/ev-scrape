@@ -24,3 +24,8 @@ class VehicleSpec(Base):
     height_mm = Column(Integer)  # 전고
     length_mm = Column(Integer)  # 전장
     created_at = Column(DateTime, default=func.now())  # 생성 일자
+    # New fields for EV subsidy information
+    vehicle_price = Column(Integer)  # 차량 출고가
+    national_subsidy = Column(Integer)  # 국가 보조금
+    local_subsidy = Column(Integer)  # 지자체 보조금
+    final_price = Column(Integer)  # 최종 가격

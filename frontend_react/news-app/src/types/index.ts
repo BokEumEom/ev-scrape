@@ -167,6 +167,10 @@ export interface VehicleDetails {
   width_mm: number;                // Vehicle width in millimeters
   height_mm: number;               // Vehicle height in millimeters
   length_mm: number;               // Vehicle length in millimeters
+  vehicle_price: number;
+  national_subsidy: number;
+  local_subsidy: number;
+  final_price: number
 }
 
 // DropdownProps 추가
