@@ -16,16 +16,16 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ data }) => {
   const regionsWithData = data.length;
 
   const cardInfo = [
-    { label: 'Total Registrations', icon: <IoCarOutline />, value: totalRegistrations, color: 'purple' },
-    { label: 'Most Registrations by Region', icon: <IoLocationSharp />, value: regionWithMostRegistrations.region, color: 'orange' },
-    { label: 'Monthly Growth', icon: <IoStatsChartOutline />, value: monthlyGrowth, color: 'pink' },
-    { label: 'Regions with Data', icon: <IoLocateSharp />, value: regionsWithData, color: 'blue' }
+    { label: '총 등록 수', icon: <IoCarOutline />, value: totalRegistrations, color: 'purple' },
+    { label: ' 지역별 가장 많은 등록 수', icon: <IoLocationSharp />, value: regionWithMostRegistrations.region, color: 'orange' },
+    { label: ' 월간 성장률', icon: <IoStatsChartOutline />, value: monthlyGrowth, color: 'pink' },
+    { label: '데이터 수집 지역', icon: <IoLocateSharp />, value: regionsWithData, color: 'blue' }
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-2 mb-6">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-2 mb-4">
       {cardInfo.map((card, index) => (
-        <div key={index} className={`bg-white p-6 rounded-lg shadow-lg flex flex-col items-center`}>
+        <div key={index} className={`bg-white p-2 rounded-lg shadow-lg flex flex-col items-center`}>
           <div className={`text-${card.color}-600 bg-${card.color}-100 p-3 rounded-full mb-2`}>
             {React.cloneElement(card.icon, { className: 'text-3xl' })}
           </div>

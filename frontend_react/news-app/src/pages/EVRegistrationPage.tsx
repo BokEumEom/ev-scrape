@@ -53,7 +53,7 @@ const EVRegistrationPage: React.FC = () => {
         </div>
       )}
       {!isLoading && !error && regionData.length === 0 && (
-        <div className="text-center text-gray-500">No data available for the selected date and region.</div>
+        <div className="text-gray-500 text-sm mt-2">선택한 날짜와 지역에 대한 데이터가 없습니다</div>
       )}
       {!isLoading && !error && regionData.length > 0 && (
         <div className="mt-6">
