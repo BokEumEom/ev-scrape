@@ -12,7 +12,7 @@ const EVDataTable: React.FC<EVDataTableProps> = ({ data }) => {
     <div className="mt-6 overflow-x-auto">
       <table className="min-w-full bg-white">
         <thead>
-          <tr>
+          <tr className="text-sm bg-black text-white">
             <th className="px-4 py-2 border">Region</th>
             <th className="px-4 py-2 border">Year</th>
             <th className="px-4 py-2 border">Month</th>
@@ -21,11 +21,11 @@ const EVDataTable: React.FC<EVDataTableProps> = ({ data }) => {
         </thead>
         <tbody>
           {data.map((item) => (
-            <tr key={item.id}>
-              <td className="px-4 py-2 border">{item.region}</td>
-              <td className="px-4 py-2 border">{item.year}</td>
-              <td className="px-4 py-2 border">{item.month}</td>
-              <td className="px-4 py-2 border">{item.count}</td>
+            <tr key={item.id} className="text-xs text-center">
+              <td className="px-4 py-1 border">{item.region}</td>
+              <td className="px-4 py-1 border">{item.year}</td>
+              <td className="px-4 py-1 border">{item.month}</td>
+              <td className="px-4 py-1 border">{item.count}</td>
             </tr>
           ))}
         </tbody>

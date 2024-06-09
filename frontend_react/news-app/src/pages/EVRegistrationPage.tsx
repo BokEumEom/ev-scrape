@@ -7,6 +7,7 @@ import TabNavigation from '@/components/ev_registration/TabNavigation';
 import EVBarChart from '@/components/ev_registration/EVBarChart';
 import EVDataTable from '@/components/ev_registration/EVDataTable';
 import EVYearlyTrendChart from '@/components/ev_registration/EVYearlyTrendChart';
+import EVRegionChart from '@/components/ev_registration/EVRegionChart';
 import useEVRegistrationData from '@/hooks/useEVRegistrationData';
 
 const ALL_REGIONS = 'All Regions';
@@ -23,6 +24,15 @@ const EVRegistrationPage: React.FC = () => {
 
   console.log("Page rendering with region data:", regionData); // Log the region data used for rendering
 
+  const sampleData: { region: string, total: number, coordinates: [number, number] }[] = [
+    { region: 'Seoul', total: 1200, coordinates: [126.9780, 37.5665] },
+    { region: 'Busan', total: 800, coordinates: [129.0756, 35.1796] },
+    { region: 'Incheon', total: 500, coordinates: [126.7052, 37.4563] },
+    { region: 'Daegu', total: 300, coordinates: [128.6014, 35.8714] },
+    { region: 'Daejeon', total: 200, coordinates: [127.3845, 36.3504] },
+    { region: 'Gwangju', total: 150, coordinates: [126.8514, 35.1595] },
+    // Add more sample data as needed
+  ];
   return (
     <div className="flex flex-col pt-16 pb-20 p-4 max-w-4xl mx-auto sm:p-6 md:p-8">
       <header className="flex flex-col sm:flex-row justify-between items-center mb-5">
@@ -62,6 +72,7 @@ const EVRegistrationPage: React.FC = () => {
           {activeTab === 'chart' && <EVBarChart data={dataForChart} />}
           {activeTab === 'table' && <EVDataTable data={regionData} />}
           {activeTab === 'trend' && <EVYearlyTrendChart data={yearlyDataForChart} />}
+          {activeTab === 'region' && <EVRegionChart data={sampleData} />}
         </div>
       )}
     </div>
