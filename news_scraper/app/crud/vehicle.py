@@ -7,7 +7,7 @@ from app.models.vehicle import VehicleSpec
 from typing import List
 
 async def create_vehicle_spec(db: AsyncSession, vehicle_spec: VehicleSpecCreate):
-    vehicle = VehicleSpec(**vehicle_spec.dict())
+    vehicle = VehicleSpec(**vehicle_spec.model_dump())
     db.add(vehicle)
     await db.commit()
     await db.refresh(vehicle)

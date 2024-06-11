@@ -1,5 +1,5 @@
 # 기본 이미지 설정
-FROM mcr.microsoft.com/playwright/python:v1.42.0-jammy
+FROM mcr.microsoft.com/playwright/python:v1.44.0-jammy
 
 ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
