@@ -35,7 +35,6 @@ const EVBarChart: React.FC<EVBarChartProps> = ({ data }) => {
             type="category" // Y축 타입을 카테고리로 변경
                       tick={{ fill: '#000', fontSize: 10, fontFamily: 'pretendard' }} // X축 tick 스타일
             axisLine={{ stroke: '#000', strokeWidth: 1 }} // X축 보더 스타일
-            axisLine={{ stroke: '#000', strokeWidth: 1 }} // Y축 보더 스타일
             tickLine={{ strokeWidth: 1 }} // Y축 tick 라인 스타일
           >
             <Label value="전국" angle={-90} position="insideLeft" fontSize="12px"/>

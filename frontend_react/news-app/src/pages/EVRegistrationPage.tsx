@@ -24,15 +24,28 @@ const EVRegistrationPage: React.FC = () => {
 
   console.log("Page rendering with region data:", regionData); // Log the region data used for rendering
 
-  const sampleData: { region: string, total: number, coordinates: [number, number] }[] = [
-    { region: 'Seoul', total: 1200, coordinates: [126.9780, 37.5665] },
-    { region: 'Busan', total: 800, coordinates: [129.0756, 35.1796] },
-    { region: 'Incheon', total: 500, coordinates: [126.7052, 37.4563] },
-    { region: 'Daegu', total: 300, coordinates: [128.6014, 35.8714] },
-    { region: 'Daejeon', total: 200, coordinates: [127.3845, 36.3504] },
-    { region: 'Gwangju', total: 150, coordinates: [126.8514, 35.1595] },
-    // Add more sample data as needed
+
+  const registrationRegion = [
+    { region: '서울', total: 1200, coordinates: [126.9784, 37.5665] },
+    { region: '부산', total: 800, coordinates: [129.0756, 35.1796] },
+    { region: '대구', total: 300, coordinates: [128.6014, 35.8714] },
+    { region: '인천', total: 500, coordinates: [126.7052, 37.4563] },
+    { region: '광주', total: 150, coordinates: [126.8514, 35.1595] },
+    { region: '대전', total: 200, coordinates: [127.3845, 36.3504] },
+    { region: '울산', total: 100, coordinates: [129.3114, 35.5384] },
+    { region: '세종', total: 50, coordinates: [127.2906, 36.4804] },
+    { region: '경기', total: 1100, coordinates: [127.5183, 37.4138] },
+    { region: '강원', total: 300, coordinates: [128.1555, 37.8328] },
+    { region: '충북', total: 150, coordinates: [127.7302, 36.6372] },
+    { region: '충남', total: 200, coordinates: [126.8454, 36.5184] },
+    { region: '전북', total: 100, coordinates: [127.1480, 35.8242] },
+    { region: '전남', total: 90, coordinates: [126.9860, 34.8679] },
+    { region: '경북', total: 250, coordinates: [128.7294, 36.5760] },
+    { region: '경남', total: 300, coordinates: [128.2132, 35.4606] },
+    { region: '제주', total: 200, coordinates: [126.4983, 33.4996] },
   ];
+
+
   return (
     <div className="flex flex-col pt-16 pb-20 p-4 max-w-4xl mx-auto sm:p-6 md:p-8">
       <header className="flex flex-col sm:flex-row justify-between items-center mb-5">
@@ -72,7 +85,7 @@ const EVRegistrationPage: React.FC = () => {
           {activeTab === 'chart' && <EVBarChart data={dataForChart} />}
           {activeTab === 'table' && <EVDataTable data={regionData} />}
           {activeTab === 'trend' && <EVYearlyTrendChart data={yearlyDataForChart} />}
-          {activeTab === 'region' && <EVRegionChart data={sampleData} />}
+          {activeTab === 'region' && <EVRegionChart data={registrationRegion} />}
         </div>
       )}
     </div>
