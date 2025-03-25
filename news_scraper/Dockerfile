@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # 의존성 파일 복사 및 설치
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir python-multipart
 
 # 실행 스테이지: 필요한 파일만 복사
 FROM python:3.10-slim
